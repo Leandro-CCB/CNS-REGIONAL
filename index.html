@@ -1,0 +1,1203 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CNS – Gestão de Fornecedores</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700;800&family=Barlow+Condensed:wght@600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#1a3a6b;
+  --blue:#2256c7;
+  --blue-light:#3a7bd5;
+  --green:#1ea96a;
+  --red:#e03535;
+  --orange:#e87c1a;
+  --gold:#f0a500;
+  --bg:#f0f4fa;
+  --card:#fff;
+  --border:#d4dff2;
+  --text:#1a2540;
+  --muted:#6b7a99;
+  --sidebar:220px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Barlow',sans-serif;background:var(--bg);color:var(--text);display:flex;min-height:100vh;flex-direction:column}
+.app-wrap{display:flex;flex:1;min-height:0}
+
+/* ── SIDEBAR ── */
+#sidebar{width:var(--sidebar);background:var(--navy);display:flex;flex-direction:column;flex-shrink:0;position:fixed;top:0;left:0;height:100vh;z-index:100}
+.brand{display:flex;align-items:center;gap:10px;padding:20px 16px 16px;border-bottom:1px solid rgba(255,255,255,.12)}
+.brand-icon{width:38px;height:38px;background:var(--blue);border-radius:10px;display:flex;align-items:center;justify-content:center}
+.brand-icon svg{width:22px;height:22px;fill:#fff}
+.brand-name{font-family:'Barlow Condensed',sans-serif;font-size:17px;font-weight:800;color:#fff;line-height:1.1}
+.brand-sub{font-size:9px;color:rgba(255,255,255,.5);text-transform:uppercase;letter-spacing:1px}
+nav{flex:1;padding:12px 0;overflow-y:auto}
+.nav-section{font-size:10px;font-weight:700;color:rgba(255,255,255,.35);text-transform:uppercase;letter-spacing:1.2px;padding:12px 16px 4px}
+.nav-item{display:flex;align-items:center;gap:10px;padding:9px 16px;cursor:pointer;border-left:3px solid transparent;transition:.15s;color:rgba(255,255,255,.7);font-size:13px;font-weight:500}
+.nav-item:hover{background:rgba(255,255,255,.06);color:#fff}
+.nav-item.active{background:rgba(50,120,255,.18);border-left-color:var(--blue-light);color:#fff}
+.nav-item svg{width:16px;height:16px;flex-shrink:0}
+.sidebar-footer{padding:14px 16px;border-top:1px solid rgba(255,255,255,.1)}
+.user-pill{display:flex;align-items:center;gap:8px}
+.avatar{width:32px;height:32px;border-radius:50%;background:var(--blue);display:flex;align-items:center;justify-content:center;font-weight:700;color:#fff;font-size:13px}
+.user-name{font-size:12px;color:#fff;font-weight:600}
+.user-role{font-size:10px;color:rgba(255,255,255,.45)}
+
+/* ── MAIN ── */
+#main{margin-left:var(--sidebar);flex:1;display:flex;flex-direction:column;min-height:100vh}
+.topbar{background:#fff;border-bottom:1px solid var(--border);padding:0 28px;height:58px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50}
+.page-title{font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:800;color:var(--navy)}
+.topbar-right{display:flex;align-items:center;gap:14px}
+.btn{padding:7px 16px;border-radius:7px;font-size:13px;font-weight:600;border:none;cursor:pointer;display:inline-flex;align-items:center;gap:6px;transition:.15s}
+.btn-primary{background:var(--blue);color:#fff}
+.btn-primary:hover{background:var(--navy)}
+.btn-outline{background:transparent;border:1.5px solid var(--border);color:var(--text)}
+.btn-outline:hover{border-color:var(--blue);color:var(--blue)}
+.btn-green{background:var(--green);color:#fff}
+.btn-red{background:var(--red);color:#fff}
+.btn-sm{padding:5px 12px;font-size:12px}
+
+content{padding:24px 28px;flex:1}
+content{display:block}
+
+/* ── TABS (pages) ── */
+.page{display:none}
+.page.active{display:block}
+
+/* ── STAT CARDS - matching image layout ── */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:20px}
+.stat-card{border-radius:10px;padding:16px 18px;display:flex;align-items:center;gap:14px;color:#fff;position:relative;overflow:hidden;min-height:80px}
+.stat-card::after{content:'';position:absolute;right:-12px;top:-12px;width:70px;height:70px;border-radius:50%;background:rgba(255,255,255,.1)}
+.stat-card.blue{background:linear-gradient(135deg,#2256c7,#3a7bd5)}
+.stat-card.green{background:linear-gradient(135deg,#159c5e,#1ea96a)}
+.stat-card.red{background:linear-gradient(135deg,#c42a2a,#e03535)}
+.stat-card.orange{background:linear-gradient(135deg,#c96a0d,#e87c1a)}
+.stat-icon{width:42px;height:42px;border-radius:10px;background:rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.stat-icon svg{width:22px;height:22px;fill:#fff}
+.stat-number{font-family:'Barlow Condensed',sans-serif;font-size:30px;font-weight:800;line-height:1}
+.stat-label{font-size:11px;opacity:.85;margin-top:2px}
+
+/* ── DASHBOARD GRID - 4 columns like image ── */
+.dash-main{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:0}
+.dash-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-top:16px}
+
+/* Left panel with menu shortcuts */
+.left-menu-panel{display:flex;flex-direction:column;gap:10px}
+.menu-btn{border-radius:10px;padding:14px 16px;display:flex;align-items:center;gap:12px;cursor:pointer;color:#fff;font-weight:700;font-size:13px;border:none;transition:.15s;width:100%;text-align:left}
+.menu-btn:hover{opacity:.9;transform:translateX(2px)}
+.menu-btn.blue{background:linear-gradient(135deg,var(--blue),var(--blue-light))}
+.menu-btn.green{background:linear-gradient(135deg,#159c5e,var(--green))}
+.menu-btn.cyan{background:linear-gradient(135deg,#0891b2,#06b6d4)}
+.menu-btn.purple{background:linear-gradient(135deg,#7c3aed,#a855f7)}
+.menu-btn.coral{background:linear-gradient(135deg,#dc2626,#f87171)}
+.menu-btn-icon{width:36px;height:36px;border-radius:8px;background:rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.menu-btn-icon svg{width:18px;height:18px;fill:#fff}
+
+/* ── 3-COLUMN DASH LAYOUT ── */
+.dash-3col{display:grid;grid-template-columns:auto 1fr 1fr auto;gap:16px;align-items:start}
+.dash-center{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+
+/* Main dashboard layout */
+.dash-layout{display:grid;grid-template-columns:150px 1fr 1fr 260px;gap:16px;align-items:start}
+
+/* ── CARD ── */
+.card{background:var(--card);border-radius:12px;border:1px solid var(--border);overflow:hidden}
+.card-header{padding:12px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.card-title{font-weight:700;font-size:13px;color:var(--navy)}
+.card-body{padding:0}
+
+/* ── TABLES ── */
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{background:#f4f7fd;padding:9px 12px;text-align:left;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);border-bottom:1px solid var(--border)}
+td{padding:9px 12px;border-bottom:1px solid #eef2f9;vertical-align:middle}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:#fafcff}
+.rank-badge{width:22px;height:22px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:10px;font-weight:800}
+.rank-1{background:#f0a500;color:#fff}
+.rank-2{background:#9eaab8;color:#fff}
+.rank-3{background:#b87333;color:#fff}
+.rank-n{background:#eef2f9;color:var(--muted)}
+.stars{color:#f0a500;letter-spacing:0px;font-size:11px}
+.score-bad{color:var(--red);font-weight:700}
+.score-mid{color:var(--orange);font-weight:700}
+.score-good{color:var(--green);font-weight:700}
+.badge{padding:2px 7px;border-radius:20px;font-size:10px;font-weight:600}
+.badge-green{background:#d4f5e5;color:#0f7a46}
+.badge-yellow{background:#fff3d4;color:#9a6000}
+.badge-red{background:#fde2e2;color:#9a1515}
+.badge-blue{background:#dce8ff;color:#1a4db3}
+.badge-gray{background:#eef2f9;color:var(--muted)}
+.trend-up{color:var(--red)}
+.trend-down{color:var(--green)}
+
+/* ── FORMS ── */
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.form-group{display:flex;flex-direction:column;gap:5px}
+.form-group.full{grid-column:span 2}
+label{font-size:12px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
+input,select,textarea{padding:9px 12px;border:1.5px solid var(--border);border-radius:8px;font-size:13px;font-family:'Barlow',sans-serif;color:var(--text);background:#fff;transition:.15s;outline:none;width:100%}
+input:focus,select:focus,textarea:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(34,86,199,.12)}
+textarea{resize:vertical;min-height:80px}
+.form-section{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:22px;margin-bottom:20px}
+.form-section-title{font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:800;color:var(--navy);margin-bottom:16px;padding-bottom:10px;border-bottom:1px solid var(--border)}
+.form-actions{display:flex;gap:10px;justify-content:flex-end;margin-top:8px}
+
+/* ── SEARCH BAR ── */
+.search-bar{display:flex;gap:10px;margin-bottom:18px;align-items:center}
+.search-wrap{position:relative;flex:1}
+.search-wrap svg{position:absolute;left:10px;top:50%;transform:translateY(-50%);width:15px;height:15px;fill:var(--muted)}
+.search-wrap input{padding-left:34px}
+
+/* ── SCORE STAR PICKER ── */
+.star-picker{display:flex;gap:4px}
+.star-picker span{font-size:24px;cursor:pointer;color:#d0d8e8;transition:.1s}
+.star-picker span.on{color:#f0a500}
+
+/* ── MODAL ── */
+.modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:900;align-items:center;justify-content:center}
+.modal-bg.open{display:flex}
+.modal{background:#fff;border-radius:14px;width:500px;max-width:95vw;max-height:90vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.25)}
+.modal-header{padding:18px 22px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.modal-title{font-weight:800;font-size:16px;color:var(--navy)}
+.modal-close{background:none;border:none;font-size:20px;cursor:pointer;color:var(--muted);line-height:1}
+.modal-body{padding:22px}
+.modal-footer{padding:14px 22px;border-top:1px solid var(--border);display:flex;gap:10px;justify-content:flex-end}
+
+/* ── TOAST ── */
+#toast{position:fixed;bottom:60px;right:24px;z-index:9999;display:flex;flex-direction:column;gap:8px}
+.toast-item{background:#1a2540;color:#fff;padding:12px 18px;border-radius:10px;font-size:13px;font-weight:500;display:flex;align-items:center;gap:10px;animation:slideIn .25s ease;box-shadow:0 8px 24px rgba(0,0,0,.2)}
+.toast-item.success{border-left:4px solid var(--green)}
+.toast-item.error{border-left:4px solid var(--red)}
+@keyframes slideIn{from{transform:translateX(40px);opacity:0}to{transform:translateX(0);opacity:1}}
+
+/* ── AGENDA ── */
+.agenda-item{display:flex;align-items:center;gap:10px;padding:8px 12px;border-bottom:1px solid #eef2f9}
+.agenda-item:last-child{border-bottom:none}
+.agenda-num{width:26px;height:26px;border-radius:6px;background:var(--blue);color:#fff;font-size:10px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.agenda-label{font-size:12px;font-weight:500;flex:1}
+.agenda-meta{font-size:11px;color:var(--muted)}
+.agenda-badge{width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#fff;flex-shrink:0}
+
+/* ── ATIVIDADES ── */
+.atividade-item{display:flex;align-items:flex-start;gap:10px;padding:8px 12px;border-bottom:1px solid #eef2f9;font-size:12px}
+.atividade-item:last-child{border-bottom:none}
+.ativ-icon{width:24px;height:24px;border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:11px}
+
+/* ── CONVENIOS PANEL ── */
+.conv-panel{background:var(--card);border-radius:12px;border:1px solid var(--border);overflow:hidden}
+.conv-tabs{display:flex;border-bottom:1px solid var(--border);background:#f4f7fd}
+.conv-tab{padding:10px 14px;font-size:12px;font-weight:600;cursor:pointer;color:var(--muted);border-bottom:2px solid transparent;transition:.15s;white-space:nowrap}
+.conv-tab.active{color:var(--blue);border-bottom-color:var(--blue);background:#fff}
+.conv-body{padding:12px}
+.conv-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.conv-location{background:var(--blue);color:#fff;border-radius:20px;padding:6px 14px;font-size:12px;font-weight:700;display:flex;align-items:center;gap:6px;cursor:pointer}
+.conv-location svg{width:14px;height:14px;fill:#fff}
+.conv-add-btn{background:none;border:1.5px solid var(--border);border-radius:7px;padding:5px 10px;font-size:11px;font-weight:600;cursor:pointer;color:var(--blue);display:flex;align-items:center;gap:4px}
+.conv-card{display:flex;align-items:center;gap:10px;padding:10px;border:1px solid var(--border);border-radius:10px;margin-bottom:8px;cursor:pointer;transition:.15s}
+.conv-card:hover{border-color:var(--blue);background:#f8fbff}
+.conv-card:last-child{margin-bottom:0}
+.conv-img{width:56px;height:44px;border-radius:7px;object-fit:cover;flex-shrink:0;background:#eef2f9}
+.conv-img-placeholder{width:56px;height:44px;border-radius:7px;background:linear-gradient(135deg,var(--navy),var(--blue));display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.conv-img-placeholder svg{width:20px;height:20px;fill:#fff}
+.conv-info{flex:1;min-width:0}
+.conv-title{font-size:12px;font-weight:700;color:var(--navy);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.conv-meta{font-size:10px;color:var(--muted);margin-top:2px}
+.conv-footer{display:flex;align-items:center;justify-content:space-between;margin-top:12px;padding-top:10px;border-top:1px solid var(--border)}
+.conv-num{width:24px;height:24px;background:var(--gold);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:#fff;flex-shrink:0}
+.conv-access-btn{background:var(--blue);color:#fff;border:none;border-radius:8px;padding:8px 12px;font-size:11px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:5px;width:100%;justify-content:center;margin-top:8px}
+.conv-access-btn svg{width:12px;height:12px;fill:#fff}
+
+/* ── CONVENIOS MANAGEMENT ── */
+.conv-manage-item{display:flex;align-items:center;gap:12px;padding:12px;border:1px solid var(--border);border-radius:10px;margin-bottom:10px;background:#fff}
+.conv-manage-img{width:80px;height:60px;border-radius:8px;object-fit:cover;background:#eef2f9;flex-shrink:0}
+.conv-manage-info{flex:1}
+.conv-manage-title{font-size:13px;font-weight:700;color:var(--navy)}
+.conv-manage-meta{font-size:11px;color:var(--muted);margin-top:3px}
+.conv-manage-actions{display:flex;gap:6px}
+
+/* ── FOOTER ── */
+#app-footer{background:var(--navy);color:rgba(255,255,255,.6);text-align:center;padding:10px;font-size:11px;margin-left:var(--sidebar);border-top:1px solid rgba(255,255,255,.1)}
+#app-footer span{color:rgba(255,255,255,.9);font-weight:600}
+
+/* ── LOGIN ── */
+#login-screen{display:none;position:fixed;inset:0;background:linear-gradient(135deg,#1a3a6b 0%,#2256c7 100%);z-index:9000;align-items:center;justify-content:center}
+#login-screen.open{display:flex}
+.login-box{background:#fff;border-radius:16px;padding:40px;width:380px;box-shadow:0 30px 80px rgba(0,0,0,.3)}
+.login-logo{text-align:center;margin-bottom:28px}
+.login-logo-icon{width:60px;height:60px;background:var(--navy);border-radius:16px;display:inline-flex;align-items:center;justify-content:center;margin-bottom:10px}
+.login-logo-icon svg{width:32px;height:32px;fill:#fff}
+.login-logo h1{font-family:'Barlow Condensed',sans-serif;font-size:26px;font-weight:800;color:var(--navy)}
+.login-logo p{font-size:12px;color:var(--muted);margin-top:2px}
+.login-error{background:#fde2e2;color:#9a1515;padding:8px 12px;border-radius:7px;font-size:12px;margin-bottom:12px;display:none}
+.login-btn{width:100%;padding:12px;background:var(--blue);color:#fff;border:none;border-radius:9px;font-size:15px;font-weight:700;cursor:pointer;font-family:'Barlow',sans-serif;transition:.15s;margin-top:6px}
+.login-btn:hover{background:var(--navy)}
+
+/* ── RESPONSIVE ── */
+@media(max-width:1200px){.dash-layout{grid-template-columns:140px 1fr 1fr 240px}.stats{grid-template-columns:1fr 1fr}}
+@media(max-width:1000px){.dash-layout{grid-template-columns:1fr 1fr}}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="login-screen" class="open">
+  <div class="login-box">
+    <div class="login-logo">
+      <div class="login-logo-icon">
+        <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+      </div>
+      <h1>CNS</h1>
+      <p>Gestão de Fornecedores</p>
+    </div>
+    <div class="login-error" id="login-err">Usuário ou senha incorretos.</div>
+    <div class="form-group" style="margin-bottom:12px">
+      <label>Usuário</label>
+      <input id="l-user" type="text" placeholder="Digite seu usuário" value="admin">
+    </div>
+    <div class="form-group" style="margin-bottom:16px">
+      <label>Senha</label>
+      <input id="l-pass" type="password" placeholder="••••••••" value="1234">
+    </div>
+    <button class="login-btn" onclick="doLogin()">Entrar</button>
+  </div>
+</div>
+
+<!-- SIDEBAR -->
+<div id="sidebar">
+  <div class="brand">
+    <div class="brand-icon"><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"/></svg></div>
+    <div><div class="brand-name">CNS</div><div class="brand-sub">Gestão de Fornecedores</div></div>
+  </div>
+  <nav>
+    <div class="nav-section">Principal</div>
+    <div class="nav-item active" onclick="showPage('dashboard',this)">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/></svg> Dashboard
+    </div>
+    <div class="nav-item" onclick="showPage('fornecedores',this)">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20 7H4c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V9c0-1.1-.9-2-2-2zm-9 3h2v2h-2v-2zm0 4h2v2h-2v-2zM7 10h2v2H7v-2zm0 4h2v2H7v-2zm10 4H7v-2h10v2zm0-4h-2v-2h2v2zm0-4h-2v-2h2v2z"/></svg> Fornecedores
+    </div>
+    <div class="nav-item" onclick="showPage('ranking',this)">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M7.5 21H2V9h5.5v12zm7.25-18h-5.5v18h5.5V3zM22 11h-5.5v10H22V11z"/></svg> Ranking
+    </div>
+    <div class="nav-item" onclick="showPage('agenda',this)">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z"/></svg> Agenda de Compras
+    </div>
+    <div class="nav-section">Cadastros</div>
+    <div class="nav-item" onclick="showPage('cad-fornecedor',this)">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg> Novo Fornecedor
+    </div>
+    <div class="nav-section">Administração</div>
+    <div class="nav-item" onclick="showPage('usuarios',this)">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg> Usuários
+    </div>
+    <div class="nav-item" onclick="showPage('convenios',this)">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 3c1.93 0 3.5 1.57 3.5 3.5S13.93 13 12 13s-3.5-1.57-3.5-3.5S10.07 6 12 6zm7 13H5v-.23c0-.62.28-1.2.76-1.58C7.47 15.82 9.64 15 12 15s4.53.82 6.24 2.19c.48.38.76.97.76 1.58V19z"/></svg> Convênios
+    </div>
+    <div class="nav-item" onclick="doLogout()">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5-5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"/></svg> Sair
+    </div>
+  </nav>
+  <div class="sidebar-footer">
+    <div class="user-pill">
+      <div class="avatar" id="sb-avatar">A</div>
+      <div><div class="user-name" id="sb-uname">Admin</div><div class="user-role" id="sb-urole">Administrador</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div id="main">
+  <div class="topbar">
+    <div class="page-title" id="top-title">Dashboard</div>
+    <div class="topbar-right">
+      <button class="btn btn-primary" onclick="showPage('cad-fornecedor',null)">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg> Novo Fornecedor
+      </button>
+    </div>
+  </div>
+  <content>
+
+    <!-- DASHBOARD -->
+    <div class="page active" id="page-dashboard">
+      <!-- Stats Row -->
+      <div class="stats" id="stats-row"></div>
+
+      <!-- 4-column layout matching image -->
+      <div class="dash-layout">
+        <!-- Column 1: Menu Buttons -->
+        <div class="left-menu-panel">
+          <button class="menu-btn blue" onclick="showPage('cad-fornecedor',null)">
+            <div class="menu-btn-icon"><svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg></div>
+            <div>Indicar Fornecedor</div>
+          </button>
+          <button class="menu-btn green" onclick="showPage('fornecedores',null)">
+            <div class="menu-btn-icon"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg></div>
+            <div>Fornecedores Aprovados</div>
+          </button>
+          <button class="menu-btn cyan" onclick="showPage('fornecedores',null)">
+            <div class="menu-btn-icon"><svg viewBox="0 0 24 24"><path d="M20 7H4c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V9c0-1.1-.9-2-2-2z"/></svg></div>
+            <div>CNS Limpeza</div>
+          </button>
+          <button class="menu-btn purple" onclick="showPage('agenda',null)">
+            <div class="menu-btn-icon"><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 5h2v6H11zm0 8h2v2h-2z"/></svg></div>
+            <div>Projeto Meia Luz</div>
+          </button>
+          <button class="menu-btn coral" onclick="showPage('agenda',null)">
+            <div class="menu-btn-icon"><svg viewBox="0 0 24 24"><path d="M7 14c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3zm13.71-9.37l-1.34-1.34a1 1 0 0 0-1.41 0L9 12.25 11.75 15l8.96-8.96a1 1 0 0 0 0-1.41z"/></svg></div>
+            <div>Pintura Programada</div>
+          </button>
+        </div>
+
+        <!-- Column 2: Top 10 + Atividades -->
+        <div>
+          <div class="card" style="margin-bottom:14px">
+            <div class="card-header">
+              <span class="card-title">Top 10 Fornecedores</span>
+              <button class="btn btn-outline btn-sm" onclick="showPage('ranking',null)">Ver Todos</button>
+            </div>
+            <div class="card-body">
+              <table>
+                <thead><tr><th>No</th><th>Nome</th><th>Score</th><th>Scor</th></tr></thead>
+                <tbody id="top10-body"></tbody>
+              </table>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-header"><span class="card-title">Atividades Recentes</span></div>
+            <div class="card-body" id="atividades-body"></div>
+          </div>
+        </div>
+
+        <!-- Column 3: 5 Piores + Agenda -->
+        <div>
+          <div class="card" style="margin-bottom:14px">
+            <div class="card-header">
+              <span class="card-title">5 Piores Fornecedores</span>
+              <button class="btn btn-outline btn-sm" onclick="showPage('ranking',null)">Ver Todos</button>
+            </div>
+            <div class="card-body">
+              <table>
+                <thead><tr><th>No</th><th>Nome</th><th>Score</th></tr></thead>
+                <tbody id="worst5-body"></tbody>
+              </table>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-header">
+              <span class="card-title">Agenda de Compras Futuras</span>
+              <button class="btn btn-primary btn-sm" onclick="showPage('agenda',null)">+ Adicionar Pedido</button>
+            </div>
+            <div class="card-body" id="agenda-dash"></div>
+          </div>
+        </div>
+
+        <!-- Column 4: Convênios -->
+        <div class="conv-panel">
+          <div class="conv-tabs">
+            <div class="conv-tab active" onclick="switchConvTab('convenios', this)">Convênios</div>
+            <div class="conv-tab" onclick="switchConvTab('nacionais', this)">Nacionais</div>
+            <div class="conv-tab" onclick="switchConvTab('regionais', this)">Regionais</div>
+          </div>
+          <div class="conv-body">
+            <div class="conv-top">
+              <div class="conv-location">
+                <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+                Brás Nacional
+              </div>
+              <button class="conv-add-btn" onclick="openConvModal()">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
+                Novo Boletim
+              </button>
+            </div>
+
+            <!-- Convênios list -->
+            <div id="conv-list"></div>
+
+            <div style="display:flex;align-items:center;gap:8px;margin-top:10px">
+              <div class="conv-num" id="conv-count">4</div>
+              <span style="font-size:11px;color:var(--muted)">Brás Nacional</span>
+            </div>
+            <button class="conv-access-btn" onclick="showPage('convenios',null)">
+              <svg viewBox="0 0 24 24"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg>
+              Acessar Convênios Nacionais
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- FORNECEDORES -->
+    <div class="page" id="page-fornecedores">
+      <div class="search-bar">
+        <div class="search-wrap">
+          <svg viewBox="0 0 24 24"><path d="M21 21l-4.35-4.35M17 11A6 6 0 1 1 5 11a6 6 0 0 1 12 0z" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/></svg>
+          <input type="text" id="search-forn" placeholder="Buscar fornecedor..." oninput="renderFornecedores()">
+        </div>
+        <select id="filter-status" onchange="renderFornecedores()" style="width:160px">
+          <option value="">Todos os status</option>
+          <option value="Aprovado">Aprovado</option>
+          <option value="Pendente">Pendente</option>
+          <option value="Suspenso">Suspenso</option>
+        </select>
+        <select id="filter-cat" onchange="renderFornecedores()" style="width:160px">
+          <option value="">Todas as categorias</option>
+        </select>
+      </div>
+      <div class="card">
+        <div class="card-header"><span class="card-title" id="forn-count">Fornecedores</span><button class="btn btn-primary btn-sm" onclick="showPage('cad-fornecedor',null)">+ Novo</button></div>
+        <div class="card-body"><table><thead><tr><th>#</th><th>Nome</th><th>Categoria</th><th>CNPJ</th><th>Score</th><th>Status</th><th>Ações</th></tr></thead><tbody id="forn-body"></tbody></table></div>
+      </div>
+    </div>
+
+    <!-- RANKING -->
+    <div class="page" id="page-ranking">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
+        <div class="card">
+          <div class="card-header"><span class="card-title">🏆 Ranking — Melhores</span></div>
+          <div class="card-body"><table><thead><tr><th>Pos</th><th>Fornecedor</th><th>Categoria</th><th>Score</th><th>Status</th></tr></thead><tbody id="rank-best-body"></tbody></table></div>
+        </div>
+        <div class="card">
+          <div class="card-header"><span class="card-title">⚠️ Piores Fornecedores</span></div>
+          <div class="card-body"><table><thead><tr><th>Pos</th><th>Nome</th><th>Score</th></tr></thead><tbody id="rank-worst-body"></tbody></table></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- AGENDA -->
+    <div class="page" id="page-agenda">
+      <div style="display:flex;gap:16px;margin-bottom:18px;align-items:flex-start">
+        <div class="form-section" style="flex:1;margin-bottom:0">
+          <div class="form-section-title">Novo Pedido</div>
+          <div class="form-grid">
+            <div class="form-group"><label>Produto / Serviço</label><input id="ag-prod" type="text" placeholder="Nome do produto"></div>
+            <div class="form-group"><label>Fornecedor</label><select id="ag-forn"></select></div>
+            <div class="form-group"><label>Data</label><input id="ag-data" type="date"></div>
+            <div class="form-group"><label>Igrejas</label><input id="ag-igr" type="number" min="1" value="1"></div>
+            <div class="form-group full"><label>Observações</label><textarea id="ag-obs" rows="2" placeholder="Detalhes do pedido"></textarea></div>
+          </div>
+          <div class="form-actions"><button class="btn btn-primary" onclick="addAgenda()">+ Adicionar Pedido</button></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header"><span class="card-title">Agenda de Compras</span></div>
+        <div class="card-body"><table><thead><tr><th>#</th><th>Produto</th><th>Fornecedor</th><th>Data</th><th>Igrejas</th><th>Status</th><th>Ações</th></tr></thead><tbody id="agenda-body"></tbody></table></div>
+      </div>
+    </div>
+
+    <!-- CADASTRAR FORNECEDOR -->
+    <div class="page" id="page-cad-fornecedor">
+      <div class="form-section">
+        <div class="form-section-title">Dados do Fornecedor</div>
+        <div class="form-grid">
+          <div class="form-group"><label>Nome / Razão Social *</label><input id="f-nome" type="text" placeholder="Nome completo"></div>
+          <div class="form-group"><label>CNPJ / CPF *</label><input id="f-cnpj" type="text" placeholder="00.000.000/0001-00"></div>
+          <div class="form-group"><label>Categoria *</label>
+            <select id="f-cat">
+              <option value="">Selecione...</option>
+              <option>Construção</option><option>Limpeza</option><option>Tecnologia</option>
+              <option>Alimentação</option><option>Saúde</option><option>Materiais</option>
+              <option>Serviços Gerais</option><option>Transporte</option><option>Outros</option>
+            </select>
+          </div>
+          <div class="form-group"><label>E-mail</label><input id="f-email" type="email" placeholder="email@empresa.com"></div>
+          <div class="form-group"><label>Telefone</label><input id="f-tel" type="text" placeholder="(11) 99999-9999"></div>
+          <div class="form-group"><label>Responsável</label><input id="f-resp" type="text" placeholder="Nome do responsável"></div>
+          <div class="form-group full"><label>Endereço</label><input id="f-end" type="text" placeholder="Rua, número, bairro, cidade"></div>
+          <div class="form-group"><label>Status</label>
+            <select id="f-status"><option>Aprovado</option><option>Pendente</option><option>Suspenso</option></select>
+          </div>
+          <div class="form-group"><label>Score Inicial (1-5)</label><input id="f-score" type="number" min="1" max="5" step="0.1" value="3.0"></div>
+          <div class="form-group full"><label>Observações</label><textarea id="f-obs" rows="3" placeholder="Informações adicionais"></textarea></div>
+        </div>
+        <div class="form-actions">
+          <button class="btn btn-outline" onclick="clearFornForm()">Limpar</button>
+          <button class="btn btn-primary" onclick="saveFornecedor()">Salvar Fornecedor</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- USUÁRIOS -->
+    <div class="page" id="page-usuarios">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
+        <div>
+          <div class="form-section">
+            <div class="form-section-title" id="user-form-title">Novo Usuário</div>
+            <div class="form-group" style="margin-bottom:12px"><label>Nome Completo *</label><input id="u-nome" type="text" placeholder="Nome"></div>
+            <div class="form-group" style="margin-bottom:12px"><label>Login (usuário) *</label><input id="u-login" type="text" placeholder="usuario123"></div>
+            <div class="form-group" style="margin-bottom:12px"><label>E-mail</label><input id="u-email" type="email" placeholder="email@cns.com"></div>
+            <div class="form-group" style="margin-bottom:12px"><label>Perfil</label>
+              <select id="u-perfil"><option>Administrador</option><option>Gestor</option><option>Consultor</option></select>
+            </div>
+            <div class="form-group" style="margin-bottom:12px"><label>Senha *</label><input id="u-senha" type="password" placeholder="••••••••"></div>
+            <div class="form-group" style="margin-bottom:16px"><label>Confirmar Senha *</label><input id="u-senha2" type="password" placeholder="••••••••"></div>
+            <div class="form-actions">
+              <button class="btn btn-outline" onclick="clearUserForm()">Limpar</button>
+              <button class="btn btn-primary" id="u-save-btn" onclick="saveUser()">Salvar Usuário</button>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header"><span class="card-title">Usuários Cadastrados</span></div>
+          <div class="card-body"><table><thead><tr><th>Nome</th><th>Login</th><th>Perfil</th><th>Status</th><th>Ações</th></tr></thead><tbody id="users-body"></tbody></table></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CONVÊNIOS (página completa) -->
+    <div class="page" id="page-convenios">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
+        <div></div>
+        <button class="btn btn-primary" onclick="openConvModal()">+ Novo Convênio/Boletim</button>
+      </div>
+
+      <!-- Formulário de novo convênio -->
+      <div class="form-section" id="conv-form-section" style="display:none">
+        <div class="form-section-title">Novo Convênio / Boletim</div>
+        <div class="form-grid">
+          <div class="form-group"><label>Título *</label><input id="cv-titulo" type="text" placeholder="Ex: Boletim CNS Convênios Abril 2024"></div>
+          <div class="form-group"><label>Tipo</label>
+            <select id="cv-tipo"><option value="convenios">Convênios</option><option value="nacionais">Nacionais</option><option value="regionais">Regionais</option></select>
+          </div>
+          <div class="form-group"><label>URL da Imagem</label><input id="cv-img" type="url" placeholder="https://exemplo.com/imagem.jpg"></div>
+          <div class="form-group"><label>Igrejas</label><input id="cv-igrejas" type="number" min="0" value="0"></div>
+          <div class="form-group full"><label>Descrição</label><textarea id="cv-desc" rows="2" placeholder="Descrição opcional"></textarea></div>
+        </div>
+        <div class="form-actions">
+          <button class="btn btn-outline" onclick="closeConvForm()">Cancelar</button>
+          <button class="btn btn-primary" onclick="saveConvenio()">Salvar</button>
+        </div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px">
+        <div class="card">
+          <div class="card-header"><span class="card-title">Convênios</span></div>
+          <div class="card-body" style="padding:12px" id="conv-page-convenios"></div>
+        </div>
+        <div class="card">
+          <div class="card-header"><span class="card-title">Nacionais</span></div>
+          <div class="card-body" style="padding:12px" id="conv-page-nacionais"></div>
+        </div>
+        <div class="card">
+          <div class="card-header"><span class="card-title">Regionais</span></div>
+          <div class="card-body" style="padding:12px" id="conv-page-regionais"></div>
+        </div>
+      </div>
+    </div>
+
+  </content>
+</div>
+
+<!-- FOOTER -->
+<div id="app-footer">
+  Sistema desenvolvido por <span>Leandro Machado</span>
+</div>
+
+<!-- MODAL AVALIAÇÃO -->
+<div class="modal-bg" id="modal-aval">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="modal-title">Avaliar Fornecedor</span>
+      <button class="modal-close" onclick="closeModal('modal-aval')">✕</button>
+    </div>
+    <div class="modal-body">
+      <p id="modal-forn-name" style="font-weight:700;font-size:15px;margin-bottom:14px"></p>
+      <div class="form-group" style="margin-bottom:12px">
+        <label>Nota (clique nas estrelas)</label>
+        <div class="star-picker" id="star-picker">
+          <span data-v="1" onclick="setStar(1)">★</span>
+          <span data-v="2" onclick="setStar(2)">★</span>
+          <span data-v="3" onclick="setStar(3)">★</span>
+          <span data-v="4" onclick="setStar(4)">★</span>
+          <span data-v="5" onclick="setStar(5)">★</span>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Comentário</label>
+        <textarea id="aval-comment" rows="3" placeholder="Descreva sua avaliação..."></textarea>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('modal-aval')">Cancelar</button>
+      <button class="btn btn-primary" onclick="submitAval()">Salvar Avaliação</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL VER FORNECEDOR -->
+<div class="modal-bg" id="modal-view">
+  <div class="modal" style="width:560px">
+    <div class="modal-header">
+      <span class="modal-title" id="view-title">Detalhes do Fornecedor</span>
+      <button class="modal-close" onclick="closeModal('modal-view')">✕</button>
+    </div>
+    <div class="modal-body" id="view-body"></div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('modal-view')">Fechar</button>
+      <button class="btn btn-primary" id="view-edit-btn">Editar</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+// ─── STATE ───────────────────────────────────────────────────────────────────
+let currentUser = null;
+let editingFornId = null;
+let editingUserId = null;
+let avalFornId = null;
+let starVal = 0;
+// ID 1 é o usuário principal protegido
+const PRINCIPAL_USER_ID = 1;
+
+let fornecedores = [
+  {id:1,nome:'Serv-Técnica',cnpj:'12.345.678/0001-90',cat:'Tecnologia',email:'contato@servtecnica.com',tel:'(11)99001-0001',resp:'João Silva',end:'Av. Paulista 100, SP',status:'Aprovado',score:4.9,obs:'Parceiro premium',avals:[]},
+  {id:2,nome:'Construtora Firmeza',cnpj:'23.456.789/0001-01',cat:'Construção',email:'firmeza@mail.com',tel:'(11)99002-0002',resp:'Maria Santos',end:'Rua Augusta 200, SP',status:'Aprovado',score:4.8,obs:'',avals:[]},
+  {id:3,nome:'Floreste Materiais',cnpj:'34.567.890/0001-02',cat:'Materiais',email:'floreste@mail.com',tel:'(11)99003-0003',resp:'Carlos Lima',end:'Rua Vergueiro 300, SP',status:'Aprovado',score:4.7,obs:'',avals:[]},
+  {id:4,nome:'ABC Ltda.',cnpj:'45.678.901/0001-03',cat:'Serviços Gerais',email:'abc@mail.com',tel:'(11)99004-0004',resp:'Ana Costa',end:'',status:'Aprovado',score:4.6,obs:'',avals:[]},
+  {id:5,nome:'EletroBlue',cnpj:'56.789.012/0001-04',cat:'Tecnologia',email:'eletro@blue.com',tel:'(11)99005-0005',resp:'Pedro Ramos',end:'',status:'Aprovado',score:4.6,obs:'',avals:[]},
+  {id:6,nome:'ConsulMed',cnpj:'67.890.123/0001-05',cat:'Saúde',email:'consul@med.com',tel:'(11)99006-0006',resp:'Laura Mendes',end:'',status:'Aprovado',score:4.2,obs:'',avals:[]},
+  {id:7,nome:'FortePisos',cnpj:'78.901.234/0001-06',cat:'Construção',email:'forte@pisos.com',tel:'(11)99007-0007',resp:'Roberto Dias',end:'',status:'Aprovado',score:4.2,obs:'',avals:[]},
+  {id:8,nome:'TecPart Industrial',cnpj:'89.012.345/0001-07',cat:'Materiais',email:'tecpart@mail.com',tel:'(11)99008-0008',resp:'Fernanda Luz',end:'',status:'Aprovado',score:4.1,obs:'',avals:[]},
+  {id:9,nome:'DecoFlores',cnpj:'90.123.456/0001-08',cat:'Outros',email:'deco@flores.com',tel:'(11)99009-0009',resp:'Marcos Braga',end:'',status:'Pendente',score:4.2,obs:'',avals:[]},
+  {id:10,nome:'LavPro Limpeza',cnpj:'01.234.567/0001-09',cat:'Limpeza',email:'lavpro@mail.com',tel:'(11)99010-0010',resp:'Sônia Vera',end:'',status:'Aprovado',score:4.2,obs:'',avals:[]},
+  {id:11,nome:'Luma Distribuidora',cnpj:'11.222.333/0001-10',cat:'Materiais',email:'luma@dist.com',tel:'(11)99011-0011',resp:'Lúcia Lopes',end:'',status:'Suspenso',score:2.5,obs:'Problemas de entrega',avals:[]},
+  {id:12,nome:'MetalCarro',cnpj:'22.333.444/0001-11',cat:'Transporte',email:'metal@carro.com',tel:'(11)99012-0012',resp:'Tiago Ferro',end:'',status:'Suspenso',score:2.8,obs:'',avals:[]},
+  {id:13,nome:'Casa Fácil',cnpj:'33.444.555/0001-12',cat:'Serviços Gerais',email:'casa@facil.com',tel:'(11)99013-0013',resp:'Patrícia Gomes',end:'',status:'Pendente',score:2.9,obs:'',avals:[]},
+  {id:14,nome:'Dr. Plantas',cnpj:'44.555.666/0001-13',cat:'Outros',email:'dr@plantas.com',tel:'(11)99014-0014',resp:'Eduardo Flor',end:'',status:'Pendente',score:3.0,obs:'',avals:[]},
+  {id:15,nome:'Tintas Verde',cnpj:'55.666.777/0001-14',cat:'Materiais',email:'tintas@verde.com',tel:'(11)99015-0015',resp:'Renata Cor',end:'',status:'Pendente',score:3.1,obs:'',avals:[]},
+];
+
+let agenda = [
+  {id:1,prod:'João 355 Audio System',fornId:1,data:'2026-04-20',igrejas:5,obs:'',status:'Agendado'},
+  {id:2,prod:'Pintura e Reparos',fornId:2,data:'2026-04-22',igrejas:3,obs:'',status:'Agendado'},
+  {id:3,prod:'Lustres e Lâmpadas',fornId:5,data:'2026-04-25',igrejas:4,obs:'',status:'Agendado'},
+  {id:4,prod:'Sacos de Lixo',fornId:10,data:'2026-04-18',igrejas:8,obs:'',status:'Agendado'},
+  {id:5,prod:'Rolos de Fio',fornId:3,data:'2026-05-01',igrejas:7,obs:'',status:'Agendado'},
+  {id:6,prod:'Produtos de Limpeza',fornId:10,data:'2026-05-05',igrejas:4,obs:'',status:'Agendado'},
+  {id:7,prod:'Microfone Semfio Lapela',fornId:1,data:'2026-05-10',igrejas:6,obs:'',status:'Agendado'},
+];
+
+let users = [
+  {id:1,nome:'Administrador CNS',login:'admin',email:'admin@cns.com',perfil:'Administrador',senha:'1234',ativo:true},
+  {id:2,nome:'Gestor Regional',login:'gestor1',email:'gestor@cns.com',perfil:'Gestor',senha:'gestor123',ativo:true},
+];
+
+// Convênios data - suporta URL de imagem
+let convenios = [
+  {id:1,titulo:'Boletim CNS Convênios Abril 2024',tipo:'convenios',imgUrl:'',igrejas:10,desc:'Boletim mensal de convênios',dataCriacao:'há 11 hips'},
+  {id:2,titulo:'Convênios Regionais',tipo:'regionais',imgUrl:'',igrejas:4,desc:'Convênios das regiões',dataCriacao:'há 11 mrs'},
+  {id:3,titulo:'Boletim CNS - Fevereiro 2024',tipo:'convenios',imgUrl:'',igrejas:4,desc:'Boletim de fevereiro',dataCriacao:'há 11 mrs'},
+];
+let nextConvId = 4;
+
+let nextFornId = 16;
+let nextAgId = 8;
+let nextUserId = 3;
+let currentConvTab = 'convenios';
+
+// ─── LOGIN ───────────────────────────────────────────────────────────────────
+function doLogin(){
+  const u = document.getElementById('l-user').value.trim();
+  const p = document.getElementById('l-pass').value.trim();
+  const found = users.find(x=>x.login===u && x.senha===p && x.ativo);
+  if(found){
+    currentUser = found;
+    document.getElementById('login-screen').classList.remove('open');
+    document.getElementById('sb-uname').textContent = found.nome;
+    document.getElementById('sb-urole').textContent = found.perfil;
+    document.getElementById('sb-avatar').textContent = found.nome[0].toUpperCase();
+    renderAll();
+  } else {
+    document.getElementById('login-err').style.display='block';
+  }
+}
+function doLogout(){
+  currentUser = null;
+  document.getElementById('login-screen').classList.add('open');
+  document.getElementById('l-pass').value='';
+  document.getElementById('login-err').style.display='none';
+}
+document.getElementById('l-pass').addEventListener('keydown',e=>{if(e.key==='Enter')doLogin()});
+
+// ─── NAVIGATION ──────────────────────────────────────────────────────────────
+const pageTitles={dashboard:'Dashboard',fornecedores:'Fornecedores',ranking:'Ranking de Fornecedores','cad-fornecedor':'Cadastrar Fornecedor',agenda:'Agenda de Compras',usuarios:'Gestão de Usuários',convenios:'Convênios'};
+function showPage(id, el){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  document.getElementById('page-'+id).classList.add('active');
+  document.getElementById('top-title').textContent = pageTitles[id]||id;
+  if(el) el.classList.add('active');
+  if(id==='dashboard') renderDashboard();
+  if(id==='fornecedores'){renderFornecedores();populateCatFilter();}
+  if(id==='ranking') renderRanking();
+  if(id==='agenda') renderAgenda();
+  if(id==='usuarios') renderUsers();
+  if(id==='convenios') renderConveniosPage();
+  if(id==='cad-fornecedor'){ clearFornForm(); if(!editingFornId) document.getElementById('f-score').value='3.0'; }
+}
+
+// ─── HELPERS ─────────────────────────────────────────────────────────────────
+function stars(s){
+  let r='';
+  for(let i=1;i<=5;i++) r += i<=Math.round(s)?'★':'☆';
+  return r;
+}
+function scoreClass(s){ return s>=4.5?'score-good':s>=3.5?'score-mid':'score-bad'; }
+function statusBadge(s){
+  const m={Aprovado:'badge-green',Pendente:'badge-yellow',Suspenso:'badge-red',Agendado:'badge-blue',Concluído:'badge-gray'};
+  return `<span class="badge ${m[s]||'badge-gray'}">${s}</span>`;
+}
+function fmtDate(d){ if(!d) return '-'; const p=d.split('-'); return p[2]+'/'+p[1]+'/'+p[0]; }
+function toast(msg,type='success'){
+  const el=document.createElement('div');
+  el.className='toast-item '+(type);
+  el.innerHTML=(type==='success'?'✅ ':'❌ ')+msg;
+  document.getElementById('toast').appendChild(el);
+  setTimeout(()=>el.remove(),3000);
+}
+function closeModal(id){ document.getElementById(id).classList.remove('open'); }
+
+// ─── RENDER ALL ───────────────────────────────────────────────────────────────
+function renderAll(){
+  renderDashboard();
+  renderFornSelectAgenda();
+  populateCatFilter();
+}
+
+// ─── DASHBOARD ───────────────────────────────────────────────────────────────
+function renderDashboard(){
+  const total=fornecedores.length;
+  const aprov=fornecedores.filter(f=>f.status==='Aprovado').length;
+  const pend=fornecedores.filter(f=>f.status==='Pendente').length;
+  const docs=8;
+  document.getElementById('stats-row').innerHTML=`
+    <div class="stat-card blue"><div class="stat-icon"><svg viewBox="0 0 24 24"><path d="M20 7H4c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V9c0-1.1-.9-2-2-2z"/></svg></div><div><div class="stat-number">${total}</div><div class="stat-label">Fornecedores Cadastrados</div></div></div>
+    <div class="stat-card green"><div class="stat-icon"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg></div><div><div class="stat-number">${aprov}</div><div class="stat-label">Aprovados</div></div></div>
+    <div class="stat-card red"><div class="stat-icon"><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg></div><div><div class="stat-number">${pend}</div><div class="stat-label">Pendentes de Avaliação</div></div></div>
+    <div class="stat-card orange"><div class="stat-icon"><svg viewBox="0 0 24 24"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67V7z"/></svg></div><div><div class="stat-number">${docs}</div><div class="stat-label">Documentos a Vencer</div></div></div>
+  `;
+
+  // top 10
+  const sorted=[...fornecedores].sort((a,b)=>b.score-a.score);
+  const top10=sorted.slice(0,10);
+  document.getElementById('top10-body').innerHTML=top10.map((f,i)=>`
+    <tr><td><span class="rank-badge ${i<3?'rank-'+(i+1):'rank-n'}">${i+1}</span></td>
+    <td style="max-width:100px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap"><b>${f.nome}</b></td>
+    <td><span class="stars">${stars(f.score)}</span></td>
+    <td><span class="${scoreClass(f.score)}">${f.score.toFixed(1)}</span></td></tr>`).join('');
+
+  // worst 5
+  const worst5=[...fornecedores].sort((a,b)=>a.score-b.score).slice(0,5);
+  document.getElementById('worst5-body').innerHTML=worst5.map((f,i)=>`
+    <tr><td><span class="rank-badge rank-n">${i+1}</span></td>
+    <td><b>${f.nome}</b></td>
+    <td><span class="${scoreClass(f.score)}">${f.score.toFixed(1)}</span></td></tr>`).join('');
+
+  // agenda dash
+  document.getElementById('agenda-dash').innerHTML=agenda.slice(0,7).map(a=>{
+    const colors=['#2256c7','#e87c1a','#1ea96a','#9333ea','#e03535','#0891b2','#f0a500'];
+    const colorIdx=parseInt(a.id)%colors.length;
+    return `<div class="agenda-item">
+      <div class="agenda-num" style="background:${colors[colorIdx]}">${String(a.id).padStart(2,'0')}</div>
+      <div class="agenda-label">${a.prod}</div>
+      <div class="agenda-meta">${a.igrejas} igrejas</div>
+      <div class="agenda-badge" style="background:${colors[colorIdx]}">${a.igrejas}</div>
+    </div>`;
+  }).join('');
+
+  // atividades recentes
+  document.getElementById('atividades-body').innerHTML=`
+    <div class="atividade-item"><div class="ativ-icon" style="background:#dce8ff">👤</div><div>João indicou o fornecedor <b>ABC Ltda.</b></div></div>
+    <div class="atividade-item"><div class="ativ-icon" style="background:#fde2e2">📄</div><div>Documento CNA em vencimento</div></div>
+    <div class="atividade-item"><div class="ativ-icon" style="background:#fff3d4">⚠️</div><div>Avaliação pendente para a <b>Empresa XYZ</b></div></div>
+    <div class="atividade-item"><div class="ativ-icon" style="background:#d4f5e5">✅</div><div>Novo fornecedor aprovado: <b>Serv-Técnica</b></div></div>
+  `;
+
+  // convênios no dashboard
+  renderConvDash();
+}
+
+// ─── CONVÊNIOS ───────────────────────────────────────────────────────────────
+function switchConvTab(tab, el){
+  currentConvTab = tab;
+  document.querySelectorAll('.conv-tab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  renderConvDash();
+}
+
+function renderConvDash(){
+  const filtered = convenios.filter(c => c.tipo === currentConvTab || currentConvTab === 'convenios');
+  const listEl = document.getElementById('conv-list');
+  if(!listEl) return;
+
+  listEl.innerHTML = filtered.slice(0,3).map(c => {
+    const hasImg = c.imgUrl && c.imgUrl.trim() !== '';
+    return `<div class="conv-card" title="${c.titulo}">
+      ${hasImg
+        ? `<img class="conv-img" src="${c.imgUrl}" alt="${c.titulo}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">`
+        : ''}
+      <div class="conv-img-placeholder" style="${hasImg?'display:none':''}">
+        <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 3c1.93 0 3.5 1.57 3.5 3.5S13.93 13 12 13s-3.5-1.57-3.5-3.5S10.07 6 12 6zm7 13H5v-.23c0-.62.28-1.2.76-1.58C7.47 15.82 9.64 15 12 15s4.53.82 6.24 2.19c.48.38.76.97.76 1.58V19z"/></svg>
+      </div>
+      <div class="conv-info">
+        <div class="conv-title">${c.titulo}</div>
+        <div class="conv-meta">${c.igrejas} Igrejas • ${c.dataCriacao||'recente'}</div>
+      </div>
+    </div>`;
+  }).join('');
+
+  document.getElementById('conv-count').textContent = filtered.length;
+}
+
+function openConvModal(){
+  document.getElementById('conv-form-section').style.display='block';
+  showPage('convenios', document.querySelector('.nav-item:nth-child(9)'));
+  document.getElementById('conv-form-section').scrollIntoView({behavior:'smooth'});
+}
+
+function closeConvForm(){
+  document.getElementById('conv-form-section').style.display='none';
+  ['cv-titulo','cv-img','cv-desc'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('cv-igrejas').value='0';
+}
+
+function saveConvenio(){
+  const titulo = document.getElementById('cv-titulo').value.trim();
+  if(!titulo){toast('Informe o título','error');return;}
+  const obj = {
+    id: nextConvId++,
+    titulo,
+    tipo: document.getElementById('cv-tipo').value,
+    imgUrl: document.getElementById('cv-img').value.trim(),
+    igrejas: parseInt(document.getElementById('cv-igrejas').value)||0,
+    desc: document.getElementById('cv-desc').value.trim(),
+    dataCriacao: 'agora'
+  };
+  convenios.push(obj);
+  closeConvForm();
+  renderConveniosPage();
+  renderConvDash();
+  toast('Convênio salvo!');
+}
+
+function deleteConvenio(id){
+  if(confirm('Excluir este convênio/boletim?')){
+    convenios = convenios.filter(c=>c.id!==id);
+    renderConveniosPage();
+    renderConvDash();
+    toast('Convênio removido!');
+  }
+}
+
+function renderConveniosPage(){
+  ['convenios','nacionais','regionais'].forEach(tipo=>{
+    const el = document.getElementById('conv-page-'+tipo);
+    if(!el) return;
+    const list = convenios.filter(c=>c.tipo===tipo);
+    if(list.length===0){
+      el.innerHTML='<p style="color:var(--muted);font-size:12px;padding:8px">Nenhum item cadastrado.</p>';
+      return;
+    }
+    el.innerHTML = list.map(c=>{
+      const hasImg = c.imgUrl && c.imgUrl.trim()!=='';
+      return `<div class="conv-manage-item">
+        ${hasImg
+          ? `<img class="conv-manage-img" src="${c.imgUrl}" alt="${c.titulo}" onerror="this.style.display='none'">`
+          : `<div class="conv-manage-img" style="background:linear-gradient(135deg,var(--navy),var(--blue));display:flex;align-items:center;justify-content:center">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="#fff"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"/></svg>
+            </div>`}
+        <div class="conv-manage-info">
+          <div class="conv-manage-title">${c.titulo}</div>
+          <div class="conv-manage-meta">${c.igrejas} Igrejas • ${c.dataCriacao||'recente'}</div>
+          ${c.imgUrl?`<div style="font-size:10px;color:var(--blue);margin-top:2px;word-break:break-all">${c.imgUrl.substring(0,40)}...</div>`:''}
+        </div>
+        <div class="conv-manage-actions">
+          <button class="btn btn-red btn-sm" onclick="deleteConvenio(${c.id})">✕</button>
+        </div>
+      </div>`;
+    }).join('');
+  });
+}
+
+// ─── FORNECEDORES ─────────────────────────────────────────────────────────────
+function populateCatFilter(){
+  const cats=[...new Set(fornecedores.map(f=>f.cat))].sort();
+  const sel=document.getElementById('filter-cat');
+  sel.innerHTML='<option value="">Todas as categorias</option>'+cats.map(c=>`<option>${c}</option>`).join('');
+}
+function renderFornecedores(){
+  const q=document.getElementById('search-forn').value.toLowerCase();
+  const st=document.getElementById('filter-status').value;
+  const cat=document.getElementById('filter-cat').value;
+  let list=fornecedores.filter(f=>{
+    return(!q||f.nome.toLowerCase().includes(q)||f.cnpj.includes(q)||f.cat.toLowerCase().includes(q))&&
+      (!st||f.status===st)&&(!cat||f.cat===cat);
+  });
+  document.getElementById('forn-count').textContent=`Fornecedores (${list.length})`;
+  document.getElementById('forn-body').innerHTML=list.map((f,i)=>`
+    <tr><td>${i+1}</td><td><b>${f.nome}</b><br><small style="color:var(--muted)">${f.cnpj}</small></td>
+    <td>${f.cat}</td><td style="font-size:12px;color:var(--muted)">${f.cnpj}</td>
+    <td><span class="stars">${stars(f.score)}</span> <span class="${scoreClass(f.score)}">${f.score.toFixed(1)}</span></td>
+    <td>${statusBadge(f.status)}</td>
+    <td style="white-space:nowrap">
+      <button class="btn btn-outline btn-sm" onclick="viewForn(${f.id})">Ver</button>
+      <button class="btn btn-outline btn-sm" style="color:var(--blue)" onclick="editForn(${f.id})">Editar</button>
+      <button class="btn btn-outline btn-sm" style="color:var(--gold)" onclick="openAval(${f.id})">Avaliar</button>
+      <button class="btn btn-outline btn-sm" style="color:var(--red)" onclick="deleteForn(${f.id})">✕</button>
+    </td></tr>`).join('');
+}
+
+// ─── RANKING ─────────────────────────────────────────────────────────────────
+function renderRanking(){
+  const sorted=[...fornecedores].sort((a,b)=>b.score-a.score);
+  document.getElementById('rank-best-body').innerHTML=sorted.map((f,i)=>`
+    <tr><td><span class="rank-badge ${i<3?'rank-'+(i+1):'rank-n'}">${i+1}</span></td>
+    <td><b>${f.nome}</b></td><td>${f.cat}</td>
+    <td><span class="stars">${stars(f.score)}</span> <span class="${scoreClass(f.score)}">${f.score.toFixed(1)}</span></td>
+    <td>${statusBadge(f.status)}</td></tr>`).join('');
+  const worst=[...fornecedores].sort((a,b)=>a.score-b.score).slice(0,8);
+  document.getElementById('rank-worst-body').innerHTML=worst.map((f,i)=>`
+    <tr><td><span class="rank-badge rank-n">${i+1}</span></td>
+    <td><b>${f.nome}</b><br><small style="color:var(--muted)">${f.cat}</small></td>
+    <td><span class="stars">${stars(f.score)}</span> <span class="${scoreClass(f.score)}">${f.score.toFixed(1)}</span></td></tr>`).join('');
+}
+
+// ─── AGENDA ──────────────────────────────────────────────────────────────────
+function renderFornSelectAgenda(){
+  const sel=document.getElementById('ag-forn');
+  if(!sel) return;
+  sel.innerHTML=fornecedores.map(f=>`<option value="${f.id}">${f.nome}</option>`).join('');
+}
+function renderAgenda(){
+  renderFornSelectAgenda();
+  document.getElementById('agenda-body').innerHTML=agenda.map(a=>{
+    const f=fornecedores.find(x=>x.id===a.fornId);
+    return `<tr><td><b>${String(a.id).padStart(2,'0')}</b></td>
+      <td>${a.prod}</td><td>${f?f.nome:'-'}</td>
+      <td>${fmtDate(a.data)}</td><td>${a.igrejas}</td>
+      <td>${statusBadge(a.status)}</td>
+      <td style="white-space:nowrap">
+        <button class="btn btn-outline btn-sm" style="color:var(--green)" onclick="setAgStatus(${a.id},'Concluído')">✓</button>
+        <button class="btn btn-outline btn-sm" style="color:var(--red)" onclick="delAgenda(${a.id})">✕</button>
+      </td></tr>`;
+  }).join('');
+}
+function addAgenda(){
+  const prod=document.getElementById('ag-prod').value.trim();
+  const fornId=parseInt(document.getElementById('ag-forn').value);
+  const data=document.getElementById('ag-data').value;
+  const igr=parseInt(document.getElementById('ag-igr').value)||1;
+  const obs=document.getElementById('ag-obs').value;
+  if(!prod){toast('Informe o produto','error');return;}
+  agenda.push({id:nextAgId++,prod,fornId,data,igrejas:igr,obs,status:'Agendado'});
+  document.getElementById('ag-prod').value='';
+  document.getElementById('ag-obs').value='';
+  renderAgenda();
+  toast('Pedido adicionado!');
+}
+function setAgStatus(id,st){ const a=agenda.find(x=>x.id===id); if(a){a.status=st;renderAgenda();toast('Status atualizado!');} }
+function delAgenda(id){ if(confirm('Remover pedido?')){agenda=agenda.filter(x=>x.id!==id);renderAgenda();toast('Pedido removido!');} }
+
+// ─── SAVE FORNECEDOR ─────────────────────────────────────────────────────────
+function saveFornecedor(){
+  const nome=document.getElementById('f-nome').value.trim();
+  const cnpj=document.getElementById('f-cnpj').value.trim();
+  const cat=document.getElementById('f-cat').value;
+  if(!nome||!cat){toast('Nome e Categoria são obrigatórios','error');return;}
+  const obj={
+    id:editingFornId||nextFornId++,
+    nome,cnpj,cat,
+    email:document.getElementById('f-email').value.trim(),
+    tel:document.getElementById('f-tel').value.trim(),
+    resp:document.getElementById('f-resp').value.trim(),
+    end:document.getElementById('f-end').value.trim(),
+    status:document.getElementById('f-status').value,
+    score:parseFloat(document.getElementById('f-score').value)||3.0,
+    obs:document.getElementById('f-obs').value.trim(),
+    avals:[]
+  };
+  if(editingFornId){
+    const idx=fornecedores.findIndex(f=>f.id===editingFornId);
+    obj.avals=fornecedores[idx].avals;
+    fornecedores[idx]=obj;
+    toast('Fornecedor atualizado!');
+  } else {
+    fornecedores.push(obj);
+    toast('Fornecedor cadastrado!');
+  }
+  editingFornId=null;
+  clearFornForm();
+  populateCatFilter();
+  renderFornSelectAgenda();
+  showPage('fornecedores',document.querySelector('.nav-item:nth-child(3)'));
+}
+function clearFornForm(){
+  ['f-nome','f-cnpj','f-email','f-tel','f-resp','f-end','f-obs'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('f-cat').value='';
+  document.getElementById('f-status').value='Aprovado';
+  document.getElementById('f-score').value='3.0';
+  editingFornId=null;
+}
+function editForn(id){
+  const f=fornecedores.find(x=>x.id===id);
+  if(!f) return;
+  editingFornId=id;
+  document.getElementById('f-nome').value=f.nome;
+  document.getElementById('f-cnpj').value=f.cnpj;
+  document.getElementById('f-cat').value=f.cat;
+  document.getElementById('f-email').value=f.email;
+  document.getElementById('f-tel').value=f.tel;
+  document.getElementById('f-resp').value=f.resp;
+  document.getElementById('f-end').value=f.end;
+  document.getElementById('f-status').value=f.status;
+  document.getElementById('f-score').value=f.score;
+  document.getElementById('f-obs').value=f.obs;
+  showPage('cad-fornecedor',null);
+  document.getElementById('top-title').textContent='Editar Fornecedor';
+}
+function deleteForn(id){
+  if(confirm('Excluir este fornecedor?')){
+    fornecedores=fornecedores.filter(f=>f.id!==id);
+    renderFornecedores();
+    toast('Fornecedor removido!');
+  }
+}
+function viewForn(id){
+  const f=fornecedores.find(x=>x.id===id);
+  if(!f) return;
+  document.getElementById('view-title').textContent=f.nome;
+  document.getElementById('view-body').innerHTML=`
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;font-size:13px">
+      <div><b>CNPJ</b><br>${f.cnpj||'-'}</div>
+      <div><b>Categoria</b><br>${f.cat}</div>
+      <div><b>E-mail</b><br>${f.email||'-'}</div>
+      <div><b>Telefone</b><br>${f.tel||'-'}</div>
+      <div><b>Responsável</b><br>${f.resp||'-'}</div>
+      <div><b>Status</b><br>${statusBadge(f.status)}</div>
+      <div style="grid-column:span 2"><b>Endereço</b><br>${f.end||'-'}</div>
+      <div style="grid-column:span 2"><b>Score</b><br><span class="stars" style="font-size:18px">${stars(f.score)}</span> <span class="${scoreClass(f.score)}" style="font-size:18px;font-weight:800">${f.score.toFixed(1)}</span></div>
+      ${f.obs?`<div style="grid-column:span 2"><b>Observações</b><br>${f.obs}</div>`:''}
+    </div>`;
+  document.getElementById('view-edit-btn').onclick=()=>{closeModal('modal-view');editForn(id);};
+  document.getElementById('modal-view').classList.add('open');
+}
+
+// ─── AVALIAÇÃO ───────────────────────────────────────────────────────────────
+function openAval(id){
+  avalFornId=id;
+  starVal=0;
+  setStar(0);
+  document.getElementById('aval-comment').value='';
+  const f=fornecedores.find(x=>x.id===id);
+  document.getElementById('modal-forn-name').textContent=f?f.nome:'';
+  document.getElementById('modal-aval').classList.add('open');
+}
+function setStar(v){
+  starVal=v;
+  document.querySelectorAll('#star-picker span').forEach(s=>{
+    s.classList.toggle('on',parseInt(s.dataset.v)<=v);
+  });
+}
+function submitAval(){
+  if(!starVal){toast('Selecione uma nota','error');return;}
+  const f=fornecedores.find(x=>x.id===avalFornId);
+  if(!f) return;
+  f.avals.push({score:starVal,comment:document.getElementById('aval-comment').value,by:currentUser?.nome,date:new Date().toLocaleDateString('pt-BR')});
+  const avg=f.avals.reduce((s,a)=>s+a.score,0)/f.avals.length;
+  f.score=Math.round(avg*10)/10;
+  closeModal('modal-aval');
+  toast('Avaliação salva! Novo score: '+f.score.toFixed(1));
+  renderFornecedores();
+}
+
+// ─── USUÁRIOS ────────────────────────────────────────────────────────────────
+function renderUsers(){
+  document.getElementById('users-body').innerHTML=users.map(u=>{
+    const isPrincipal = u.id === PRINCIPAL_USER_ID;
+    return `<tr>
+      <td><b>${u.nome}</b>${isPrincipal ? ' <span class="badge badge-blue" style="font-size:9px">Principal</span>' : ''}</td>
+      <td>${u.login}</td>
+      <td><span class="badge badge-blue">${u.perfil}</span></td>
+      <td>${u.ativo?'<span class="badge badge-green">Ativo</span>':'<span class="badge badge-red">Inativo</span>'}</td>
+      <td style="white-space:nowrap">
+        <button class="btn btn-outline btn-sm" onclick="editUser(${u.id})">Editar</button>
+        <button class="btn btn-outline btn-sm" style="color:${u.ativo?'var(--red)':'var(--green)'}" onclick="toggleUser(${u.id})">${u.ativo?'Desativar':'Ativar'}</button>
+        ${!isPrincipal ? `<button class="btn btn-red btn-sm" onclick="deleteUser(${u.id})" title="Excluir usuário">🗑 Excluir</button>` : `<button class="btn btn-sm" style="background:#eef2f9;color:var(--muted);cursor:not-allowed" disabled title="Usuário principal não pode ser excluído">🔒</button>`}
+      </td></tr>`;
+  }).join('');
+}
+
+function deleteUser(id){
+  if(id === PRINCIPAL_USER_ID){
+    toast('O usuário principal não pode ser excluído!','error');
+    return;
+  }
+  if(id === currentUser?.id){
+    toast('Você não pode excluir seu próprio usuário!','error');
+    return;
+  }
+  const u = users.find(x=>x.id===id);
+  if(!u) return;
+  if(confirm(`Deseja realmente excluir o usuário "${u.nome}"? Esta ação não pode ser desfeita.`)){
+    users = users.filter(x=>x.id!==id);
+    renderUsers();
+    toast('Usuário excluído com sucesso!');
+  }
+}
+
+function saveUser(){
+  const nome=document.getElementById('u-nome').value.trim();
+  const login=document.getElementById('u-login').value.trim();
+  const email=document.getElementById('u-email').value.trim();
+  const perfil=document.getElementById('u-perfil').value;
+  const senha=document.getElementById('u-senha').value;
+  const senha2=document.getElementById('u-senha2').value;
+  if(!nome||!login){toast('Nome e Login são obrigatórios','error');return;}
+  if(senha && senha!==senha2){toast('As senhas não conferem','error');return;}
+  if(editingUserId){
+    const u=users.find(x=>x.id===editingUserId);
+    u.nome=nome;u.login=login;u.email=email;u.perfil=perfil;
+    if(senha) u.senha=senha;
+    toast('Usuário atualizado!');
+  } else {
+    if(!senha){toast('Informe uma senha','error');return;}
+    const exists=users.find(x=>x.login===login);
+    if(exists){toast('Login já existe','error');return;}
+    users.push({id:nextUserId++,nome,login,email,perfil,senha,ativo:true});
+    toast('Usuário criado!');
+  }
+  editingUserId=null;
+  clearUserForm();
+  renderUsers();
+}
+function clearUserForm(){
+  ['u-nome','u-login','u-email','u-senha','u-senha2'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('u-perfil').value='Consultor';
+  editingUserId=null;
+  document.getElementById('user-form-title').textContent='Novo Usuário';
+  document.getElementById('u-save-btn').textContent='Salvar Usuário';
+}
+function editUser(id){
+  const u=users.find(x=>x.id===id);
+  if(!u) return;
+  editingUserId=id;
+  document.getElementById('u-nome').value=u.nome;
+  document.getElementById('u-login').value=u.login;
+  document.getElementById('u-email').value=u.email||'';
+  document.getElementById('u-perfil').value=u.perfil;
+  document.getElementById('u-senha').value='';
+  document.getElementById('u-senha2').value='';
+  document.getElementById('user-form-title').textContent='Editar Usuário';
+  document.getElementById('u-save-btn').textContent='Atualizar Usuário';
+}
+function toggleUser(id){
+  const u=users.find(x=>x.id===id);
+  if(u.id===currentUser?.id){toast('Não é possível desativar seu próprio usuário','error');return;}
+  if(u.id===PRINCIPAL_USER_ID && u.ativo){toast('Não é possível desativar o usuário principal','error');return;}
+  u.ativo=!u.ativo;renderUsers();toast(u.ativo?'Usuário ativado!':'Usuário desativado!');
+}
+</script>
+</body>
+</html>
