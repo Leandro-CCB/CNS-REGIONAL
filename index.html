@@ -625,12 +625,16 @@ textarea{resize:vertical;min-height:80px}
         .pp-btn-del:hover{background:#f9c0c0}
         .pp-btn svg{width:15px;height:15px;fill:currentColor}
         .pp-num{font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:800;color:var(--muted)}
-        .pp-cidade{background:var(--navy);color:#fff;border-radius:30px;padding:9px 18px;font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:800;font-style:italic;text-align:center}
+        .pp-cidade{background:#e8eef8;color:var(--navy);border-radius:30px;padding:9px 18px;font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:800;font-style:italic;text-align:center;border:1.5px solid #c5d3ea}
         .pp-valor{background:#fff;border:2px solid var(--border);border-radius:30px;padding:9px 18px;font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:800;color:var(--navy);text-align:center}
-        .pp-perc{background:var(--green);color:#fff;border-radius:30px;padding:9px 18px;font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:800;font-style:italic;text-align:center}
+        .pp-perc{background:#d4f5e5;color:#0f6e3d;border-radius:30px;padding:9px 18px;font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:800;font-style:italic;text-align:center;border:1.5px solid #a3e4c4}
         .pp-section-title{font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:800;color:var(--navy);margin-bottom:14px}
         .pp-checklist{display:flex;flex-direction:column;gap:10px}
-        .pp-check-item{background:var(--blue-light);color:#fff;border-radius:12px;padding:14px 20px;display:flex;align-items:center;gap:14px;font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:700;letter-spacing:.5px}
+        .pp-check-item{background:var(--blue-light);color:#fff;border-radius:12px;padding:12px 16px;display:flex;align-items:center;gap:14px;font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:700;letter-spacing:.5px}
+        .pp-check-label{flex:1}
+        .pp-link-btn{background:rgba(255,255,255,.22);border:1.5px solid rgba(255,255,255,.45);border-radius:7px;color:#fff;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:4px;white-space:nowrap;transition:.15s;font-family:'Barlow',sans-serif;text-decoration:none}
+        .pp-link-btn:hover{background:rgba(255,255,255,.38)}
+        .pp-link-btn svg{width:12px;height:12px;fill:#fff;flex-shrink:0}
         .pp-check-icon{width:28px;height:28px;background:rgba(255,255,255,.25);border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:14px}
         .pp-add-row{display:flex;justify-content:flex-end;margin-bottom:16px}
         .pp-two-col{display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:start}
@@ -670,7 +674,7 @@ textarea{resize:vertical;min-height:80px}
         <!-- Left: Lista de igrejas -->
         <div class="pp-card">
           <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
-            <div class="pp-section-title">Igrejas Implantadas</div>
+            <div class="pp-section-title">Cidades Implantadas</div>
             <button class="btn btn-primary btn-sm" onclick="document.getElementById('modal-pp-add').classList.add('open')">+ Adicionar</button>
           </div>
           <div class="pp-list" id="pp-list"></div>
@@ -679,12 +683,7 @@ textarea{resize:vertical;min-height:80px}
         <!-- Right: Checklist -->
         <div class="pp-card">
           <div class="pp-section-title">Componentes do Programa</div>
-          <div class="pp-checklist">
-            <div class="pp-check-item"><div class="pp-check-icon">✓</div> IMPLANTAÇÃO</div>
-            <div class="pp-check-item"><div class="pp-check-icon">✓</div> POP</div>
-            <div class="pp-check-item"><div class="pp-check-icon">✓</div> MATERIAIS</div>
-            <div class="pp-check-item"><div class="pp-check-icon">✓</div> CONTROLE</div>
-          </div>
+          <div class="pp-checklist" id="pp-checklist"></div>
         </div>
       </div>
     </div>
@@ -1426,6 +1425,77 @@ function saveEditPP(){
   editingPPIndex = -1;
 }
 
-// also render on showPage hook — call after existing init
-setTimeout(renderPP, 300);
+// ─── COMPONENTES DO PROGRAMA (links) ────────────────────────────────────────
+let ppComponents = [
+  {label:'IMPLANTAÇÃO', link:''},
+  {label:'POP',         link:''},
+  {label:'MATERIAIS',   link:''},
+  {label:'CONTROLE',    link:''},
+];
+let editingCompIndex = -1;
+
+function renderPPChecklist(){
+  const el = document.getElementById('pp-checklist');
+  if(!el) return;
+  el.innerHTML = ppComponents.map((c,i) => `
+    <div class="pp-check-item">
+      <div class="pp-check-icon">✓</div>
+      <span class="pp-check-label">${c.label}</span>
+      ${c.link
+        ? `<a class="pp-link-btn" href="${c.link}" target="_blank" rel="noopener">
+             <svg viewBox="0 0 24 24"><path d="M14 3h7v7h-2V6.41l-9.29 9.3-1.42-1.42L17.59 5H14V3zM5 5h6V3H5C3.9 3 3 3.9 3 5v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2v-6h-2v6H5V5z"/></svg>
+             Abrir
+           </a>`
+        : ''}
+      <button class="pp-link-btn" onclick="openLinkModal(${i})" title="Atribuir link" style="background:rgba(255,255,255,.15);border-color:rgba(255,255,255,.35)">
+        <svg viewBox="0 0 24 24"><path d="M17 7h-4v2h4c1.65 0 3 1.35 3 3s-1.35 3-3 3h-4v2h4c2.76 0 5-2.24 5-5s-2.24-5-5-5zm-6 8H7c-1.65 0-3-1.35-3-3s1.35-3 3-3h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-2zm1-4H8v2h8v-2z"/></svg>
+        ${c.link ? 'Editar' : 'Link'}
+      </button>
+    </div>`).join('');
+}
+
+function openLinkModal(i){
+  editingCompIndex = i;
+  document.getElementById('comp-link-label').textContent = ppComponents[i].label;
+  document.getElementById('comp-link-input').value = ppComponents[i].link || '';
+  document.getElementById('modal-comp-link').classList.add('open');
+  setTimeout(()=>document.getElementById('comp-link-input').focus(),100);
+}
+
+function saveCompLink(){
+  if(editingCompIndex < 0) return;
+  const val = document.getElementById('comp-link-input').value.trim();
+  // Auto-add https:// if user typed a URL without protocol
+  ppComponents[editingCompIndex].link = val && !val.startsWith('http') ? 'https://'+val : val;
+  renderPPChecklist();
+  document.getElementById('modal-comp-link').classList.remove('open');
+  toast('Link salvo!');
+  editingCompIndex = -1;
+}
+
+setTimeout(renderPPChecklist, 310);
+
 </script>
+
+<!-- MODAL: Atribuir Link ao Componente -->
+<div class="modal-bg" id="modal-comp-link">
+  <div class="modal" style="width:440px">
+    <div class="modal-header">
+      <span class="modal-title">🔗 Atribuir Link — <span id="comp-link-label"></span></span>
+      <button class="modal-close" onclick="document.getElementById('modal-comp-link').classList.remove('open')">×</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label>URL do documento / página</label>
+        <input id="comp-link-input" type="url" placeholder="https://exemplo.com/documento">
+      </div>
+      <p style="font-size:11px;color:var(--muted);margin-top:8px">Cole o link que este cartão deve abrir. Deixe em branco para remover.</p>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="document.getElementById('modal-comp-link').classList.remove('open')">Cancelar</button>
+      <button class="btn btn-primary" onclick="saveCompLink()">Salvar Link</button>
+    </div>
+  </div>
+</div>
+</body>
+</html>
