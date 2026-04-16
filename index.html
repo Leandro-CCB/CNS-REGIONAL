@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>CNS – Gestão de Fornecedores</title>
+<title>COMISSÃO REGIONAL DE SUPRIMENTOS</title>
 <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700;800&family=Barlow+Condensed:wght@600;700;800&display=swap" rel="stylesheet">
 <style>
 :root{
@@ -243,12 +243,9 @@ textarea{resize:vertical;min-height:80px}
 <!-- LOGIN -->
 <div id="login-screen" class="open">
   <div class="login-box">
-    <div class="login-logo">
-      <div class="login-logo-icon">
-        <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
-      </div>
-      <h1>CNS</h1>
-      <p>Gestão de Fornecedores</p>
+    <div class="login-logo" style="display:flex;flex-direction:column;align-items:center;justify-content:center;margin-bottom:28px">
+      <img src="logo.jpeg" alt="Logo" style="width:160px;height:160px;object-fit:contain;border-radius:12px;margin-bottom:12px">
+      <h1 style="font-size:20px;line-height:1.3;text-align:center;color:var(--navy);font-family:'Barlow Condensed',sans-serif;font-weight:800">COMISSÃO REGIONAL<br>DE SUPRIMENTOS</h1>
     </div>
     <div class="login-error" id="login-err">Usuário ou senha incorretos.</div>
     <div class="form-group" style="margin-bottom:12px">
@@ -267,7 +264,7 @@ textarea{resize:vertical;min-height:80px}
 <div id="sidebar">
   <div class="brand">
     <div class="brand-icon"><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"/></svg></div>
-    <div><div class="brand-name">CNS</div><div class="brand-sub">Gestão de Fornecedores</div></div>
+    <div><div class="brand-name" style="font-size:11px;line-height:1.2">COMISSÃO REGIONAL<br>DE SUPRIMENTOS</div><div class="brand-sub">Gestão de Fornecedores</div></div>
   </div>
   <nav>
     <div class="nav-section">Principal</div>
@@ -293,6 +290,9 @@ textarea{resize:vertical;min-height:80px}
     </div>
     <div class="nav-item" onclick="showPage('convenios',this)">
       <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 3c1.93 0 3.5 1.57 3.5 3.5S13.93 13 12 13s-3.5-1.57-3.5-3.5S10.07 6 12 6zm7 13H5v-.23c0-.62.28-1.2.76-1.58C7.47 15.82 9.64 15 12 15s4.53.82 6.24 2.19c.48.38.76.97.76 1.58V19z"/></svg> Convênios
+    </div>
+    <div class="nav-item" onclick="showPage('pintura',this)">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 14c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3zm13.71-9.37l-1.34-1.34a1 1 0 0 0-1.41 0L9 12.25 11.75 15l8.96-8.96a1 1 0 0 0 0-1.41z"/></svg> Pintura Programada
     </div>
     <div class="nav-item" onclick="doLogout()">
       <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5-5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"/></svg> Sair
@@ -343,7 +343,7 @@ textarea{resize:vertical;min-height:80px}
             <div class="menu-btn-icon"><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 5h2v6H11zm0 8h2v2h-2z"/></svg></div>
             <div>Projeto Meia Luz</div>
           </button>
-          <button class="menu-btn coral" onclick="showPage('agenda',null)">
+          <button class="menu-btn coral" onclick="showPage('pintura',null)">
             <div class="menu-btn-icon"><svg viewBox="0 0 24 24"><path d="M7 14c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3zm13.71-9.37l-1.34-1.34a1 1 0 0 0-1.41 0L9 12.25 11.75 15l8.96-8.96a1 1 0 0 0 0-1.41z"/></svg></div>
             <div>Pintura Programada</div>
           </button>
@@ -585,8 +585,111 @@ textarea{resize:vertical;min-height:80px}
       </div>
     </div>
 
+    <!-- PINTURA PROGRAMADA -->
+    <div class="page" id="page-pintura">
+      <style>
+        .pp-header{display:flex;align-items:center;gap:10px;background:#fff;border-radius:14px;padding:12px 20px;margin-bottom:22px;border:1px solid var(--border);width:fit-content;font-family:'Barlow Condensed',sans-serif;font-size:20px;font-weight:800;color:var(--navy)}
+        .pp-header svg{width:26px;height:26px;fill:var(--navy)}
+        .pp-stat-row{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:24px}
+        .pp-stat{border-radius:12px;padding:18px 22px;text-align:center;font-family:'Barlow Condensed',sans-serif}
+        .pp-stat.navy{background:var(--navy);color:#fff}
+        .pp-stat.white{background:#fff;border:2px solid var(--border);color:var(--navy)}
+        .pp-stat.green{background:var(--green);color:#fff}
+        .pp-stat-num{font-size:36px;font-weight:800;font-style:italic;line-height:1}
+        .pp-stat-label{font-size:12px;opacity:.8;margin-top:4px;font-family:'Barlow',sans-serif;font-weight:600}
+        .pp-year-row{display:flex;align-items:center;gap:12px;margin-bottom:20px}
+        .pp-year-bar{flex:1;background:#fff;border:2px solid var(--border);border-radius:30px;padding:10px 20px;font-size:14px;color:var(--muted)}
+        .pp-year-badge{background:var(--blue);color:#fff;border-radius:20px;padding:10px 24px;font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:800;letter-spacing:1px}
+        .pp-list{display:flex;flex-direction:column;gap:10px}
+        .pp-item{display:grid;grid-template-columns:40px 1fr 1fr 120px;align-items:center;gap:10px}
+        .pp-num{font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:800;color:var(--muted)}
+        .pp-cidade{background:var(--navy);color:#fff;border-radius:30px;padding:9px 18px;font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:800;font-style:italic;text-align:center}
+        .pp-valor{background:#fff;border:2px solid var(--border);border-radius:30px;padding:9px 18px;font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:800;color:var(--navy);text-align:center}
+        .pp-perc{background:var(--green);color:#fff;border-radius:30px;padding:9px 18px;font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:800;font-style:italic;text-align:center}
+        .pp-section-title{font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:800;color:var(--navy);margin-bottom:14px}
+        .pp-checklist{display:flex;flex-direction:column;gap:10px}
+        .pp-check-item{background:var(--blue-light);color:#fff;border-radius:12px;padding:14px 20px;display:flex;align-items:center;gap:14px;font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:700;letter-spacing:.5px}
+        .pp-check-icon{width:28px;height:28px;background:rgba(255,255,255,.25);border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:14px}
+        .pp-add-row{display:flex;justify-content:flex-end;margin-bottom:16px}
+        .pp-two-col{display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:start}
+        .pp-card{background:#fff;border:1px solid var(--border);border-radius:14px;padding:22px}
+        /* Modal Pintura */
+        #modal-pp-add .modal{width:520px}
+      </style>
+
+      <div class="pp-header">
+        <svg viewBox="0 0 24 24"><path d="M7 14c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3zm13.71-9.37l-1.34-1.34a1 1 0 0 0-1.41 0L9 12.25 11.75 15l8.96-8.96a1 1 0 0 0 0-1.41z"/></svg>
+        Pintura Programada
+      </div>
+
+      <!-- Stats -->
+      <div class="pp-stat-row">
+        <div class="pp-stat navy">
+          <div class="pp-stat-num" id="pp-implantadas">04</div>
+          <div class="pp-stat-label">Implantadas</div>
+        </div>
+        <div class="pp-stat white">
+          <div class="pp-stat-num" id="pp-economia-val">20mil</div>
+          <div class="pp-stat-label">Economia ($)</div>
+        </div>
+        <div class="pp-stat green">
+          <div class="pp-stat-num" id="pp-economia-pct">15%</div>
+          <div class="pp-stat-label">Economia (%)</div>
+        </div>
+      </div>
+
+      <!-- Year row -->
+      <div class="pp-year-row">
+        <div class="pp-year-bar"></div>
+        <div class="pp-year-badge" id="pp-ano">2026</div>
+      </div>
+
+      <div class="pp-two-col">
+        <!-- Left: Lista de igrejas -->
+        <div class="pp-card">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+            <div class="pp-section-title">Igrejas Implantadas</div>
+            <button class="btn btn-primary btn-sm" onclick="document.getElementById('modal-pp-add').classList.add('open')">+ Adicionar</button>
+          </div>
+          <div class="pp-list" id="pp-list"></div>
+        </div>
+
+        <!-- Right: Checklist -->
+        <div class="pp-card">
+          <div class="pp-section-title">Componentes do Programa</div>
+          <div class="pp-checklist">
+            <div class="pp-check-item"><div class="pp-check-icon">✓</div> IMPLANTAÇÃO</div>
+            <div class="pp-check-item"><div class="pp-check-icon">✓</div> POP</div>
+            <div class="pp-check-item"><div class="pp-check-icon">✓</div> MATERIAIS</div>
+            <div class="pp-check-item"><div class="pp-check-icon">✓</div> CONTROLE</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MODAL: Adicionar Igreja PP -->
+    <div class="modal-bg" id="modal-pp-add">
+      <div class="modal" style="width:480px">
+        <div class="modal-header">
+          <span class="modal-title">Adicionar Igreja — Pintura Programada</span>
+          <button class="modal-close" onclick="document.getElementById('modal-pp-add').classList.remove('open')">×</button>
+        </div>
+        <div class="modal-body">
+          <div class="form-grid">
+            <div class="form-group"><label>Cidade / Igreja</label><input id="pp-cidade" type="text" placeholder="Ex: Campinas"></div>
+            <div class="form-group"><label>Valor Economizado (R$)</label><input id="pp-val" type="text" placeholder="Ex: 5.000,00"></div>
+            <div class="form-group"><label>Economia (%)</label><input id="pp-pct" type="text" placeholder="Ex: 15%"></div>
+            <div class="form-group"><label>Ano</label><input id="pp-item-ano" type="number" value="2026" min="2020" max="2099"></div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-outline" onclick="document.getElementById('modal-pp-add').classList.remove('open')">Cancelar</button>
+          <button class="btn btn-primary" onclick="savePPItem()">Salvar</button>
+        </div>
+      </div>
+    </div>
+
   </content>
-</div>
 
 <!-- FOOTER -->
 <div id="app-footer">
@@ -735,6 +838,7 @@ function showPage(id, el){
   if(id==='agenda') renderAgenda();
   if(id==='usuarios') renderUsers();
   if(id==='convenios') renderConveniosPage();
+  if(id==='pintura') renderPP();
   if(id==='cad-fornecedor'){ clearFornForm(); if(!editingFornId) document.getElementById('f-score').value='3.0'; }
 }
 
@@ -1198,6 +1302,44 @@ function toggleUser(id){
   if(u.id===PRINCIPAL_USER_ID && u.ativo){toast('Não é possível desativar o usuário principal','error');return;}
   u.ativo=!u.ativo;renderUsers();toast(u.ativo?'Usuário ativado!':'Usuário desativado!');
 }
+// ─── PINTURA PROGRAMADA ──────────────────────────────────────────────────────
+let ppItems = [
+  {cidade:'Caieiras', val:'R$ 5.000,00', pct:'15%', ano:2026},
+  {cidade:'Morato',   val:'R$ 5.000,00', pct:'15%', ano:2026},
+  {cidade:'Jundiaí',  val:'R$ 5.000,00', pct:'15%', ano:2026},
+  {cidade:'Itupeva',  val:'R$ 5.000,00', pct:'15%', ano:2026},
+];
+function renderPP(){
+  const list = document.getElementById('pp-list');
+  if(!list) return;
+  list.innerHTML = ppItems.map((it,i)=>`
+    <div class="pp-item">
+      <div class="pp-num">${String(i+1).padStart(2,'0')}.</div>
+      <div class="pp-cidade">${it.cidade}</div>
+      <div class="pp-valor">${it.val}</div>
+      <div class="pp-perc">${it.pct}</div>
+    </div>`).join('');
+  document.getElementById('pp-implantadas').textContent = String(ppItems.length).padStart(2,'0');
+  const totalRaw = ppItems.reduce((s,it)=>{
+    const n = parseFloat(it.val.replace(/[^\d,]/g,'').replace(',','.')) || 0;
+    return s + n;
+  },0);
+  const totalK = totalRaw >= 1000 ? (totalRaw/1000).toFixed(0)+'mil' : 'R$ '+totalRaw.toFixed(2);
+  document.getElementById('pp-economia-val').textContent = totalK;
+}
+function savePPItem(){
+  const cidade = document.getElementById('pp-cidade').value.trim();
+  const val    = document.getElementById('pp-val').value.trim();
+  const pct    = document.getElementById('pp-pct').value.trim();
+  const ano    = parseInt(document.getElementById('pp-item-ano').value)||2026;
+  if(!cidade){toast('Informe a cidade/igreja','error');return;}
+  ppItems.push({cidade, val:'R$ '+val, pct, ano});
+  renderPP();
+  document.getElementById('modal-pp-add').classList.remove('open');
+  ['pp-cidade','pp-val','pp-pct'].forEach(id=>document.getElementById(id).value='');
+  toast('Igreja adicionada ao programa!');
+}
+document.addEventListener('DOMContentLoaded', renderPP);
+// also render on showPage hook — call after existing init
+setTimeout(renderPP, 300);
 </script>
-</body>
-</html>
