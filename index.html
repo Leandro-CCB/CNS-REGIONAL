@@ -1378,6 +1378,10 @@ function renderPP(){
   },0);
   const totalK = totalRaw >= 1000 ? (totalRaw/1000).toFixed(0)+'mil' : 'R$ '+totalRaw.toFixed(2);
   document.getElementById('pp-economia-val').textContent = totalK;
+  // Calcula média dos percentuais
+  const pcts = ppItems.map(it => parseFloat(it.pct.replace(/[^\d.,]/g,'').replace(',','.')) || 0);
+  const avgPct = pcts.length ? pcts.reduce((s,v)=>s+v,0)/pcts.length : 0;
+  document.getElementById('pp-economia-pct').textContent = avgPct % 1 === 0 ? avgPct.toFixed(0)+'%' : avgPct.toFixed(1)+'%';
 }
 function savePPItem(){
   const cidade = document.getElementById('pp-cidade').value.trim();
