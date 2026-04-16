@@ -83,23 +83,23 @@ content{display:block}
 .dash-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-top:16px}
 
 /* Left panel with menu shortcuts */
-.left-menu-panel{display:flex;flex-direction:column;gap:10px}
-.menu-btn{border-radius:10px;padding:14px 16px;display:flex;align-items:center;gap:12px;cursor:pointer;color:#fff;font-weight:700;font-size:13px;border:none;transition:.15s;width:100%;text-align:left}
-.menu-btn:hover{opacity:.9;transform:translateX(2px)}
+.left-menu-panel{display:flex;flex-direction:column;gap:12px}
+.menu-btn{border-radius:14px;padding:18px 16px;display:flex;align-items:center;gap:12px;cursor:pointer;color:#fff;font-weight:700;font-size:14px;line-height:1.3;border:none;transition:.15s;width:100%;text-align:left;box-shadow:0 4px 12px rgba(0,0,0,.15)}
+.menu-btn:hover{opacity:.9;transform:translateX(3px);box-shadow:0 6px 16px rgba(0,0,0,.2)}
 .menu-btn.blue{background:linear-gradient(135deg,var(--blue),var(--blue-light))}
 .menu-btn.green{background:linear-gradient(135deg,#159c5e,var(--green))}
 .menu-btn.cyan{background:linear-gradient(135deg,#0891b2,#06b6d4)}
 .menu-btn.purple{background:linear-gradient(135deg,#7c3aed,#a855f7)}
 .menu-btn.coral{background:linear-gradient(135deg,#dc2626,#f87171)}
-.menu-btn-icon{width:36px;height:36px;border-radius:8px;background:rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;flex-shrink:0}
-.menu-btn-icon svg{width:18px;height:18px;fill:#fff}
+.menu-btn-icon{width:46px;height:46px;border-radius:12px;background:rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.menu-btn-icon svg{width:26px;height:26px;fill:#fff}
 
 /* ── 3-COLUMN DASH LAYOUT ── */
 .dash-3col{display:grid;grid-template-columns:auto 1fr 1fr auto;gap:16px;align-items:start}
 .dash-center{display:grid;grid-template-columns:1fr 1fr;gap:16px}
 
 /* Main dashboard layout */
-.dash-layout{display:grid;grid-template-columns:150px 1fr 1fr 260px;gap:16px;align-items:start}
+.dash-layout{display:grid;grid-template-columns:210px 1fr 1fr 260px;gap:16px;align-items:start}
 
 /* ── CARD ── */
 .card{background:var(--card);border-radius:12px;border:1px solid var(--border);overflow:hidden}
@@ -234,7 +234,7 @@ textarea{resize:vertical;min-height:80px}
 .login-btn:hover{background:var(--navy)}
 
 /* ── RESPONSIVE ── */
-@media(max-width:1200px){.dash-layout{grid-template-columns:140px 1fr 1fr 240px}.stats{grid-template-columns:1fr 1fr}}
+@media(max-width:1200px){.dash-layout{grid-template-columns:190px 1fr 1fr 240px}.stats{grid-template-columns:1fr 1fr}}
 @media(max-width:1000px){.dash-layout{grid-template-columns:1fr 1fr}}
 </style>
 </head>
@@ -328,23 +328,38 @@ textarea{resize:vertical;min-height:80px}
         <!-- Column 1: Menu Buttons -->
         <div class="left-menu-panel">
           <button class="menu-btn blue" onclick="showPage('cad-fornecedor',null)">
-            <div class="menu-btn-icon"><svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg></div>
+            <div class="menu-btn-icon">
+              <!-- Person add / indicar fornecedor -->
+              <svg viewBox="0 0 24 24"><path d="M15 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm-9-2V7H4v3H1v2h3v3h2v-3h3v-2H6zm9 4c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+            </div>
             <div>Indicar Fornecedor</div>
           </button>
           <button class="menu-btn green" onclick="showPage('fornecedores',null)">
-            <div class="menu-btn-icon"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg></div>
+            <div class="menu-btn-icon">
+              <!-- Verified / aprovados -->
+              <svg viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/></svg>
+            </div>
             <div>Fornecedores Aprovados</div>
           </button>
           <button class="menu-btn cyan" onclick="showPage('fornecedores',null)">
-            <div class="menu-btn-icon"><svg viewBox="0 0 24 24"><path d="M20 7H4c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V9c0-1.1-.9-2-2-2z"/></svg></div>
+            <div class="menu-btn-icon">
+              <!-- Cleaning / limpeza -->
+              <svg viewBox="0 0 24 24"><path d="M19.36 2.72L20.78 4.14 16.19 8.72C17.24 10.41 17 12.55 15.59 14L9.13 7.53C10.57 6.12 12.71 5.88 14.4 6.94L19.36 2.72M5.93 17.57C3.92 15.56 2.69 13.16 2.36 10.72L7.46 8.53L15.48 16.56L13.29 21.65C10.84 21.33 8.44 20.09 6.43 18.08L5.93 17.57Z"/></svg>
+            </div>
             <div>CNS Limpeza</div>
           </button>
           <button class="menu-btn purple" onclick="showPage('agenda',null)">
-            <div class="menu-btn-icon"><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 5h2v6H11zm0 8h2v2h-2z"/></svg></div>
+            <div class="menu-btn-icon">
+              <!-- Lightbulb / meia luz -->
+              <svg viewBox="0 0 24 24"><path d="M9 21c0 .55.45 1 1 1h4c.55 0 1-.45 1-1v-1H9v1zm3-19C8.14 2 5 5.14 5 9c0 2.38 1.19 4.47 3 5.74V17c0 .55.45 1 1 1h6c.55 0 1-.45 1-1v-2.26c1.81-1.27 3-3.36 3-5.74 0-3.86-3.14-7-7-7z"/></svg>
+            </div>
             <div>Projeto Meia Luz</div>
           </button>
           <button class="menu-btn coral" onclick="showPage('pintura',null)">
-            <div class="menu-btn-icon"><svg viewBox="0 0 24 24"><path d="M7 14c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3zm13.71-9.37l-1.34-1.34a1 1 0 0 0-1.41 0L9 12.25 11.75 15l8.96-8.96a1 1 0 0 0 0-1.41z"/></svg></div>
+            <div class="menu-btn-icon">
+              <!-- Paint roller / pintura -->
+              <svg viewBox="0 0 24 24"><path d="M18 4V3c0-.55-.45-1-1-1H5c-.55 0-1 .45-1 1v4c0 .55.45 1 1 1h12c.55 0 1-.45 1-1V6h1v4H9v11c0 .55.45 1 1 1h2c.55 0 1-.45 1-1v-9h8V4h-3z"/></svg>
+            </div>
             <div>Pintura Programada</div>
           </button>
         </div>
@@ -601,7 +616,14 @@ textarea{resize:vertical;min-height:80px}
         .pp-year-bar{flex:1;background:#fff;border:2px solid var(--border);border-radius:30px;padding:10px 20px;font-size:14px;color:var(--muted)}
         .pp-year-badge{background:var(--blue);color:#fff;border-radius:20px;padding:10px 24px;font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:800;letter-spacing:1px}
         .pp-list{display:flex;flex-direction:column;gap:10px}
-        .pp-item{display:grid;grid-template-columns:40px 1fr 1fr 120px;align-items:center;gap:10px}
+        .pp-item{display:grid;grid-template-columns:40px 1fr 1fr 120px auto;align-items:center;gap:10px}
+        .pp-actions{display:flex;gap:6px;flex-shrink:0}
+        .pp-btn{border:none;border-radius:8px;width:32px;height:32px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:.15s;flex-shrink:0}
+        .pp-btn-edit{background:#dce8ff;color:#1a4db3}
+        .pp-btn-edit:hover{background:#b8d0ff}
+        .pp-btn-del{background:#fde2e2;color:#9a1515}
+        .pp-btn-del:hover{background:#f9c0c0}
+        .pp-btn svg{width:15px;height:15px;fill:currentColor}
         .pp-num{font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:800;color:var(--muted)}
         .pp-cidade{background:var(--navy);color:#fff;border-radius:30px;padding:9px 18px;font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:800;font-style:italic;text-align:center}
         .pp-valor{background:#fff;border:2px solid var(--border);border-radius:30px;padding:9px 18px;font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:800;color:var(--navy);text-align:center}
@@ -685,6 +707,28 @@ textarea{resize:vertical;min-height:80px}
         <div class="modal-footer">
           <button class="btn btn-outline" onclick="document.getElementById('modal-pp-add').classList.remove('open')">Cancelar</button>
           <button class="btn btn-primary" onclick="savePPItem()">Salvar</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- MODAL: Editar Igreja PP -->
+    <div class="modal-bg" id="modal-pp-edit">
+      <div class="modal" style="width:480px">
+        <div class="modal-header">
+          <span class="modal-title">Editar Igreja — Pintura Programada</span>
+          <button class="modal-close" onclick="document.getElementById('modal-pp-edit').classList.remove('open')">×</button>
+        </div>
+        <div class="modal-body">
+          <div class="form-grid">
+            <div class="form-group"><label>Cidade / Igreja</label><input id="pp-edit-cidade" type="text" placeholder="Ex: Campinas"></div>
+            <div class="form-group"><label>Valor Economizado (R$)</label><input id="pp-edit-val" type="text" placeholder="Ex: 5.000,00"></div>
+            <div class="form-group"><label>Economia (%)</label><input id="pp-edit-pct" type="text" placeholder="Ex: 15%"></div>
+            <div class="form-group"><label>Ano</label><input id="pp-edit-ano" type="number" value="2026" min="2020" max="2099"></div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-outline" onclick="document.getElementById('modal-pp-edit').classList.remove('open')">Cancelar</button>
+          <button class="btn btn-primary" onclick="saveEditPP()">Salvar Alterações</button>
         </div>
       </div>
     </div>
@@ -1318,6 +1362,14 @@ function renderPP(){
       <div class="pp-cidade">${it.cidade}</div>
       <div class="pp-valor">${it.val}</div>
       <div class="pp-perc">${it.pct}</div>
+      <div class="pp-actions">
+        <button class="pp-btn pp-btn-edit" title="Editar" onclick="openEditPP(${i})">
+          <svg viewBox="0 0 24 24"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a1 1 0 0 0 0-1.41l-2.34-2.34a1 1 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>
+        </button>
+        <button class="pp-btn pp-btn-del" title="Excluir" onclick="deletePPItem(${i})">
+          <svg viewBox="0 0 24 24"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>
+        </button>
+      </div>
     </div>`).join('');
   document.getElementById('pp-implantadas').textContent = String(ppItems.length).padStart(2,'0');
   const totalRaw = ppItems.reduce((s,it)=>{
@@ -1339,7 +1391,37 @@ function savePPItem(){
   ['pp-cidade','pp-val','pp-pct'].forEach(id=>document.getElementById(id).value='');
   toast('Igreja adicionada ao programa!');
 }
-document.addEventListener('DOMContentLoaded', renderPP);
+function deletePPItem(i){
+  if(confirm(`Excluir "${ppItems[i].cidade}"?`)){
+    ppItems.splice(i,1);
+    renderPP();
+    toast('Igreja removida!');
+  }
+}
+let editingPPIndex = -1;
+function openEditPP(i){
+  editingPPIndex = i;
+  const it = ppItems[i];
+  document.getElementById('pp-edit-cidade').value = it.cidade;
+  document.getElementById('pp-edit-val').value = it.val.replace('R$ ','');
+  document.getElementById('pp-edit-pct').value = it.pct;
+  document.getElementById('pp-edit-ano').value = it.ano||2026;
+  document.getElementById('modal-pp-edit').classList.add('open');
+}
+function saveEditPP(){
+  if(editingPPIndex < 0) return;
+  const cidade = document.getElementById('pp-edit-cidade').value.trim();
+  const val    = document.getElementById('pp-edit-val').value.trim();
+  const pct    = document.getElementById('pp-edit-pct').value.trim();
+  const ano    = parseInt(document.getElementById('pp-edit-ano').value)||2026;
+  if(!cidade){toast('Informe a cidade/igreja','error');return;}
+  ppItems[editingPPIndex] = {cidade, val:'R$ '+val, pct, ano};
+  renderPP();
+  document.getElementById('modal-pp-edit').classList.remove('open');
+  toast('Igreja atualizada!');
+  editingPPIndex = -1;
+}
+
 // also render on showPage hook — call after existing init
 setTimeout(renderPP, 300);
 </script>
