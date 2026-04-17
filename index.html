@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>COMISSÃO REGIONAL DE SUPRIMENTOS</title>
 <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700;800&family=Barlow+Condensed:wght@600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 :root{
   --navy:#1a3a6b;
@@ -217,7 +218,7 @@ textarea{resize:vertical;min-height:80px}
 .conv-manage-actions{display:flex;gap:6px}
 
 /* ── FOOTER ── */
-#app-footer{background:var(--navy);color:rgba(255,255,255,.6);text-align:center;padding:10px;font-size:11px;margin-left:var(--sidebar);border-top:1px solid rgba(255,255,255,.1)}
+#app-footer{background:var(--navy);color:rgba(255,255,255,.6);text-align:center;padding:10px;font-size:11px;border-top:1px solid rgba(255,255,255,.1);width:100%}
 #app-footer span{color:rgba(255,255,255,.9);font-weight:600}
 
 /* ── LOGIN ── */
@@ -234,6 +235,7 @@ textarea{resize:vertical;min-height:80px}
 .login-btn:hover{background:var(--navy)}
 
 /* ── RESPONSIVE ── */
+@keyframes spin{to{transform:rotate(360deg)}}
 @media(max-width:1200px){.dash-layout{grid-template-columns:190px 1fr 1fr 240px}.stats{grid-template-columns:1fr 1fr}}
 @media(max-width:1000px){.dash-layout{grid-template-columns:1fr 1fr}}
 </style>
@@ -262,9 +264,9 @@ textarea{resize:vertical;min-height:80px}
 
 <!-- SIDEBAR -->
 <div id="sidebar">
-  <div class="brand">
-    <div class="brand-icon"><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"/></svg></div>
-    <div><div class="brand-name" style="font-size:11px;line-height:1.2">COMISSÃO REGIONAL<br>DE SUPRIMENTOS</div><div class="brand-sub">Gestão de Fornecedores</div></div>
+  <div class="brand" style="padding:14px 12px;gap:8px">
+    <img src="logo.jpeg" alt="Logo" style="width:44px;height:44px;object-fit:contain;border-radius:10px;flex-shrink:0;background:#fff">
+    <div><div class="brand-name" style="font-size:10px;line-height:1.2">COMISSÃO REGIONAL<br>DE SUPRIMENTOS</div><div class="brand-sub">Gestão de Fornecedores</div></div>
   </div>
   <nav>
     <div class="nav-section">Principal</div>
@@ -298,12 +300,6 @@ textarea{resize:vertical;min-height:80px}
       <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5-5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"/></svg> Sair
     </div>
   </nav>
-  <div class="sidebar-footer">
-    <div class="user-pill">
-      <div class="avatar" id="sb-avatar">A</div>
-      <div><div class="user-name" id="sb-uname">Admin</div><div class="user-role" id="sb-urole">Administrador</div></div>
-    </div>
-  </div>
 </div>
 
 <!-- MAIN -->
@@ -311,9 +307,17 @@ textarea{resize:vertical;min-height:80px}
   <div class="topbar">
     <div class="page-title" id="top-title">Dashboard</div>
     <div class="topbar-right">
-      <button class="btn btn-primary" onclick="showPage('cad-fornecedor',null)">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg> Novo Fornecedor
-      </button>
+      <div id="topbar-sync" style="display:none;align-items:center;gap:6px;font-size:12px;color:var(--muted)">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" style="animation:spin .8s linear infinite"><path d="M12 4V1L8 5l4 4V6c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6H4c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z"/></svg>
+        Salvando...
+      </div>
+      <div id="topbar-user" style="display:flex;align-items:center;gap:10px">
+        <div style="text-align:right">
+          <div id="topbar-uname" style="font-size:13px;font-weight:700;color:var(--navy)">—</div>
+          <div id="topbar-urole" style="font-size:10px;color:var(--muted)">—</div>
+        </div>
+        <div id="topbar-avatar" style="width:36px;height:36px;border-radius:50%;background:var(--blue);display:flex;align-items:center;justify-content:center;font-weight:700;color:#fff;font-size:15px;flex-shrink:0;cursor:pointer" onclick="doLogout()" title="Clique para sair">A</div>
+      </div>
     </div>
   </div>
   <content>
@@ -503,8 +507,22 @@ textarea{resize:vertical;min-height:80px}
     <!-- CADASTRAR FORNECEDOR -->
     <div class="page" id="page-cad-fornecedor">
       <div class="form-section">
-        <div class="form-section-title">Dados do Fornecedor</div>
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;padding-bottom:10px;border-bottom:1px solid var(--border)">
+          <div class="form-section-title" style="margin:0;padding:0;border:none">Dados do Fornecedor</div>
+          <div style="display:flex;align-items:center;gap:8px">
+            <label for="xls-import-input" class="btn btn-outline" style="cursor:pointer;display:inline-flex;align-items:center;gap:6px;margin:0">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>
+              Importar dados do fornecedor
+            </label>
+            <input type="file" id="xls-import-input" accept=".xls,.xlsx,.csv" style="display:none" onchange="importXLS(this)">
+          </div>
+        </div>
+        <div id="xls-import-preview" style="display:none;margin-bottom:16px;background:#f4f7fd;border:1px solid var(--border);border-radius:8px;padding:12px">
+          <div style="font-size:12px;font-weight:700;color:var(--navy);margin-bottom:8px">📋 Pré-visualização — selecione o fornecedor para importar:</div>
+          <div id="xls-rows-list" style="display:flex;flex-direction:column;gap:6px;max-height:200px;overflow-y:auto"></div>
+        </div>
         <div class="form-grid">
+          <div class="form-group"><label>Código</label><input id="f-codigo" type="text" placeholder="Código do fornecedor"></div>
           <div class="form-group"><label>Nome / Razão Social *</label><input id="f-nome" type="text" placeholder="Nome completo"></div>
           <div class="form-group"><label>CNPJ / CPF *</label><input id="f-cnpj" type="text" placeholder="00.000.000/0001-00"></div>
           <div class="form-group"><label>Categoria *</label>
@@ -518,11 +536,14 @@ textarea{resize:vertical;min-height:80px}
           <div class="form-group"><label>E-mail</label><input id="f-email" type="email" placeholder="email@empresa.com"></div>
           <div class="form-group"><label>Telefone</label><input id="f-tel" type="text" placeholder="(11) 99999-9999"></div>
           <div class="form-group"><label>Responsável</label><input id="f-resp" type="text" placeholder="Nome do responsável"></div>
+          <div class="form-group"><label>Cidade</label><input id="f-cidade" type="text" placeholder="Cidade"></div>
+          <div class="form-group"><label>UF</label><input id="f-uf" type="text" placeholder="SP" maxlength="2" style="text-transform:uppercase"></div>
           <div class="form-group full"><label>Endereço</label><input id="f-end" type="text" placeholder="Rua, número, bairro, cidade"></div>
-          <div class="form-group"><label>Status</label>
-            <select id="f-status"><option>Aprovado</option><option>Pendente</option><option>Suspenso</option></select>
+          <!-- Status e Score: visíveis APENAS para admin -->
+          <div class="form-group admin-only-field"><label>Status</label>
+            <select id="f-status"><option>Pendente</option><option>Aprovado</option><option>Suspenso</option></select>
           </div>
-          <div class="form-group"><label>Score Inicial (1-5)</label><input id="f-score" type="number" min="1" max="5" step="0.1" value="3.0"></div>
+          <div class="form-group admin-only-field"><label>Score Inicial (1-5)</label><input id="f-score" type="number" min="1" max="5" step="0.1" value="3.0"></div>
           <div class="form-group full"><label>Observações</label><textarea id="f-obs" rows="3" placeholder="Informações adicionais"></textarea></div>
         </div>
         <div class="form-actions">
@@ -534,28 +555,45 @@ textarea{resize:vertical;min-height:80px}
 
     <!-- USUÁRIOS -->
     <div class="page" id="page-usuarios">
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
-        <div>
-          <div class="form-section">
-            <div class="form-section-title" id="user-form-title">Novo Usuário</div>
-            <div class="form-group" style="margin-bottom:12px"><label>Nome Completo *</label><input id="u-nome" type="text" placeholder="Nome"></div>
-            <div class="form-group" style="margin-bottom:12px"><label>Login (usuário) *</label><input id="u-login" type="text" placeholder="usuario123"></div>
-            <div class="form-group" style="margin-bottom:12px"><label>E-mail</label><input id="u-email" type="email" placeholder="email@cns.com"></div>
-            <div class="form-group" style="margin-bottom:12px"><label>Perfil</label>
+      <div style="display:flex;flex-direction:column;gap:20px">
+
+        <!-- Formulário em linha -->
+        <div class="form-section" style="margin-bottom:0">
+          <div class="form-section-title" id="user-form-title">Novo Usuário</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px">
+            <div class="form-group"><label>Nome Completo *</label><input id="u-nome" type="text" placeholder="Nome completo"></div>
+            <div class="form-group"><label>Login (usuário) *</label><input id="u-login" type="text" placeholder="usuario123"></div>
+            <div class="form-group"><label>E-mail</label><input id="u-email" type="email" placeholder="email@cns.com"></div>
+            <div class="form-group"><label>Perfil</label>
               <select id="u-perfil"><option>Administrador</option><option>Gestor</option><option>Consultor</option></select>
             </div>
-            <div class="form-group" style="margin-bottom:12px"><label>Senha *</label><input id="u-senha" type="password" placeholder="••••••••"></div>
-            <div class="form-group" style="margin-bottom:16px"><label>Confirmar Senha *</label><input id="u-senha2" type="password" placeholder="••••••••"></div>
-            <div class="form-actions">
-              <button class="btn btn-outline" onclick="clearUserForm()">Limpar</button>
-              <button class="btn btn-primary" id="u-save-btn" onclick="saveUser()">Salvar Usuário</button>
-            </div>
+            <div class="form-group"><label>Senha *</label><input id="u-senha" type="password" placeholder="••••••••"></div>
+            <div class="form-group"><label>Confirmar Senha *</label><input id="u-senha2" type="password" placeholder="••••••••"></div>
+          </div>
+          <div class="form-actions" style="margin-top:14px">
+            <button class="btn btn-outline" onclick="clearUserForm()">Limpar</button>
+            <button class="btn btn-primary" id="u-save-btn" onclick="saveUser()">Salvar Usuário</button>
           </div>
         </div>
+
+        <!-- Tabela completa de usuários -->
         <div class="card">
           <div class="card-header"><span class="card-title">Usuários Cadastrados</span></div>
-          <div class="card-body"><table><thead><tr><th>Nome</th><th>Login</th><th>Perfil</th><th>Status</th><th>Ações</th></tr></thead><tbody id="users-body"></tbody></table></div>
+          <div class="card-body">
+            <table style="table-layout:fixed;width:100%">
+              <colgroup>
+                <col style="width:28%">
+                <col style="width:16%">
+                <col style="width:16%">
+                <col style="width:12%">
+                <col style="width:28%">
+              </colgroup>
+              <thead><tr><th>Nome</th><th>Login</th><th>Perfil</th><th>Status</th><th>Ações</th></tr></thead>
+              <tbody id="users-body"></tbody>
+            </table>
+          </div>
         </div>
+
       </div>
     </div>
 
@@ -739,6 +777,8 @@ textarea{resize:vertical;min-height:80px}
   Sistema desenvolvido por <span>Leandro Machado</span>
 </div>
 
+</div><!-- /#main -->
+
 <!-- MODAL AVALIAÇÃO -->
 <div class="modal-bg" id="modal-aval">
   <div class="modal">
@@ -797,6 +837,14 @@ let starVal = 0;
 // ID 1 é o usuário principal protegido
 const PRINCIPAL_USER_ID = 1;
 
+function isAdmin(){ return currentUser && (currentUser.perfil === 'Administrador' || currentUser.login === 'admin'); }
+
+function applyAdminVisibility(){
+  document.querySelectorAll('.admin-only-field').forEach(el=>{
+    el.style.display = isAdmin() ? '' : 'none';
+  });
+}
+
 let fornecedores = [
   {id:1,nome:'Serv-Técnica',cnpj:'12.345.678/0001-90',cat:'Tecnologia',email:'contato@servtecnica.com',tel:'(11)99001-0001',resp:'João Silva',end:'Av. Paulista 100, SP',status:'Aprovado',score:4.9,obs:'Parceiro premium',avals:[]},
   {id:2,nome:'Construtora Firmeza',cnpj:'23.456.789/0001-01',cat:'Construção',email:'firmeza@mail.com',tel:'(11)99002-0002',resp:'Maria Santos',end:'Rua Augusta 200, SP',status:'Aprovado',score:4.8,obs:'',avals:[]},
@@ -851,10 +899,11 @@ function doLogin(){
   if(found){
     currentUser = found;
     document.getElementById('login-screen').classList.remove('open');
-    document.getElementById('sb-uname').textContent = found.nome;
-    document.getElementById('sb-urole').textContent = found.perfil;
-    document.getElementById('sb-avatar').textContent = found.nome[0].toUpperCase();
-    renderAll();
+    document.getElementById('topbar-uname').textContent = found.nome;
+    document.getElementById('topbar-urole').textContent = found.perfil;
+    document.getElementById('topbar-avatar').textContent = found.nome[0].toUpperCase();
+    applyAdminVisibility();
+    loadFromSupabase();
   } else {
     document.getElementById('login-err').style.display='block';
   }
@@ -882,7 +931,7 @@ function showPage(id, el){
   if(id==='usuarios') renderUsers();
   if(id==='convenios') renderConveniosPage();
   if(id==='pintura') renderPP();
-  if(id==='cad-fornecedor'){ clearFornForm(); if(!editingFornId) document.getElementById('f-score').value='3.0'; }
+  if(id==='cad-fornecedor'){ clearFornForm(); if(!editingFornId) document.getElementById('f-score').value='3.0'; applyAdminVisibility(); }
 }
 
 // ─── HELPERS ─────────────────────────────────────────────────────────────────
@@ -1091,24 +1140,41 @@ function renderFornecedores(){
     <td style="white-space:nowrap">
       <button class="btn btn-outline btn-sm" onclick="viewForn(${f.id})">Ver</button>
       <button class="btn btn-outline btn-sm" style="color:var(--blue)" onclick="editForn(${f.id})">Editar</button>
-      <button class="btn btn-outline btn-sm" style="color:var(--gold)" onclick="openAval(${f.id})">Avaliar</button>
+      ${isAdmin()?`<button class="btn btn-outline btn-sm" style="color:var(--gold)" onclick="openAval(${f.id})">Avaliar</button>`:''}
       <button class="btn btn-outline btn-sm" style="color:var(--red)" onclick="deleteForn(${f.id})">✕</button>
     </td></tr>`).join('');
 }
 
 // ─── RANKING ─────────────────────────────────────────────────────────────────
 function renderRanking(){
-  const sorted=[...fornecedores].sort((a,b)=>b.score-a.score);
-  document.getElementById('rank-best-body').innerHTML=sorted.map((f,i)=>`
-    <tr><td><span class="rank-badge ${i<3?'rank-'+(i+1):'rank-n'}">${i+1}</span></td>
-    <td><b>${f.nome}</b></td><td>${f.cat}</td>
-    <td><span class="stars">${stars(f.score)}</span> <span class="${scoreClass(f.score)}">${f.score.toFixed(1)}</span></td>
-    <td>${statusBadge(f.status)}</td></tr>`).join('');
+  // Ranking primário: fornecedores com avaliações, ordenados por média de avals; depois os sem avals por score inicial
+  const withAvals = fornecedores.filter(f=>f.avals && f.avals.length > 0)
+    .sort((a,b) => b.score - a.score || b.avals.length - a.avals.length);
+  const noAvals   = fornecedores.filter(f=>!f.avals || f.avals.length === 0)
+    .sort((a,b) => b.score - a.score);
+  const sorted = [...withAvals, ...noAvals];
+
+  document.getElementById('rank-best-body').innerHTML=sorted.map((f,i)=>{
+    const avalCount = (f.avals||[]).length;
+    return `<tr>
+      <td><span class="rank-badge ${i<3?'rank-'+(i+1):'rank-n'}">${i+1}</span></td>
+      <td><b>${f.nome}</b></td><td>${f.cat}</td>
+      <td><span class="stars">${stars(f.score)}</span> <span class="${scoreClass(f.score)}">${f.score.toFixed(1)}</span>
+        <span style="font-size:10px;color:var(--muted);margin-left:4px">(${avalCount} aval.)</span>
+      </td>
+      <td>${statusBadge(f.status)}</td></tr>`;
+  }).join('');
+
   const worst=[...fornecedores].sort((a,b)=>a.score-b.score).slice(0,8);
-  document.getElementById('rank-worst-body').innerHTML=worst.map((f,i)=>`
-    <tr><td><span class="rank-badge rank-n">${i+1}</span></td>
-    <td><b>${f.nome}</b><br><small style="color:var(--muted)">${f.cat}</small></td>
-    <td><span class="stars">${stars(f.score)}</span> <span class="${scoreClass(f.score)}">${f.score.toFixed(1)}</span></td></tr>`).join('');
+  document.getElementById('rank-worst-body').innerHTML=worst.map((f,i)=>{
+    const avalCount = (f.avals||[]).length;
+    return `<tr>
+      <td><span class="rank-badge rank-n">${i+1}</span></td>
+      <td><b>${f.nome}</b><br><small style="color:var(--muted)">${f.cat}</small></td>
+      <td><span class="stars">${stars(f.score)}</span> <span class="${scoreClass(f.score)}">${f.score.toFixed(1)}</span>
+        <span style="font-size:10px;color:var(--muted);margin-left:4px">(${avalCount} aval.)</span>
+      </td></tr>`;
+  }).join('');
 }
 
 // ─── AGENDA ──────────────────────────────────────────────────────────────────
@@ -1153,15 +1219,20 @@ function saveFornecedor(){
   const cnpj=document.getElementById('f-cnpj').value.trim();
   const cat=document.getElementById('f-cat').value;
   if(!nome||!cat){toast('Nome e Categoria são obrigatórios','error');return;}
+  const statusVal = isAdmin() ? document.getElementById('f-status').value : 'Pendente';
+  const scoreVal  = isAdmin() ? (parseFloat(document.getElementById('f-score').value)||3.0) : 3.0;
   const obj={
     id:editingFornId||nextFornId++,
+    codigo:document.getElementById('f-codigo').value.trim(),
     nome,cnpj,cat,
     email:document.getElementById('f-email').value.trim(),
     tel:document.getElementById('f-tel').value.trim(),
     resp:document.getElementById('f-resp').value.trim(),
+    cidade:document.getElementById('f-cidade').value.trim(),
+    uf:document.getElementById('f-uf').value.trim().toUpperCase(),
     end:document.getElementById('f-end').value.trim(),
-    status:document.getElementById('f-status').value,
-    score:parseFloat(document.getElementById('f-score').value)||3.0,
+    status:statusVal,
+    score:scoreVal,
     obs:document.getElementById('f-obs').value.trim(),
     avals:[]
   };
@@ -1181,27 +1252,33 @@ function saveFornecedor(){
   showPage('fornecedores',document.querySelector('.nav-item:nth-child(3)'));
 }
 function clearFornForm(){
-  ['f-nome','f-cnpj','f-email','f-tel','f-resp','f-end','f-obs'].forEach(id=>document.getElementById(id).value='');
+  ['f-codigo','f-nome','f-cnpj','f-email','f-tel','f-resp','f-cidade','f-uf','f-end','f-obs'].forEach(id=>document.getElementById(id).value='');
   document.getElementById('f-cat').value='';
-  document.getElementById('f-status').value='Aprovado';
+  document.getElementById('f-status').value='Pendente';
   document.getElementById('f-score').value='3.0';
+  document.getElementById('xls-import-preview').style.display='none';
+  document.getElementById('xls-import-input').value='';
   editingFornId=null;
 }
 function editForn(id){
   const f=fornecedores.find(x=>x.id===id);
   if(!f) return;
   editingFornId=id;
+  document.getElementById('f-codigo').value=f.codigo||'';
   document.getElementById('f-nome').value=f.nome;
   document.getElementById('f-cnpj').value=f.cnpj;
   document.getElementById('f-cat').value=f.cat;
   document.getElementById('f-email').value=f.email;
   document.getElementById('f-tel').value=f.tel;
   document.getElementById('f-resp').value=f.resp;
+  document.getElementById('f-cidade').value=f.cidade||'';
+  document.getElementById('f-uf').value=f.uf||'';
   document.getElementById('f-end').value=f.end;
   document.getElementById('f-status').value=f.status;
   document.getElementById('f-score').value=f.score;
   document.getElementById('f-obs').value=f.obs;
   showPage('cad-fornecedor',null);
+  applyAdminVisibility();
   document.getElementById('top-title').textContent='Editar Fornecedor';
 }
 function deleteForn(id){
@@ -1231,6 +1308,124 @@ function viewForn(id){
   document.getElementById('modal-view').classList.add('open');
 }
 
+// ─── XLS IMPORT ──────────────────────────────────────────────────────────────
+function importXLS(input){
+  const file = input.files[0];
+  if(!file){ return; }
+  const ext = file.name.split('.').pop().toLowerCase();
+
+  if(ext === 'csv'){
+    const reader = new FileReader();
+    reader.onload = e => parseCSVImport(e.target.result);
+    reader.readAsText(file, 'UTF-8');
+    return;
+  }
+
+  // XLS/XLSX via SheetJS (loaded from CDN)
+  if(!window.XLSX){
+    const script = document.createElement('script');
+    script.src = 'https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js';
+    script.onload = () => readXLSXFile(file);
+    document.head.appendChild(script);
+  } else {
+    readXLSXFile(file);
+  }
+}
+
+function readXLSXFile(file){
+  const reader = new FileReader();
+  reader.onload = e => {
+    try {
+      const wb = XLSX.read(e.target.result, {type:'array'});
+      const ws = wb.Sheets[wb.SheetNames[0]];
+      const rows = XLSX.utils.sheet_to_json(ws, {header:1, defval:''});
+      processImportRows(rows);
+    } catch(err){
+      toast('Erro ao ler arquivo XLS: '+err.message,'error');
+    }
+  };
+  reader.readAsArrayBuffer(file);
+}
+
+function parseCSVImport(text){
+  const lines = text.split(/\r?\n/).filter(l=>l.trim());
+  const rows = lines.map(l => l.split(/[;,]/).map(c=>c.trim().replace(/^"|"$/g,'')));
+  processImportRows(rows);
+}
+
+function processImportRows(rows){
+  if(!rows || rows.length < 1){ toast('Arquivo vazio ou inválido','error'); return; }
+
+  // Detect header row: look for columns Código, Nome, CNPJ, Cidade, UF (case-insensitive)
+  let dataRows = rows;
+  const firstRow = rows[0].map(c => String(c).toLowerCase());
+  const hasHeader = firstRow.some(c => ['código','codigo','nome','cnpj','cidade','uf'].includes(c));
+  if(hasHeader) dataRows = rows.slice(1);
+
+  // Map columns: try header names first, else use positional (Código=0, Nome=1, CNPJ=2, Cidade=3, UF=4)
+  let colMap = {codigo:0, nome:1, cnpj:2, cidade:3, uf:4};
+  if(hasHeader){
+    rows[0].forEach((h,i)=>{
+      const hl = String(h).toLowerCase().replace(/[^a-z]/g,'');
+      if(['codigo','cdigo'].includes(hl)) colMap.codigo = i;
+      if(hl==='nome') colMap.nome = i;
+      if(hl==='cnpj') colMap.cnpj = i;
+      if(hl==='cidade') colMap.cidade = i;
+      if(hl==='uf') colMap.uf = i;
+    });
+  }
+
+  const parsed = dataRows
+    .filter(r => r.some(c => String(c).trim()))
+    .map(r => ({
+      codigo: String(r[colMap.codigo]||'').trim(),
+      nome:   String(r[colMap.nome]||'').trim(),
+      cnpj:   String(r[colMap.cnpj]||'').trim(),
+      cidade: String(r[colMap.cidade]||'').trim(),
+      uf:     String(r[colMap.uf]||'').trim().toUpperCase(),
+    }))
+    .filter(r => r.nome);
+
+  if(!parsed.length){ toast('Nenhum dado válido encontrado no arquivo','error'); return; }
+
+  const preview = document.getElementById('xls-import-preview');
+  const list    = document.getElementById('xls-rows-list');
+  preview.style.display = 'block';
+
+  list.innerHTML = parsed.map((r,i) => `
+    <div style="display:flex;align-items:center;gap:10px;background:#fff;border:1px solid var(--border);border-radius:7px;padding:8px 12px;font-size:12px;cursor:pointer;transition:.15s"
+         onclick="applyImportRow(${i})" title="Clique para preencher o formulário">
+      <div style="width:22px;height:22px;border-radius:50%;background:var(--blue);color:#fff;font-size:10px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0">${i+1}</div>
+      <div style="flex:1;min-width:0">
+        <b style="color:var(--navy)">${r.nome||'—'}</b>
+        <span style="color:var(--muted);margin-left:8px">${r.cnpj||''}</span>
+        ${r.cidade?`<span style="color:var(--muted);margin-left:8px">📍 ${r.cidade}${r.uf?'/'+r.uf:''}</span>`:''}
+        ${r.codigo?`<span style="color:var(--muted);margin-left:8px">Cód: ${r.codigo}</span>`:''}
+      </div>
+      <span style="color:var(--blue);font-weight:700;font-size:11px">Usar →</span>
+    </div>`).join('');
+
+  // Store parsed rows for selection
+  window._xlsImportRows = parsed;
+  toast(`${parsed.length} fornecedor(es) encontrado(s) no arquivo. Clique para preencher.`);
+}
+
+function applyImportRow(i){
+  const r = window._xlsImportRows && window._xlsImportRows[i];
+  if(!r) return;
+  document.getElementById('f-codigo').value = r.codigo || '';
+  document.getElementById('f-nome').value   = r.nome   || '';
+  document.getElementById('f-cnpj').value   = r.cnpj   || '';
+  document.getElementById('f-cidade').value = r.cidade || '';
+  document.getElementById('f-uf').value     = r.uf     || '';
+  // Auto-fill endereço se cidade/uf presentes
+  if(r.cidade && !document.getElementById('f-end').value)
+    document.getElementById('f-end').value = r.cidade + (r.uf ? ' - ' + r.uf : '');
+  document.getElementById('xls-import-preview').style.display='none';
+  document.getElementById('xls-import-input').value='';
+  toast('Dados preenchidos! Complete os campos restantes e salve.');
+}
+
 // ─── AVALIAÇÃO ───────────────────────────────────────────────────────────────
 function openAval(id){
   avalFornId=id;
@@ -1257,6 +1452,10 @@ function submitAval(){
   closeModal('modal-aval');
   toast('Avaliação salva! Novo score: '+f.score.toFixed(1));
   renderFornecedores();
+  // Re-render ranking and dashboard top10 if already loaded
+  const rankPage = document.getElementById('page-ranking');
+  if(rankPage && rankPage.classList.contains('active')) renderRanking();
+  renderDashboard();
 }
 
 // ─── USUÁRIOS ────────────────────────────────────────────────────────────────
@@ -1475,6 +1674,284 @@ function saveCompLink(){
 
 setTimeout(renderPPChecklist, 310);
 
+// ─── SUPABASE INTEGRATION ────────────────────────────────────────────────────
+const SUPA_URL = 'https://fyggsslndwsguavhduly.supabase.co';
+const SUPA_KEY = 'sb_publishable_BrjU1nekPGhSgRFoh607XQ_H8G9BetM';
+let db = null;
+
+function initSupabase(){
+  try {
+    db = supabase.createClient(SUPA_URL, SUPA_KEY);
+  } catch(e){ console.warn('Supabase init failed:', e); }
+}
+
+function showSyncing(v){ 
+  const el = document.getElementById('topbar-sync');
+  if(el) el.style.display = v ? 'flex' : 'none';
+}
+
+async function loadFromSupabase(){
+  if(!db){ renderAll(); return; }
+  showSyncing(true);
+  try {
+    const [f, a, c, pp, pc, us] = await Promise.all([
+      db.from('fornecedores').select('*'),
+      db.from('agenda_compras').select('*'),
+      db.from('convenios').select('*'),
+      db.from('pp_items').select('*'),
+      db.from('pp_components').select('*'),
+      db.from('usuarios').select('*'),
+    ]);
+    if(f.data && f.data.length > 0){
+      fornecedores = f.data.map(r=>({
+        id:r.id, codigo:r.codigo||'', nome:r.nome, cnpj:r.cnpj||'', cat:r.cat||'',
+        email:r.email||'', tel:r.tel||'', resp:r.resp||'', cidade:r.cidade||'',
+        uf:r.uf||'', end:r.endereco||'', status:r.status||'Pendente',
+        score:parseFloat(r.score)||3.0, obs:r.obs||'', avals:r.avals||[]
+      }));
+      nextFornId = Math.max(...fornecedores.map(f=>f.id), 0) + 1;
+    }
+    if(a.data && a.data.length > 0){
+      agenda = a.data.map(r=>({
+        id:r.id, prod:r.prod||'', fornId:r.forn_id||0, data:r.data||'',
+        igrejas:r.igrejas||1, obs:r.obs||'', status:r.status||'Agendado'
+      }));
+      nextAgId = Math.max(...agenda.map(x=>x.id), 0) + 1;
+    }
+    if(c.data && c.data.length > 0){
+      convenios = c.data.map(r=>({
+        id:r.id, titulo:r.titulo||'', tipo:r.tipo||'convenios',
+        imgUrl:r.img_url||'', igrejas:r.igrejas||0, desc:r.descricao||'',
+        dataCriacao:r.data_criacao||'recente'
+      }));
+      nextConvId = Math.max(...convenios.map(x=>x.id), 0) + 1;
+    }
+    if(pp.data && pp.data.length > 0){
+      ppItems = pp.data.map(r=>({cidade:r.cidade||'', val:r.val||'', pct:r.pct||'', ano:r.ano||2026}));
+    }
+    if(pc.data && pc.data.length > 0){
+      ppComponents = pc.data.map(r=>({label:r.label||'', link:r.link||''}));
+    }
+    if(us.data && us.data.length > 0){
+      users = us.data.map(r=>({
+        id:r.id, nome:r.nome||'', login:r.login||'', email:r.email||'',
+        perfil:r.perfil||'Consultor', senha:r.senha||'', ativo:r.ativo!==false
+      }));
+      nextUserId = Math.max(...users.map(u=>u.id), 0) + 1;
+    }
+    toast('Dados carregados!');
+  } catch(e){ console.warn('Load error:', e); }
+  showSyncing(false);
+  renderAll();
+}
+
+// ── SAVE helpers ──────────────────────────────────────────────────────────────
+async function sbSaveFornecedor(obj){
+  if(!db) return;
+  showSyncing(true);
+  const row = {
+    id:obj.id, codigo:obj.codigo, nome:obj.nome, cnpj:obj.cnpj, cat:obj.cat,
+    email:obj.email, tel:obj.tel, resp:obj.resp, cidade:obj.cidade, uf:obj.uf,
+    endereco:obj.end, status:obj.status, score:obj.score, obs:obj.obs, avals:obj.avals
+  };
+  const {error} = await db.from('fornecedores').upsert(row, {onConflict:'id'});
+  if(error) console.error('Save forn:', error);
+  showSyncing(false);
+}
+
+async function sbDeleteFornecedor(id){
+  if(!db) return;
+  showSyncing(true);
+  const {error} = await db.from('fornecedores').delete().eq('id', id);
+  if(error) console.error('Del forn:', error);
+  showSyncing(false);
+}
+
+async function sbSaveAgenda(obj){
+  if(!db) return;
+  showSyncing(true);
+  const row = {id:obj.id, prod:obj.prod, forn_id:obj.fornId, data:obj.data, igrejas:obj.igrejas, obs:obj.obs, status:obj.status};
+  const {error} = await db.from('agenda_compras').upsert(row, {onConflict:'id'});
+  if(error) console.error('Save agenda:', error);
+  showSyncing(false);
+}
+
+async function sbDeleteAgenda(id){
+  if(!db) return;
+  showSyncing(true);
+  await db.from('agenda_compras').delete().eq('id', id);
+  showSyncing(false);
+}
+
+async function sbSaveConvenio(obj){
+  if(!db) return;
+  showSyncing(true);
+  const row = {id:obj.id, titulo:obj.titulo, tipo:obj.tipo, img_url:obj.imgUrl, igrejas:obj.igrejas, descricao:obj.desc, data_criacao:obj.dataCriacao};
+  const {error} = await db.from('convenios').upsert(row, {onConflict:'id'});
+  if(error) console.error('Save conv:', error);
+  showSyncing(false);
+}
+
+async function sbDeleteConvenio(id){
+  if(!db) return;
+  showSyncing(true);
+  await db.from('convenios').delete().eq('id', id);
+  showSyncing(false);
+}
+
+async function sbSavePPItems(){
+  if(!db) return;
+  showSyncing(true);
+  await db.from('pp_items').delete().neq('id', 0);
+  if(ppItems.length > 0){
+    const rows = ppItems.map((it,i)=>({id:i+1, cidade:it.cidade, val:it.val, pct:it.pct, ano:it.ano||2026}));
+    await db.from('pp_items').insert(rows);
+  }
+  showSyncing(false);
+}
+
+async function sbSavePPComponents(){
+  if(!db) return;
+  showSyncing(true);
+  await db.from('pp_components').delete().neq('id', 0);
+  const rows = ppComponents.map((c,i)=>({id:i+1, label:c.label, link:c.link||''}));
+  await db.from('pp_components').insert(rows);
+  showSyncing(false);
+}
+
+async function sbSaveUser(obj){
+  if(!db) return;
+  showSyncing(true);
+  const row = {id:obj.id, nome:obj.nome, login:obj.login, email:obj.email||'', perfil:obj.perfil, senha:obj.senha, ativo:obj.ativo};
+  const {error} = await db.from('usuarios').upsert(row, {onConflict:'id'});
+  if(error) console.error('Save user:', error);
+  showSyncing(false);
+}
+
+async function sbDeleteUser(id){
+  if(!db) return;
+  showSyncing(true);
+  const {error} = await db.from('usuarios').delete().eq('id', id);
+  if(error) console.error('Del user:', error);
+  showSyncing(false);
+}
+
+// ── Patch existing mutation functions to call Supabase ────────────────────────
+const _origSaveForn = saveFornecedor;
+saveFornecedor = async function(){
+  const wasEditing = editingFornId;
+  _origSaveForn();
+  const saved = wasEditing
+    ? fornecedores.find(f=>f.id===wasEditing)
+    : fornecedores[fornecedores.length-1];
+  if(saved) await sbSaveFornecedor(saved);
+};
+
+const _origDelForn = deleteForn;
+deleteForn = async function(id){
+  const before = fornecedores.length;
+  _origDelForn(id);
+  if(fornecedores.length < before) await sbDeleteFornecedor(id);
+};
+
+const _origAddAgenda = addAgenda;
+addAgenda = async function(){
+  _origAddAgenda();
+  const added = agenda[agenda.length-1];
+  if(added) await sbSaveAgenda(added);
+};
+
+const _origDelAgenda = delAgenda;
+delAgenda = async function(id){
+  const before = agenda.length;
+  _origDelAgenda(id);
+  if(agenda.length < before) await sbDeleteAgenda(id);
+};
+
+const _origSetAgStatus = setAgStatus;
+setAgStatus = async function(id, st){
+  _origSetAgStatus(id, st);
+  const item = agenda.find(x=>x.id===id);
+  if(item) await sbSaveAgenda(item);
+};
+
+const _origSaveConv = saveConvenio;
+saveConvenio = async function(){
+  _origSaveConv();
+  const added = convenios[convenios.length-1];
+  if(added) await sbSaveConvenio(added);
+};
+
+const _origDelConv = deleteConvenio;
+deleteConvenio = async function(id){
+  const before = convenios.length;
+  _origDelConv(id);
+  if(convenios.length < before) await sbDeleteConvenio(id);
+};
+
+const _origSavePP = savePPItem;
+savePPItem = async function(){
+  _origSavePP();
+  await sbSavePPItems();
+};
+
+const _origDelPP = deletePPItem;
+deletePPItem = async function(i){
+  _origDelPP(i);
+  await sbSavePPItems();
+};
+
+const _origSaveEditPP = saveEditPP;
+saveEditPP = async function(){
+  _origSaveEditPP();
+  await sbSavePPItems();
+};
+
+const _origSaveCompLink = saveCompLink;
+saveCompLink = async function(){
+  _origSaveCompLink();
+  await sbSavePPComponents();
+};
+
+// ── Patch users ───────────────────────────────────────────────────────────────
+const _origSaveUser = saveUser;
+saveUser = async function(){
+  const wasEditing = editingUserId;
+  _origSaveUser();
+  const saved = wasEditing
+    ? users.find(u=>u.id===wasEditing)
+    : users[users.length-1];
+  if(saved) await sbSaveUser(saved);
+};
+
+const _origDeleteUser = deleteUser;
+deleteUser = async function(id){
+  const before = users.length;
+  _origDeleteUser(id);
+  if(users.length < before) await sbDeleteUser(id);
+};
+
+const _origToggleUser = toggleUser;
+toggleUser = async function(id){
+  _origToggleUser(id);
+  const u = users.find(x=>x.id===id);
+  if(u) await sbSaveUser(u);
+};
+
+// ── Supabase SQL setup hint (run once in Supabase SQL Editor) ──────────────────
+/*
+CREATE TABLE IF NOT EXISTS fornecedores (id int primary key, codigo text, nome text, cnpj text, cat text, email text, tel text, resp text, cidade text, uf text, endereco text, status text, score float, obs text, avals jsonb default '[]');
+CREATE TABLE IF NOT EXISTS agenda_compras (id int primary key, prod text, forn_id int, data text, igrejas int, obs text, status text);
+CREATE TABLE IF NOT EXISTS convenios (id int primary key, titulo text, tipo text, img_url text, igrejas int, descricao text, data_criacao text);
+CREATE TABLE IF NOT EXISTS pp_items (id int primary key, cidade text, val text, pct text, ano int);
+CREATE TABLE IF NOT EXISTS pp_components (id int primary key, label text, link text);
+CREATE TABLE IF NOT EXISTS usuarios (id int primary key, nome text, login text unique, email text, perfil text, senha text, ativo boolean default true);
+-- Enable RLS and add policies as needed
+*/
+
+// ── Init ──────────────────────────────────────────────────────────────────────
+initSupabase();
+
 </script>
 
 <!-- MODAL: Atribuir Link ao Componente -->
@@ -1497,5 +1974,6 @@ setTimeout(renderPPChecklist, 310);
     </div>
   </div>
 </div>
+
 </body>
 </html>
