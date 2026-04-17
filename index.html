@@ -27,7 +27,13 @@ body{font-family:'Barlow',sans-serif;background:var(--bg);color:var(--text);disp
 .app-wrap{display:flex;flex:1;min-height:0}
 
 /* ── SIDEBAR ── */
-#sidebar{width:var(--sidebar);background:var(--navy);display:flex;flex-direction:column;flex-shrink:0;position:fixed;top:0;left:0;height:100vh;z-index:100}
+#sidebar{width:var(--sidebar);background:var(--navy);display:flex;flex-direction:column;flex-shrink:0;position:fixed;top:0;left:0;height:100vh;z-index:100;transition:transform .25s ease}
+#sidebar.hidden{transform:translateX(-100%)}
+#sidebar-toggle{position:fixed;top:50%;left:0;transform:translateY(-50%);z-index:101;background:var(--navy);border:none;border-radius:0 8px 8px 0;width:22px;height:52px;cursor:pointer;display:none;align-items:center;justify-content:center;color:#fff;font-size:14px;font-weight:700;box-shadow:2px 0 8px rgba(0,0,0,.25);transition:background .15s}
+#sidebar-toggle:hover{background:var(--blue)}
+#sidebar.hidden ~ #sidebar-toggle{display:flex}
+#main{margin-left:var(--sidebar);flex:1;display:flex;flex-direction:column;min-height:100vh;transition:margin-left .25s ease}
+#main.expanded{margin-left:0}
 .brand{display:flex;align-items:center;gap:10px;padding:20px 16px 16px;border-bottom:1px solid rgba(255,255,255,.12)}
 .brand-icon{width:38px;height:38px;background:var(--blue);border-radius:10px;display:flex;align-items:center;justify-content:center}
 .brand-icon svg{width:22px;height:22px;fill:#fff}
@@ -44,9 +50,6 @@ nav{flex:1;padding:12px 0;overflow-y:auto}
 .avatar{width:32px;height:32px;border-radius:50%;background:var(--blue);display:flex;align-items:center;justify-content:center;font-weight:700;color:#fff;font-size:13px}
 .user-name{font-size:12px;color:#fff;font-weight:600}
 .user-role{font-size:10px;color:rgba(255,255,255,.45)}
-
-/* ── MAIN ── */
-#main{margin-left:var(--sidebar);flex:1;display:flex;flex-direction:column;min-height:100vh}
 .topbar{background:#fff;border-bottom:1px solid var(--border);padding:0 28px;height:58px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50}
 .page-title{font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:800;color:var(--navy)}
 .topbar-right{display:flex;align-items:center;gap:14px}
@@ -84,23 +87,24 @@ content{display:block}
 .dash-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-top:16px}
 
 /* Left panel with menu shortcuts */
-.left-menu-panel{display:flex;flex-direction:column;gap:12px}
-.menu-btn{border-radius:14px;padding:18px 16px;display:flex;align-items:center;gap:12px;cursor:pointer;color:#fff;font-weight:700;font-size:14px;line-height:1.3;border:none;transition:.15s;width:100%;text-align:left;box-shadow:0 4px 12px rgba(0,0,0,.15)}
+/* left-menu-panel defined below in dash-layout section */
+.menu-btn{border-radius:14px;padding:14px 14px;display:flex;align-items:center;gap:12px;cursor:pointer;color:#fff;font-weight:700;font-size:13px;line-height:1.3;border:none;transition:.15s;width:100%;text-align:left;box-shadow:0 4px 12px rgba(0,0,0,.15)}
 .menu-btn:hover{opacity:.9;transform:translateX(3px);box-shadow:0 6px 16px rgba(0,0,0,.2)}
 .menu-btn.blue{background:linear-gradient(135deg,var(--blue),var(--blue-light))}
 .menu-btn.green{background:linear-gradient(135deg,#159c5e,var(--green))}
 .menu-btn.cyan{background:linear-gradient(135deg,#0891b2,#06b6d4)}
 .menu-btn.purple{background:linear-gradient(135deg,#7c3aed,#a855f7)}
 .menu-btn.coral{background:linear-gradient(135deg,#dc2626,#f87171)}
-.menu-btn-icon{width:46px;height:46px;border-radius:12px;background:rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;flex-shrink:0}
-.menu-btn-icon svg{width:26px;height:26px;fill:#fff}
+.menu-btn-icon{width:40px;height:40px;border-radius:10px;background:rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.menu-btn-icon svg{width:22px;height:22px;fill:#fff}
 
 /* ── 3-COLUMN DASH LAYOUT ── */
 .dash-3col{display:grid;grid-template-columns:auto 1fr 1fr auto;gap:16px;align-items:start}
 .dash-center{display:grid;grid-template-columns:1fr 1fr;gap:16px}
 
 /* Main dashboard layout */
-.dash-layout{display:grid;grid-template-columns:210px 1fr 1fr 260px;gap:16px;align-items:start}
+.dash-layout{display:grid;grid-template-columns:220px 1fr 1fr 270px;gap:16px;align-items:start}
+.left-menu-panel{display:flex;flex-direction:column;gap:9px}
 
 /* ── CARD ── */
 .card{background:var(--card);border-radius:12px;border:1px solid var(--border);overflow:hidden}
@@ -252,11 +256,11 @@ textarea{resize:vertical;min-height:80px}
     <div class="login-error" id="login-err">Usuário ou senha incorretos.</div>
     <div class="form-group" style="margin-bottom:12px">
       <label>Usuário</label>
-      <input id="l-user" type="text" placeholder="Digite seu usuário" value="admin">
+      <input id="l-user" type="text" placeholder="Digite seu usuário">
     </div>
     <div class="form-group" style="margin-bottom:16px">
       <label>Senha</label>
-      <input id="l-pass" type="password" placeholder="••••••••" value="1234">
+      <input id="l-pass" type="password" placeholder="••••••••">
     </div>
     <button class="login-btn" onclick="doLogin()">Entrar</button>
   </div>
@@ -280,7 +284,7 @@ textarea{resize:vertical;min-height:80px}
       <svg viewBox="0 0 24 24" fill="currentColor"><path d="M7.5 21H2V9h5.5v12zm7.25-18h-5.5v18h5.5V3zM22 11h-5.5v10H22V11z"/></svg> Ranking
     </div>
     <div class="nav-item" onclick="showPage('agenda',this)">
-      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z"/></svg> Agenda de Compras
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z"/></svg> Compras Coordenadas
     </div>
     <div class="nav-section">Cadastros</div>
     <div class="nav-item" onclick="showPage('cad-fornecedor',this)">
@@ -296,11 +300,14 @@ textarea{resize:vertical;min-height:80px}
     <div class="nav-item" onclick="showPage('pintura',this)">
       <svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 14c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3zm13.71-9.37l-1.34-1.34a1 1 0 0 0-1.41 0L9 12.25 11.75 15l8.96-8.96a1 1 0 0 0 0-1.41z"/></svg> Pintura Programada
     </div>
-    <div class="nav-item" onclick="doLogout()">
-      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5-5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"/></svg> Sair
+    <div class="nav-item" onclick="toggleSidebar()" style="color:rgba(255,255,255,.55)">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg> Ocultar Menu
     </div>
   </nav>
 </div>
+
+<!-- Botão para reabrir sidebar -->
+<button id="sidebar-toggle" onclick="toggleSidebar()" title="Mostrar menu">›</button>
 
 <!-- MAIN -->
 <div id="main">
@@ -366,9 +373,21 @@ textarea{resize:vertical;min-height:80px}
             </div>
             <div>Pintura Programada</div>
           </button>
+          <button class="menu-btn" style="background:linear-gradient(135deg,#d97706,#f59e0b)" onclick="showPage('dashboard',null)">
+            <div class="menu-btn-icon">
+              <svg viewBox="0 0 24 24"><path d="M11.8 10.9c-2.27-.59-3-1.2-3-2.15 0-1.09 1.01-1.85 2.7-1.85 1.78 0 2.44.85 2.5 2.1h2.21c-.07-1.72-1.12-3.3-3.21-3.81V3h-3v2.16c-1.94.42-3.5 1.68-3.5 3.61 0 2.31 1.91 3.46 4.7 4.13 2.5.6 3 1.48 3 2.41 0 .69-.49 1.79-2.7 1.79-2.06 0-2.87-.92-2.98-2.1h-2.2c.12 2.19 1.76 3.42 3.68 3.83V21h3v-2.15c1.95-.37 3.5-1.5 3.5-3.55 0-2.84-2.43-3.81-4.7-4.4z"/></svg>
+            </div>
+            <div>Economia de Compras</div>
+          </button>
+          <button class="menu-btn" style="background:linear-gradient(135deg,#1e40af,#3b82f6)" onclick="showPage('agenda',null)">
+            <div class="menu-btn-icon">
+              <svg viewBox="0 0 24 24"><path d="M17 12h-5v5h5v-5zM16 1v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2h-1V1h-2zm3 18H5V8h14v11z"/></svg>
+            </div>
+            <div>Compras Coordenadas</div>
+          </button>
         </div>
 
-        <!-- Column 2: Top 10 + Atividades -->
+        <!-- Column 2: Top 10 -->
         <div>
           <div class="card" style="margin-bottom:14px">
             <div class="card-header">
@@ -381,10 +400,6 @@ textarea{resize:vertical;min-height:80px}
                 <tbody id="top10-body"></tbody>
               </table>
             </div>
-          </div>
-          <div class="card">
-            <div class="card-header"><span class="card-title">Atividades Recentes</span></div>
-            <div class="card-body" id="atividades-body"></div>
           </div>
         </div>
 
@@ -404,43 +419,50 @@ textarea{resize:vertical;min-height:80px}
           </div>
           <div class="card">
             <div class="card-header">
-              <span class="card-title">Agenda de Compras Futuras</span>
+              <span class="card-title">Compras Coordenadas Futuras</span>
               <button class="btn btn-primary btn-sm" onclick="showPage('agenda',null)">+ Adicionar Pedido</button>
             </div>
             <div class="card-body" id="agenda-dash"></div>
           </div>
         </div>
 
-        <!-- Column 4: Convênios -->
-        <div class="conv-panel">
-          <div class="conv-tabs">
-            <div class="conv-tab active" onclick="switchConvTab('convenios', this)">Convênios</div>
-            <div class="conv-tab" onclick="switchConvTab('nacionais', this)">Nacionais</div>
-            <div class="conv-tab" onclick="switchConvTab('regionais', this)">Regionais</div>
-          </div>
-          <div class="conv-body">
-            <div class="conv-top">
-              <div class="conv-location">
-                <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
-                Brás Nacional
+        <!-- Column 4: Convênios + Atividades Recentes -->
+        <div style="display:flex;flex-direction:column;gap:14px">
+          <div class="conv-panel">
+            <div class="conv-tabs">
+              <div class="conv-tab active" onclick="switchConvTab('convenios', this)">Convênios</div>
+              <div class="conv-tab" onclick="switchConvTab('nacionais', this)">Nacionais</div>
+              <div class="conv-tab" onclick="switchConvTab('regionais', this)">Regionais</div>
+            </div>
+            <div class="conv-body">
+              <div class="conv-top">
+                <div class="conv-location">
+                  <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+                  Brás Nacional
+                </div>
+                <button class="conv-add-btn" onclick="openConvModal()">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
+                  Novo Boletim
+                </button>
               </div>
-              <button class="conv-add-btn" onclick="openConvModal()">
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
-                Novo Boletim
+
+              <!-- Convênios list -->
+              <div id="conv-list"></div>
+
+              <div style="display:flex;align-items:center;gap:8px;margin-top:10px">
+                <div class="conv-num" id="conv-count">4</div>
+                <span style="font-size:11px;color:var(--muted)">Brás Nacional</span>
+              </div>
+              <button class="conv-access-btn" onclick="showPage('convenios',null)">
+                <svg viewBox="0 0 24 24"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg>
+                Acessar Convênios Nacionais
               </button>
             </div>
-
-            <!-- Convênios list -->
-            <div id="conv-list"></div>
-
-            <div style="display:flex;align-items:center;gap:8px;margin-top:10px">
-              <div class="conv-num" id="conv-count">4</div>
-              <span style="font-size:11px;color:var(--muted)">Brás Nacional</span>
-            </div>
-            <button class="conv-access-btn" onclick="showPage('convenios',null)">
-              <svg viewBox="0 0 24 24"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg>
-              Acessar Convênios Nacionais
-            </button>
+          </div>
+          <!-- Atividades Recentes moved here -->
+          <div class="card">
+            <div class="card-header"><span class="card-title">Atividades Recentes</span></div>
+            <div class="card-body" id="atividades-body"></div>
           </div>
         </div>
       </div>
@@ -485,22 +507,45 @@ textarea{resize:vertical;min-height:80px}
 
     <!-- AGENDA -->
     <div class="page" id="page-agenda">
+      <!-- Filters Row -->
+      <div class="form-section" style="margin-bottom:16px;padding:16px 20px">
+        <div style="font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:800;color:var(--navy);margin-bottom:12px">Filtros</div>
+        <div style="display:grid;grid-template-columns:repeat(6,1fr);gap:10px;align-items:end">
+          <div class="form-group" style="margin:0"><label>Fornecedor</label><select id="ag-filter-forn" onchange="renderAgenda()"><option value="">Todos</option></select></div>
+          <div class="form-group" style="margin:0"><label>Produto</label><input id="ag-filter-prod" type="text" placeholder="Buscar..." oninput="renderAgenda()"></div>
+          <div class="form-group" style="margin:0"><label>Data</label><input id="ag-filter-data" type="date" onchange="renderAgenda()"></div>
+          <div class="form-group" style="margin:0"><label>Administração</label><input id="ag-filter-admin" type="text" placeholder="Administração..." oninput="renderAgenda()"></div>
+          <div class="form-group" style="margin:0"><label>Comprador</label><input id="ag-filter-comprador" type="text" placeholder="Comprador..." oninput="renderAgenda()"></div>
+          <div class="form-group" style="margin:0"><label>Contato</label><input id="ag-filter-contato" type="text" placeholder="Contato..." oninput="renderAgenda()"></div>
+        </div>
+      </div>
       <div style="display:flex;gap:16px;margin-bottom:18px;align-items:flex-start">
         <div class="form-section" style="flex:1;margin-bottom:0">
           <div class="form-section-title">Novo Pedido</div>
           <div class="form-grid">
-            <div class="form-group"><label>Produto / Serviço</label><input id="ag-prod" type="text" placeholder="Nome do produto"></div>
+            <div class="form-group"><label>Produto Convênio</label>
+              <select id="ag-prod-conv">
+                <option value="">-- Selecione --</option>
+                <option value="Andaime">Andaime</option>
+                <option value="Alcool Gel">Alcool Gel</option>
+                <option value="Copa">Copa</option>
+                <option value="Etc.">Etc.</option>
+              </select>
+            </div>
             <div class="form-group"><label>Fornecedor</label><select id="ag-forn"></select></div>
             <div class="form-group"><label>Data</label><input id="ag-data" type="date"></div>
             <div class="form-group"><label>Igrejas</label><input id="ag-igr" type="number" min="1" value="1"></div>
+            <div class="form-group"><label>Administração</label><input id="ag-admin" type="text" placeholder="Administração responsável"></div>
+            <div class="form-group"><label>Comprador</label><input id="ag-comprador" type="text" placeholder="Nome do comprador"></div>
+            <div class="form-group full"><label>Contato</label><input id="ag-contato" type="text" placeholder="Telefone ou e-mail de contato"></div>
             <div class="form-group full"><label>Observações</label><textarea id="ag-obs" rows="2" placeholder="Detalhes do pedido"></textarea></div>
           </div>
           <div class="form-actions"><button class="btn btn-primary" onclick="addAgenda()">+ Adicionar Pedido</button></div>
         </div>
       </div>
       <div class="card">
-        <div class="card-header"><span class="card-title">Agenda de Compras</span></div>
-        <div class="card-body"><table><thead><tr><th>#</th><th>Produto</th><th>Fornecedor</th><th>Data</th><th>Igrejas</th><th>Status</th><th>Ações</th></tr></thead><tbody id="agenda-body"></tbody></table></div>
+        <div class="card-header"><span class="card-title">Compras Coordenadas</span></div>
+        <div class="card-body" style="overflow-x:auto"><table><thead><tr><th>#</th><th>Produto</th><th>Fornecedor</th><th>Data</th><th>Igrejas</th><th>Administração</th><th>Comprador</th><th>Contato</th><th>Status</th><th>Ações</th></tr></thead><tbody id="agenda-body"></tbody></table></div>
       </div>
     </div>
 
@@ -874,7 +919,7 @@ let agenda = [
 ];
 
 let users = [
-  {id:1,nome:'Administrador CNS',login:'admin',email:'admin@cns.com',perfil:'Administrador',senha:'1234',ativo:true},
+  {id:1,nome:'Administrador CNS',login:'admin',email:'admin@cns.com',perfil:'Administrador',senha:'cns@2024',ativo:true},
   {id:2,nome:'Gestor Regional',login:'gestor1',email:'gestor@cns.com',perfil:'Gestor',senha:'gestor123',ativo:true},
 ];
 
@@ -892,32 +937,72 @@ let nextUserId = 3;
 let currentConvTab = 'convenios';
 
 // ─── LOGIN ───────────────────────────────────────────────────────────────────
-function doLogin(){
+async function doLogin(){
   const u = document.getElementById('l-user').value.trim();
   const p = document.getElementById('l-pass').value.trim();
+  const errEl = document.getElementById('login-err');
+  const btn = document.querySelector('.login-btn');
+  if(!u || !p){
+    errEl.textContent = 'Informe o usuário e a senha.';
+    errEl.style.display='block';
+    return;
+  }
+  errEl.style.display='none';
+  btn.textContent='Verificando...';
+  btn.disabled=true;
+
+  // 1) Tenta autenticar direto no Supabase (usuários do banco)
+  if(db){
+    try{
+      const {data, error} = await db.from('usuarios').select('*').eq('login', u).eq('senha', p).eq('ativo', true);
+      if(!error && data && data.length > 0){
+        const r = data[0];
+        const found = {id:r.id, nome:r.nome||'', login:r.login||'', email:r.email||'', perfil:r.perfil||'Consultor', senha:r.senha||'', ativo:r.ativo!==false};
+        _loginSuccess(found);
+        btn.textContent='Entrar'; btn.disabled=false;
+        return;
+      }
+    } catch(e){ console.warn('Supabase login query failed:', e); }
+  }
+
+  // 2) Fallback: verifica usuários locais
   const found = users.find(x=>x.login===u && x.senha===p && x.ativo);
   if(found){
-    currentUser = found;
-    document.getElementById('login-screen').classList.remove('open');
-    document.getElementById('topbar-uname').textContent = found.nome;
-    document.getElementById('topbar-urole').textContent = found.perfil;
-    document.getElementById('topbar-avatar').textContent = found.nome[0].toUpperCase();
-    applyAdminVisibility();
-    loadFromSupabase();
+    _loginSuccess(found);
   } else {
-    document.getElementById('login-err').style.display='block';
+    errEl.textContent = 'Usuário ou senha incorretos.';
+    errEl.style.display='block';
   }
+  btn.textContent='Entrar'; btn.disabled=false;
+}
+
+function _loginSuccess(found){
+  currentUser = found;
+  document.getElementById('login-screen').classList.remove('open');
+  document.getElementById('topbar-uname').textContent = found.nome;
+  document.getElementById('topbar-urole').textContent = found.perfil;
+  document.getElementById('topbar-avatar').textContent = found.nome[0].toUpperCase();
+  applyAdminVisibility();
+  loadFromSupabase();
 }
 function doLogout(){
   currentUser = null;
   document.getElementById('login-screen').classList.add('open');
+  document.getElementById('l-user').value='';
   document.getElementById('l-pass').value='';
   document.getElementById('login-err').style.display='none';
+}
+
+function toggleSidebar(){
+  const sb = document.getElementById('sidebar');
+  const main = document.getElementById('main');
+  sb.classList.toggle('hidden');
+  main.classList.toggle('expanded');
 }
 document.getElementById('l-pass').addEventListener('keydown',e=>{if(e.key==='Enter')doLogin()});
 
 // ─── NAVIGATION ──────────────────────────────────────────────────────────────
-const pageTitles={dashboard:'Dashboard',fornecedores:'Fornecedores',ranking:'Ranking de Fornecedores','cad-fornecedor':'Cadastrar Fornecedor',agenda:'Agenda de Compras',usuarios:'Gestão de Usuários',convenios:'Convênios'};
+const pageTitles={dashboard:'Dashboard',fornecedores:'Fornecedores',ranking:'Ranking de Fornecedores','cad-fornecedor':'Cadastrar Fornecedor',agenda:'Compras Coordenadas',usuarios:'Gestão de Usuários',convenios:'Convênios'};
 function showPage(id, el){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
@@ -1182,14 +1267,39 @@ function renderFornSelectAgenda(){
   const sel=document.getElementById('ag-forn');
   if(!sel) return;
   sel.innerHTML=fornecedores.map(f=>`<option value="${f.id}">${f.nome}</option>`).join('');
+  // Also populate filter dropdown
+  const filterSel=document.getElementById('ag-filter-forn');
+  if(filterSel){
+    filterSel.innerHTML='<option value="">Todos</option>'+fornecedores.map(f=>`<option value="${f.id}">${f.nome}</option>`).join('');
+  }
 }
 function renderAgenda(){
   renderFornSelectAgenda();
-  document.getElementById('agenda-body').innerHTML=agenda.map(a=>{
+  const fForn = document.getElementById('ag-filter-forn')?.value||'';
+  const fProd = (document.getElementById('ag-filter-prod')?.value||'').toLowerCase();
+  const fData = document.getElementById('ag-filter-data')?.value||'';
+  const fAdmin = (document.getElementById('ag-filter-admin')?.value||'').toLowerCase();
+  const fComprador = (document.getElementById('ag-filter-comprador')?.value||'').toLowerCase();
+  const fContato = (document.getElementById('ag-filter-contato')?.value||'').toLowerCase();
+
+  let list = agenda.filter(a=>{
+    if(fForn && String(a.fornId)!==fForn) return false;
+    if(fProd && !(a.prod||'').toLowerCase().includes(fProd)) return false;
+    if(fData && a.data!==fData) return false;
+    if(fAdmin && !(a.admin||'').toLowerCase().includes(fAdmin)) return false;
+    if(fComprador && !(a.comprador||'').toLowerCase().includes(fComprador)) return false;
+    if(fContato && !(a.contato||'').toLowerCase().includes(fContato)) return false;
+    return true;
+  });
+
+  document.getElementById('agenda-body').innerHTML=list.map(a=>{
     const f=fornecedores.find(x=>x.id===a.fornId);
     return `<tr><td><b>${String(a.id).padStart(2,'0')}</b></td>
       <td>${a.prod}</td><td>${f?f.nome:'-'}</td>
       <td>${fmtDate(a.data)}</td><td>${a.igrejas}</td>
+      <td style="font-size:12px">${a.admin||'-'}</td>
+      <td style="font-size:12px">${a.comprador||'-'}</td>
+      <td style="font-size:12px">${a.contato||'-'}</td>
       <td>${statusBadge(a.status)}</td>
       <td style="white-space:nowrap">
         <button class="btn btn-outline btn-sm" style="color:var(--green)" onclick="setAgStatus(${a.id},'Concluído')">✓</button>
@@ -1198,15 +1308,21 @@ function renderAgenda(){
   }).join('');
 }
 function addAgenda(){
-  const prod=document.getElementById('ag-prod').value.trim();
+  const prod=document.getElementById('ag-prod-conv').value.trim();
   const fornId=parseInt(document.getElementById('ag-forn').value);
   const data=document.getElementById('ag-data').value;
   const igr=parseInt(document.getElementById('ag-igr').value)||1;
   const obs=document.getElementById('ag-obs').value;
-  if(!prod){toast('Informe o produto','error');return;}
-  agenda.push({id:nextAgId++,prod,fornId,data,igrejas:igr,obs,status:'Agendado'});
-  document.getElementById('ag-prod').value='';
+  const admin=document.getElementById('ag-admin').value.trim();
+  const comprador=document.getElementById('ag-comprador').value.trim();
+  const contato=document.getElementById('ag-contato').value.trim();
+  if(!prod){toast('Selecione o Produto Convênio','error');return;}
+  agenda.push({id:nextAgId++,prod,fornId,data,igrejas:igr,obs,admin,comprador,contato,status:'Agendado'});
+  document.getElementById('ag-prod-conv').value='';
   document.getElementById('ag-obs').value='';
+  document.getElementById('ag-admin').value='';
+  document.getElementById('ag-comprador').value='';
+  document.getElementById('ag-contato').value='';
   renderAgenda();
   toast('Pedido adicionado!');
 }
@@ -1714,7 +1830,8 @@ async function loadFromSupabase(){
     if(a.data && a.data.length > 0){
       agenda = a.data.map(r=>({
         id:r.id, prod:r.prod||'', fornId:r.forn_id||0, data:r.data||'',
-        igrejas:r.igrejas||1, obs:r.obs||'', status:r.status||'Agendado'
+        igrejas:r.igrejas||1, obs:r.obs||'', status:r.status||'Agendado',
+        admin:r.admin||'', comprador:r.comprador||'', contato:r.contato||''
       }));
       nextAgId = Math.max(...agenda.map(x=>x.id), 0) + 1;
     }
