@@ -273,46 +273,60 @@ textarea{resize:vertical;min-height:80px}
     <div><div class="brand-name" style="font-size:10px;line-height:1.2">COMISSÃO REGIONAL<br>DE SUPRIMENTOS</div><div class="brand-sub">Gestão de Fornecedores</div></div>
   </div>
   <nav>
+    <!-- 1. PRINCIPAL -->
     <div class="nav-section">Principal</div>
     <div class="nav-item active" onclick="showPage('dashboard',this)">
       <svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/></svg> Dashboard
     </div>
-    <div class="nav-item" onclick="showPage('fornecedores',this)">
-      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20 7H4c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V9c0-1.1-.9-2-2-2zm-9 3h2v2h-2v-2zm0 4h2v2h-2v-2zM7 10h2v2H7v-2zm0 4h2v2H7v-2zm10 4H7v-2h10v2zm0-4h-2v-2h2v2zm0-4h-2v-2h2v2z"/></svg> Fornecedores
-    </div>
-    <div class="nav-item" onclick="showPage('ranking',this)">
-      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M7.5 21H2V9h5.5v12zm7.25-18h-5.5v18h5.5V3zM22 11h-5.5v10H22V11z"/></svg> Ranking
-    </div>
-    <div class="nav-item" onclick="showPage('agenda',this)">
-      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z"/></svg> Compras Coordenadas
-    </div>
-    <div class="nav-section">Cadastros</div>
-    <div class="nav-item" onclick="showPage('cad-fornecedor',this)">
-      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg> Novo Fornecedor
-    </div>
-    <div class="nav-item admin-only-nav" onclick="showPage('produtos',this)">
-      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 3c1.93 0 3.5 1.57 3.5 3.5S13.93 13 12 13s-3.5-1.57-3.5-3.5S10.07 6 12 6zm7 13H5v-.23c0-.62.28-1.2.76-1.58C7.47 15.82 9.64 15 12 15s4.53.82 6.24 2.19c.48.38.76.97.76 1.58V19z"/></svg> Produtos
-    </div>
-    <div class="nav-section">Administração</div>
-    <div class="nav-item" onclick="showPage('usuarios',this)">
-      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg> Usuários
-    </div>
     <div class="nav-item" onclick="showPage('convenios',this)">
       <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 3c1.93 0 3.5 1.57 3.5 3.5S13.93 13 12 13s-3.5-1.57-3.5-3.5S10.07 6 12 6zm7 13H5v-.23c0-.62.28-1.2.76-1.58C7.47 15.82 9.64 15 12 15s4.53.82 6.24 2.19c.48.38.76.97.76 1.58V19z"/></svg> Convênios
     </div>
-    <div class="nav-item" onclick="showPage('pintura',this)">
-      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 14c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3zm13.71-9.37l-1.34-1.34a1 1 0 0 0-1.41 0L9 12.25 11.75 15l8.96-8.96a1 1 0 0 0 0-1.41z"/></svg> Pintura Programada
+    <div class="nav-item" onclick="showPage('ranking',this)">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M7.5 21H2V9h5.5v12zm7.25-18h-5.5v18h5.5V3zM22 11h-5.5v10H22V11z"/></svg> Ranking Fornecedores
+    </div>
+
+    <!-- 2. PRODUTOS/SERVIÇOS -->
+    <div class="nav-section">Produtos/Serviços</div>
+    <div class="nav-item" onclick="showPage('fornecedores',this)">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20 7H4c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V9c0-1.1-.9-2-2-2zm-9 3h2v2h-2v-2zm0 4h2v2h-2v-2zM7 10h2v2H7v-2zm0 4h2v2H7v-2zm10 4H7v-2h10v2zm0-4h-2v-2h2v2zm0-4h-2v-2h2v2z"/></svg> Fornecedores
+    </div>
+    <div class="nav-item" onclick="showPage('produtos',this)">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg> Produtos
+    </div>
+
+    <!-- 3. COMPRAS -->
+    <div class="nav-section">Compras</div>
+    <div class="nav-item" onclick="showPage('agenda',this)">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z"/></svg> Compras Coordenadas
     </div>
     <div class="nav-item" onclick="showPage('economia',this)">
       <svg viewBox="0 0 24 24" fill="currentColor"><path d="M11.8 10.9c-2.27-.59-3-1.2-3-2.15 0-1.09 1.01-1.85 2.7-1.85 1.78 0 2.44.85 2.5 2.1h2.21c-.07-1.72-1.12-3.3-3.21-3.81V3h-3v2.16c-1.94.42-3.5 1.68-3.5 3.61 0 2.31 1.91 3.46 4.7 4.13 2.5.6 3 1.48 3 2.41 0 .69-.49 1.79-2.7 1.79-2.06 0-2.87-.92-2.98-2.1h-2.2c.12 2.19 1.76 3.42 3.68 3.83V21h3v-2.15c1.95-.37 3.5-1.5 3.5-3.55 0-2.84-2.43-3.81-4.7-4.4z"/></svg> Economia de Compras
     </div>
-    <div class="nav-item" onclick="showPage('cns-limpeza',this)">
+
+    <!-- 4. PROJETOS CNS -->
+    <div class="nav-section nav-cns-only">Projetos CNS</div>
+    <div class="nav-item nav-cns-only" onclick="showPage('pintura',this)">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 14c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3zm13.71-9.37l-1.34-1.34a1 1 0 0 0-1.41 0L9 12.25 11.75 15l8.96-8.96a1 1 0 0 0 0-1.41z"/></svg> Pintura Programada
+    </div>
+    <div class="nav-item nav-cns-only" onclick="showPage('cns-limpeza',this)">
       <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19.36 2.72L20.78 4.14 16.19 8.72C17.24 10.41 17 12.55 15.59 14L9.13 7.53C10.57 6.12 12.71 5.88 14.4 6.94L19.36 2.72M5.93 17.57C3.92 15.56 2.69 13.16 2.36 10.72L7.46 8.53L15.48 16.56L13.29 21.65C10.84 21.33 8.44 20.09 6.43 18.08L5.93 17.57Z"/></svg> CNS Limpeza
     </div>
-    <div class="nav-item" onclick="toggleSidebar()" style="color:rgba(255,255,255,.55)">
-      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg> Ocultar Menu
+    <div class="nav-item nav-cns-only" onclick="showPage('gestao-energias',this)">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 2v11h3v9l7-12h-4l4-8z"/></svg> Gestão de Energias
+    </div>
+
+    <!-- 5. CONFIGURAÇÕES -->
+    <div class="nav-section nav-master-regional-only">Configurações</div>
+    <div class="nav-item nav-master-regional-only" onclick="showPage('usuarios',this)">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg> Usuários
     </div>
   </nav>
+  <!-- Botão ocultar no rodapé da sidebar -->
+  <div style="padding:10px 12px;border-top:1px solid rgba(255,255,255,.1)">
+    <div class="nav-item" onclick="toggleSidebar()" style="color:rgba(255,255,255,.55);border-left:none;padding:8px 10px;border-radius:7px">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M15.41 16.59L10.83 12l4.58-4.59L14 6l-6 6 6 6z"/></svg> Ocultar Sidebar
+    </div>
+  </div>
 </div>
 
 <!-- Botão para reabrir sidebar -->
@@ -439,15 +453,14 @@ textarea{resize:vertical;min-height:80px}
         <div style="display:flex;flex-direction:column;gap:14px">
           <div class="conv-panel">
             <div class="conv-tabs">
-              <div class="conv-tab active" onclick="switchConvTab('convenios', this)">Convênios</div>
-              <div class="conv-tab" onclick="switchConvTab('nacionais', this)">Nacionais</div>
+              <div class="conv-tab active" onclick="switchConvTab('nacionais', this)">Nacionais</div>
               <div class="conv-tab" onclick="switchConvTab('regionais', this)">Regionais</div>
             </div>
             <div class="conv-body">
               <div class="conv-top">
                 <div class="conv-location">
                   <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
-                  Brás Nacional
+                  Convênios
                 </div>
                 <button class="conv-add-btn" onclick="openConvModal()">
                   <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
@@ -460,11 +473,11 @@ textarea{resize:vertical;min-height:80px}
 
               <div style="display:flex;align-items:center;gap:8px;margin-top:10px">
                 <div class="conv-num" id="conv-count">4</div>
-                <span style="font-size:11px;color:var(--muted)">Brás Nacional</span>
+                <span style="font-size:11px;color:var(--muted)">Convênios</span>
               </div>
               <button class="conv-access-btn" onclick="showPage('convenios',null)">
                 <svg viewBox="0 0 24 24"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg>
-                Acessar Convênios Nacionais
+                Acessar Convênios
               </button>
             </div>
           </div>
@@ -495,7 +508,7 @@ textarea{resize:vertical;min-height:80px}
         </select>
       </div>
       <div class="card">
-        <div class="card-header"><span class="card-title" id="forn-count">Fornecedores</span><button class="btn btn-primary btn-sm" onclick="showPage('cad-fornecedor',null)">+ Novo</button></div>
+        <div class="card-header"><span class="card-title" id="forn-count">Fornecedores</span><button class="btn btn-primary btn-sm" onclick="openNovoFornecedorForm()">+ Novo Fornecedor</button></div>
         <div class="card-body"><table><thead><tr><th>#</th><th>Nome</th><th>Categoria</th><th>CNPJ</th><th>Score</th><th>Status</th><th>Ações</th></tr></thead><tbody id="forn-body"></tbody></table></div>
       </div>
     </div>
@@ -614,13 +627,43 @@ textarea{resize:vertical;min-height:80px}
             <div class="form-group"><label>Nome Completo *</label><input id="u-nome" type="text" placeholder="Nome completo"></div>
             <div class="form-group"><label>Login (usuário) *</label><input id="u-login" type="text" placeholder="usuario123"></div>
             <div class="form-group"><label>E-mail</label><input id="u-email" type="email" placeholder="email@cns.com"></div>
-            <div class="form-group"><label>Perfil</label>
-              <select id="u-perfil"><option>Administrador</option><option>Gestor</option><option>Consultor</option></select>
+            <div class="form-group"><label>Perfil / Cargo *</label>
+              <select id="u-perfil" onchange="onPerfilChange()">
+                <option value="Master">Master</option>
+                <option value="Regional">Regional</option>
+                <option value="Administrador">Administrador</option>
+                <option value="Coordenador">Coordenador</option>
+                <option value="Comprador">Comprador</option>
+              </select>
             </div>
+            <div class="form-group"><label>Cargo / Ministério</label><input id="u-cargo" type="text" placeholder="Ex: Compras, Finanças, TI..."></div>
             <div class="form-group"><label>Cidade</label><input id="u-cidade" type="text" placeholder="Ex: Campinas"></div>
+            <!-- Módulos visíveis apenas para Coordenador -->
+            <div class="form-group full" id="u-modulos-group" style="display:none">
+              <label>Módulos que o Coordenador pode acessar</label>
+              <div style="display:flex;flex-wrap:wrap;gap:10px;margin-top:4px" id="u-modulos-checkboxes">
+                <label style="display:flex;align-items:center;gap:5px;font-size:12px;text-transform:none;font-weight:500;letter-spacing:0"><input type="checkbox" value="fornecedores"> Fornecedores</label>
+                <label style="display:flex;align-items:center;gap:5px;font-size:12px;text-transform:none;font-weight:500;letter-spacing:0"><input type="checkbox" value="ranking"> Ranking</label>
+                <label style="display:flex;align-items:center;gap:5px;font-size:12px;text-transform:none;font-weight:500;letter-spacing:0"><input type="checkbox" value="convenios"> Convênios</label>
+                <label style="display:flex;align-items:center;gap:5px;font-size:12px;text-transform:none;font-weight:500;letter-spacing:0"><input type="checkbox" value="agenda"> Compras Coordenadas</label>
+                <label style="display:flex;align-items:center;gap:5px;font-size:12px;text-transform:none;font-weight:500;letter-spacing:0"><input type="checkbox" value="economia"> Economia de Compras</label>
+                <label style="display:flex;align-items:center;gap:5px;font-size:12px;text-transform:none;font-weight:500;letter-spacing:0"><input type="checkbox" value="produtos"> Produtos</label>
+                <label style="display:flex;align-items:center;gap:5px;font-size:12px;text-transform:none;font-weight:500;letter-spacing:0"><input type="checkbox" value="pintura"> Pintura Programada</label>
+                <label style="display:flex;align-items:center;gap:5px;font-size:12px;text-transform:none;font-weight:500;letter-spacing:0"><input type="checkbox" value="cns-limpeza"> CNS Limpeza</label>
+                <label style="display:flex;align-items:center;gap:5px;font-size:12px;text-transform:none;font-weight:500;letter-spacing:0"><input type="checkbox" value="gestao-energias"> Gestão de Energias</label>
+              </div>
+            </div>
+            <!-- Cidades para Coordenador -->
+            <div class="form-group full" id="u-cidades-coord-group" style="display:none">
+              <label>Cidades auxiliadas (Coordenador)</label>
+              <input id="u-cidades-coord" type="text" placeholder="Ex: Campinas, São Paulo, Rio de Janeiro">
+              <small style="color:var(--muted);font-size:11px">Separe com vírgula. O Coordenador terá acesso somente a estas cidades.</small>
+            </div>
             <div class="form-group"><label>Senha *</label><input id="u-senha" type="password" placeholder="••••••••"></div>
             <div class="form-group"><label>Confirmar Senha *</label><input id="u-senha2" type="password" placeholder="••••••••"></div>
           </div>
+          <!-- Resumo de permissões do perfil selecionado -->
+          <div id="u-perfil-info" style="margin-top:12px;padding:10px 14px;background:#f4f7fd;border-radius:8px;border:1px solid var(--border);font-size:12px;color:var(--muted);display:none"></div>
           <div class="form-actions" style="margin-top:14px">
             <button class="btn btn-outline" onclick="clearUserForm()">Limpar</button>
             <button class="btn btn-primary" id="u-save-btn" onclick="saveUser()">Salvar Usuário</button>
@@ -633,14 +676,15 @@ textarea{resize:vertical;min-height:80px}
           <div class="card-body">
             <table style="table-layout:fixed;width:100%">
               <colgroup>
-                <col style="width:24%">
-                <col style="width:14%">
-                <col style="width:14%">
-                <col style="width:14%">
+                <col style="width:20%">
+                <col style="width:12%">
+                <col style="width:13%">
+                <col style="width:13%">
                 <col style="width:10%">
-                <col style="width:24%">
+                <col style="width:10%">
+                <col style="width:22%">
               </colgroup>
-              <thead><tr><th>Nome</th><th>Login</th><th>Perfil</th><th>Cidade</th><th>Status</th><th>Ações</th></tr></thead>
+              <thead><tr><th>Nome</th><th>Login</th><th>Perfil</th><th>Cargo/Ministério</th><th>Cidade</th><th>Status</th><th>Ações</th></tr></thead>
               <tbody id="users-body"></tbody>
             </table>
           </div>
@@ -662,9 +706,10 @@ textarea{resize:vertical;min-height:80px}
         <div class="form-grid">
           <div class="form-group"><label>Título *</label><input id="cv-titulo" type="text" placeholder="Ex: Boletim CNS Convênios Abril 2024"></div>
           <div class="form-group"><label>Tipo</label>
-            <select id="cv-tipo"><option value="convenios">Convênios</option><option value="nacionais">Nacionais</option><option value="regionais">Regionais</option></select>
+            <select id="cv-tipo"><option value="nacionais">Nacionais</option><option value="regionais">Regionais</option></select>
           </div>
           <div class="form-group"><label>URL da Imagem</label><input id="cv-img" type="url" placeholder="https://exemplo.com/imagem.jpg"></div>
+          <div class="form-group"><label>Link do Boletim</label><input id="cv-link" type="url" placeholder="https://exemplo.com/boletim"></div>
           <div class="form-group"><label>Igrejas</label><input id="cv-igrejas" type="number" min="0" value="0"></div>
           <div class="form-group full"><label>Descrição</label><textarea id="cv-desc" rows="2" placeholder="Descrição opcional"></textarea></div>
         </div>
@@ -674,11 +719,7 @@ textarea{resize:vertical;min-height:80px}
         </div>
       </div>
 
-      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px">
-        <div class="card">
-          <div class="card-header"><span class="card-title">Convênios</span></div>
-          <div class="card-body" style="padding:12px" id="conv-page-convenios"></div>
-        </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
         <div class="card">
           <div class="card-header"><span class="card-title">Nacionais</span></div>
           <div class="card-body" style="padding:12px" id="conv-page-nacionais"></div>
@@ -706,7 +747,7 @@ textarea{resize:vertical;min-height:80px}
         .pp-year-bar{flex:1;background:#fff;border:2px solid var(--border);border-radius:30px;padding:10px 20px;font-size:14px;color:var(--muted)}
         .pp-year-badge{background:var(--blue);color:#fff;border-radius:20px;padding:10px 24px;font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:800;letter-spacing:1px}
         .pp-list{display:flex;flex-direction:column;gap:10px}
-        .pp-item{display:grid;grid-template-columns:40px 1fr 1fr 120px auto;align-items:center;gap:10px}
+        .pp-item{display:grid;grid-template-columns:40px 1fr 1fr 120px 80px auto;align-items:center;gap:10px}
         .pp-actions{display:flex;gap:6px;flex-shrink:0}
         .pp-btn{border:none;border-radius:8px;width:32px;height:32px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:.15s;flex-shrink:0}
         .pp-btn-edit{background:#dce8ff;color:#1a4db3}
@@ -729,6 +770,7 @@ textarea{resize:vertical;min-height:80px}
         .pp-add-row{display:flex;justify-content:flex-end;margin-bottom:16px}
         .pp-two-col{display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:start}
         .pp-card{background:#fff;border:1px solid var(--border);border-radius:14px;padding:22px}
+        .pp-ano-badge{background:var(--blue);color:#fff;border-radius:30px;padding:9px 14px;font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:800;text-align:center}
         /* Modal Pintura */
         #modal-pp-add .modal{width:520px}
       </style>
@@ -754,12 +796,6 @@ textarea{resize:vertical;min-height:80px}
         </div>
       </div>
 
-      <!-- Year row -->
-      <div class="pp-year-row">
-        <div class="pp-year-bar"></div>
-        <div class="pp-year-badge" id="pp-ano">2026</div>
-      </div>
-
       <div class="pp-two-col">
         <!-- Left: Lista de igrejas -->
         <div class="pp-card">
@@ -778,28 +814,62 @@ textarea{resize:vertical;min-height:80px}
       </div>
     </div>
 
-    <!-- PRODUTOS (Convênio) -->
+    <!-- PRODUTOS -->
     <div class="page" id="page-produtos">
-      <div class="form-section" style="margin-bottom:16px">
+      <!-- Formulário -->
+      <div class="form-section" style="margin-bottom:16px" id="prod-form-section">
         <div class="form-section-title" id="prod-form-title">Novo Produto</div>
-        <div style="display:grid;grid-template-columns:1fr auto;gap:12px;align-items:end">
-          <div class="form-group" style="margin:0">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+          <div class="form-group">
             <label>Nome do Produto *</label>
             <input id="p-nome" type="text" placeholder="Ex: Andaime, Álcool Gel, Tintas...">
           </div>
-          <div style="display:flex;gap:8px">
-            <button class="btn btn-outline" onclick="clearProdForm()">Limpar</button>
-            <button class="btn btn-primary" id="p-save-btn" onclick="saveProduto()">Salvar Produto</button>
+          <div class="form-group">
+            <label>Categoria</label>
+            <select id="p-categoria">
+              <option value="">Selecione...</option>
+              <option>Construção</option><option>Limpeza</option><option>Tecnologia</option>
+              <option>Alimentação</option><option>Saúde</option><option>Materiais</option>
+              <option>Serviços Gerais</option><option>Transporte</option><option>Outros</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Fornecedor</label>
+            <select id="p-fornecedor">
+              <option value="">Selecione o fornecedor...</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Marca / Modelo</label>
+            <input id="p-marca" type="text" placeholder="Ex: 3M, Tramontina, Dell XPS...">
           </div>
         </div>
+        <div class="form-actions" style="margin-top:12px">
+          <button class="btn btn-outline" onclick="clearProdForm()">Limpar</button>
+          <button class="btn btn-primary" id="p-save-btn" onclick="saveProduto()">Salvar Produto</button>
+        </div>
       </div>
+
+      <!-- Filtros + Tabela -->
       <div class="card">
         <div class="card-header">
           <span class="card-title" id="prod-count">Produtos Cadastrados</span>
+          <div style="display:flex;gap:8px;align-items:center">
+            <input type="text" id="prod-filter-nome" placeholder="Buscar produto..." style="width:160px;padding:6px 10px;font-size:12px;border:1.5px solid var(--border);border-radius:7px" oninput="renderProdutos()">
+            <select id="prod-filter-cat" style="width:140px;padding:6px 10px;font-size:12px;border:1.5px solid var(--border);border-radius:7px" onchange="renderProdutos()">
+              <option value="">Todas categorias</option>
+              <option>Construção</option><option>Limpeza</option><option>Tecnologia</option>
+              <option>Alimentação</option><option>Saúde</option><option>Materiais</option>
+              <option>Serviços Gerais</option><option>Transporte</option><option>Outros</option>
+            </select>
+            <select id="prod-filter-forn" style="width:160px;padding:6px 10px;font-size:12px;border:1.5px solid var(--border);border-radius:7px" onchange="renderProdutos()">
+              <option value="">Todos fornecedores</option>
+            </select>
+          </div>
         </div>
         <div class="card-body">
           <table>
-            <thead><tr><th>#</th><th>Nome do Produto</th><th>Ações</th></tr></thead>
+            <thead><tr><th>#</th><th>Nome do Produto</th><th>Categoria</th><th>Fornecedor</th><th>Marca/Modelo</th><th>Ações</th></tr></thead>
             <tbody id="produtos-body"></tbody>
           </table>
         </div>
@@ -874,12 +944,18 @@ textarea{resize:vertical;min-height:80px}
         <div class="ec-section-title"><em>Apurar</em> <span style="font-style:normal;color:var(--text)">Economia</span></div>
 
         <!-- Upload Zone -->
-        <label for="ec-file-input" class="ec-upload-zone" id="ec-drop-zone">
-          <svg viewBox="0 0 24 24"><path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM14 13v4h-4v-4H7l5-5 5 5h-3z"/></svg>
-          <p><strong>Clique para selecionar</strong> ou arraste o arquivo Excel aqui</p>
-          <p style="font-size:11px;margin-top:4px">Formatos aceitos: .xlsx, .xls</p>
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:18px;padding:14px 18px;background:#f4f7fd;border:1.5px solid var(--border);border-radius:10px">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="var(--blue)"><path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM14 13v4h-4v-4H7l5-5 5 5h-3z"/></svg>
+          <div style="flex:1">
+            <div style="font-size:13px;font-weight:600;color:var(--navy)" id="ec-file-name">Nenhum arquivo selecionado</div>
+            <div style="font-size:11px;color:var(--muted);margin-top:2px">Formatos aceitos: .xlsx, .xls</div>
+          </div>
+          <label for="ec-file-input" class="btn btn-primary" style="cursor:pointer;margin:0">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM14 13v4h-4v-4H7l5-5 5 5h-3z"/></svg>
+            Selecionar Excel
+          </label>
           <input type="file" id="ec-file-input" accept=".xlsx,.xls" style="display:none" onchange="handleEcUpload(this)">
-        </label>
+        </div>
 
         <!-- Meta fields: Cidade, Mês, Ano -->
         <div style="display:grid;grid-template-columns:1fr 1fr 1fr auto;gap:12px;margin-bottom:14px;align-items:end">
@@ -1151,6 +1227,21 @@ textarea{resize:vertical;min-height:80px}
       </div>
     </div>
 
+    </div>
+
+    <!-- GESTÃO DE ENERGIAS -->
+    <div class="page" id="page-gestao-energias">
+      <div style="display:flex;align-items:center;gap:14px;background:#fff;border-radius:14px;padding:18px 24px;margin-bottom:22px;border:1px solid var(--border);width:fit-content">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="var(--navy)"><path d="M7 2v11h3v9l7-12h-4l4-8z"/></svg>
+        <span style="font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:800;color:var(--navy)">Gestão de Energias</span>
+      </div>
+      <div class="card" style="padding:40px;text-align:center">
+        <svg width="56" height="56" viewBox="0 0 24 24" fill="var(--border)" style="margin-bottom:16px"><path d="M7 2v11h3v9l7-12h-4l4-8z"/></svg>
+        <div style="font-family:'Barlow Condensed',sans-serif;font-size:20px;font-weight:800;color:var(--navy);margin-bottom:8px">Módulo em desenvolvimento</div>
+        <div style="font-size:13px;color:var(--muted)">O módulo de Gestão de Energias estará disponível em breve.</div>
+      </div>
+    </div>
+
     <!-- MODAL: Adicionar Igreja PP -->
     <div class="modal-bg" id="modal-pp-add">
       <div class="modal" style="width:480px">
@@ -1259,17 +1350,97 @@ let editingFornId = null;
 let editingUserId = null;
 let avalFornId = null;
 let starVal = 0;
-// ID 1 é o usuário principal protegido
+// ID 1 é o usuário principal protegido (Master)
 const PRINCIPAL_USER_ID = 1;
 
-function isAdmin(){ return currentUser && (currentUser.perfil === 'Administrador' || currentUser.login === 'admin'); }
+// ── PERFIL HELPERS ─────────────────────────────────────────────────────────────
+function isMaster(){ return currentUser && currentUser.perfil === 'Master'; }
+function isRegional(){ return currentUser && currentUser.perfil === 'Regional'; }
+function isAdminPerfil(){ return currentUser && currentUser.perfil === 'Administrador'; }
+function isCoordenador(){ return currentUser && currentUser.perfil === 'Coordenador'; }
+function isComprador(){ return currentUser && currentUser.perfil === 'Comprador'; }
+// backward compat
+function isAdmin(){ return currentUser && (isMaster() || isRegional() || isAdminPerfil()); }
+
+const PERFIL_INFO = {
+  Master: '🔐 <b>Master</b>: Acesso total ao sistema. Pode ver, editar e excluir tudo. Não pode ser excluído.',
+  Regional: '🌎 <b>Regional</b>: Acesso a todas as cidades. Todas as funcionalidades (visualizar, editar, excluir).',
+  Administrador: '🏙️ <b>Administrador</b>: Acesso restrito à sua cidade com todas as funcionalidades e edição.',
+  Coordenador: '📋 <b>Coordenador</b>: Acesso aos módulos e cidades escolhidos. Restrito ao nível de Administrador.',
+  Comprador: '🛒 <b>Comprador</b>: Acesso à sua cidade. Pode indicar fornecedores, visualizar ranking e convênios, adicionar pedidos de compras. Sem acesso a Pintura, CNS Limpeza e Gestão de Energias.'
+};
+
+function onPerfilChange(){
+  const p = document.getElementById('u-perfil').value;
+  const modGroup = document.getElementById('u-modulos-group');
+  const cidCoordGroup = document.getElementById('u-cidades-coord-group');
+  const infoEl = document.getElementById('u-perfil-info');
+  modGroup.style.display = p === 'Coordenador' ? '' : 'none';
+  cidCoordGroup.style.display = p === 'Coordenador' ? '' : 'none';
+  if(PERFIL_INFO[p]){
+    infoEl.style.display = '';
+    infoEl.innerHTML = PERFIL_INFO[p];
+  } else { infoEl.style.display='none'; }
+}
+
+function canAccessPage(pageId){
+  if(!currentUser) return false;
+  const p = currentUser.perfil;
+  if(p === 'Master' || p === 'Regional') return true;
+  // Comprador: restricted pages
+  const compradorBlocked = ['pintura','cns-limpeza','gestao-energias','usuarios'];
+  if(p === 'Comprador' && compradorBlocked.includes(pageId)) return false;
+  // Coordenador: check modulos
+  if(p === 'Coordenador'){
+    const blocked = ['usuarios','pintura','cns-limpeza','gestao-energias'];
+    if(blocked.includes(pageId)) return false;
+    if(currentUser.modulos && currentUser.modulos.length > 0){
+      const always = ['dashboard'];
+      if(always.includes(pageId)) return true;
+      return currentUser.modulos.includes(pageId);
+    }
+    return true; // no module restriction set
+  }
+  return true;
+}
 
 function applyAdminVisibility(){
+  const p = currentUser ? currentUser.perfil : '';
+  // Admin-only fields (Status e Score Inicial no form de fornecedor)
   document.querySelectorAll('.admin-only-field').forEach(el=>{
-    el.style.display = isAdmin() ? '' : 'none';
+    el.style.display = (p==='Master'||p==='Regional'||p==='Administrador') ? '' : 'none';
   });
-  document.querySelectorAll('.admin-only-nav').forEach(el=>{
-    el.style.display = isAdmin() ? '' : 'none';
+  // Nav items for CNS (pintura, limpeza, gestão energias) — hidden for Comprador
+  document.querySelectorAll('.nav-cns-only').forEach(el=>{
+    el.style.display = (p==='Master'||p==='Regional') ? '' : (isCoordenador()||isAdminPerfil()) ? '' : 'none';
+  });
+  // Comprador: hide CNS menus
+  if(p === 'Comprador'){
+    document.querySelectorAll('.nav-cns-only').forEach(el=>{ el.style.display='none'; });
+  }
+  // Coordenador: apply module visibility
+  if(p === 'Coordenador' && currentUser.modulos && currentUser.modulos.length > 0){
+    const modMap = {
+      pintura: '.nav-cns-only[onclick*="pintura"]',
+      'cns-limpeza': '.nav-cns-only[onclick*="cns-limpeza"]',
+      'gestao-energias': '.nav-cns-only[onclick*="gestao-energias"]'
+    };
+    // hide all cns, show only if in modulos
+    document.querySelectorAll('.nav-cns-only').forEach(el=>{ el.style.display='none'; });
+    currentUser.modulos.forEach(m=>{
+      if(modMap[m]){
+        const el = document.querySelector(modMap[m]);
+        if(el) el.style.display='';
+      }
+    });
+    // show section header if any cns module is visible
+    const anyCns = document.querySelectorAll('.nav-cns-only[onclick]:not([style*="none"])');
+    const hdr = document.querySelector('.nav-section.nav-cns-only');
+    if(hdr) hdr.style.display = anyCns.length ? '' : 'none';
+  }
+  // Usuários: only Master and Regional
+  document.querySelectorAll('.nav-master-regional-only').forEach(el=>{
+    el.style.display = (p==='Master'||p==='Regional') ? '' : 'none';
   });
 }
 
@@ -1302,22 +1473,22 @@ let agenda = [
 ];
 
 let users = [
-  {id:1,nome:'Administrador CNS',login:'admin',email:'admin@cns.com',perfil:'Administrador',cidade:'',senha:'cns@2024',ativo:true},
-  {id:2,nome:'Gestor Regional',login:'gestor1',email:'gestor@cns.com',perfil:'Gestor',cidade:'Campinas',senha:'gestor123',ativo:true},
+  {id:1,nome:'Master CNS',login:'admin',email:'admin@cns.com',perfil:'Master',cargo:'Gestão Central',cidade:'',senha:'cns@2024',ativo:true,modulos:[]},
+  {id:2,nome:'Gestor Regional',login:'gestor1',email:'gestor@cns.com',perfil:'Regional',cargo:'Regional Sudeste',cidade:'Campinas',senha:'gestor123',ativo:true,modulos:[]},
 ];
 
 // Convênios data - suporta URL de imagem
 let convenios = [
-  {id:1,titulo:'Boletim CNS Convênios Abril 2024',tipo:'convenios',imgUrl:'',igrejas:10,desc:'Boletim mensal de convênios',dataCriacao:'há 11 hips'},
-  {id:2,titulo:'Convênios Regionais',tipo:'regionais',imgUrl:'',igrejas:4,desc:'Convênios das regiões',dataCriacao:'há 11 mrs'},
-  {id:3,titulo:'Boletim CNS - Fevereiro 2024',tipo:'convenios',imgUrl:'',igrejas:4,desc:'Boletim de fevereiro',dataCriacao:'há 11 mrs'},
+  {id:1,titulo:'Boletim CNS Convênios Abril 2024',tipo:'nacionais',imgUrl:'',link:'',igrejas:10,desc:'Boletim mensal de convênios',dataCriacao:'há 11 hips'},
+  {id:2,titulo:'Convênios Regionais',tipo:'regionais',imgUrl:'',link:'',igrejas:4,desc:'Convênios das regiões',dataCriacao:'há 11 mrs'},
+  {id:3,titulo:'Boletim CNS - Fevereiro 2024',tipo:'nacionais',imgUrl:'',link:'',igrejas:4,desc:'Boletim de fevereiro',dataCriacao:'há 11 mrs'},
 ];
 let nextConvId = 4;
 
 let nextFornId = 16;
 let nextAgId = 8;
 let nextUserId = 3;
-let currentConvTab = 'convenios';
+let currentConvTab = 'nacionais';
 
 // ─── LOGIN ───────────────────────────────────────────────────────────────────
 async function doLogin(){
@@ -1340,7 +1511,7 @@ async function doLogin(){
       const {data, error} = await db.from('usuarios').select('*').eq('login', u).eq('senha', p).eq('ativo', true);
       if(!error && data && data.length > 0){
         const r = data[0];
-        const found = {id:r.id, nome:r.nome||'', login:r.login||'', email:r.email||'', perfil:r.perfil||'Consultor', senha:r.senha||'', ativo:r.ativo!==false};
+        const found = {id:r.id, nome:r.nome||'', login:r.login||'', email:r.email||'', perfil:r.perfil||'Comprador', cargo:r.cargo||'', senha:r.senha||'', ativo:r.ativo!==false, modulos:r.modulos||[], cidadesCoord:r.cidades_coord||''};
         _loginSuccess(found);
         btn.textContent='Entrar'; btn.disabled=false;
         return;
@@ -1363,7 +1534,7 @@ function _loginSuccess(found){
   currentUser = found;
   document.getElementById('login-screen').classList.remove('open');
   document.getElementById('topbar-uname').textContent = found.nome;
-  document.getElementById('topbar-urole').textContent = found.perfil;
+  document.getElementById('topbar-urole').textContent = (found.perfil||'') + (found.cargo ? ' · ' + found.cargo : '');
   document.getElementById('topbar-avatar').textContent = found.nome[0].toUpperCase();
   applyAdminVisibility();
   loadFromSupabase();
@@ -1385,8 +1556,12 @@ function toggleSidebar(){
 document.getElementById('l-pass').addEventListener('keydown',e=>{if(e.key==='Enter')doLogin()});
 
 // ─── NAVIGATION ──────────────────────────────────────────────────────────────
-const pageTitles={dashboard:'Dashboard',fornecedores:'Fornecedores',ranking:'Ranking de Fornecedores','cad-fornecedor':'Cadastrar Fornecedor',agenda:'Compras Coordenadas',usuarios:'Gestão de Usuários',convenios:'Convênios',produtos:'Gestão de Produtos',economia:'Economia de Compras','cns-limpeza':'CNS Limpeza'};
+const pageTitles={dashboard:'Dashboard',fornecedores:'Fornecedores',produtos:'Gestão de Produtos',ranking:'Ranking de Fornecedores','cad-fornecedor':'Cadastrar Fornecedor',agenda:'Compras Coordenadas',usuarios:'Gestão de Usuários',convenios:'Convênios',produtos:'Gestão de Produtos',economia:'Economia de Compras','cns-limpeza':'CNS Limpeza',pintura:'Pintura Programada','gestao-energias':'Gestão de Energias'};
 function showPage(id, el){
+  if(!canAccessPage(id)){
+    toast('Você não tem permissão para acessar esta página.','error');
+    return;
+  }
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
   document.getElementById('page-'+id).classList.add('active');
@@ -1394,6 +1569,7 @@ function showPage(id, el){
   if(el) el.classList.add('active');
   if(id==='dashboard') renderDashboard();
   if(id==='fornecedores'){renderFornecedores();populateCatFilter();}
+  if(id==='produtos'){renderProdutos();}
   if(id==='ranking') renderRanking();
   if(id==='agenda') renderAgenda();
   if(id==='usuarios') renderUsers();
@@ -1432,6 +1608,9 @@ function renderAll(){
   renderFornSelectAgenda();
   populateCatFilter();
   populateProdutoSelect();
+  // init user form state
+  if(document.getElementById('u-perfil')) onPerfilChange();
+  populateProdFornSelect();
 }
 
 // ─── DASHBOARD ───────────────────────────────────────────────────────────────
@@ -1496,7 +1675,7 @@ function switchConvTab(tab, el){
 }
 
 function renderConvDash(){
-  const filtered = convenios.filter(c => c.tipo === currentConvTab || currentConvTab === 'convenios');
+  const filtered = convenios.filter(c => c.tipo === currentConvTab);
   const listEl = document.getElementById('conv-list');
   if(!listEl) return;
 
@@ -1527,7 +1706,7 @@ function openConvModal(){
 
 function closeConvForm(){
   document.getElementById('conv-form-section').style.display='none';
-  ['cv-titulo','cv-img','cv-desc'].forEach(id=>document.getElementById(id).value='');
+  ['cv-titulo','cv-img','cv-desc','cv-link'].forEach(id=>document.getElementById(id).value='');
   document.getElementById('cv-igrejas').value='0';
 }
 
@@ -1539,6 +1718,7 @@ function saveConvenio(){
     titulo,
     tipo: document.getElementById('cv-tipo').value,
     imgUrl: document.getElementById('cv-img').value.trim(),
+    link: document.getElementById('cv-link').value.trim(),
     igrejas: parseInt(document.getElementById('cv-igrejas').value)||0,
     desc: document.getElementById('cv-desc').value.trim(),
     dataCriacao: 'agora'
@@ -1560,7 +1740,7 @@ function deleteConvenio(id){
 }
 
 function renderConveniosPage(){
-  ['convenios','nacionais','regionais'].forEach(tipo=>{
+  ['nacionais','regionais'].forEach(tipo=>{
     const el = document.getElementById('conv-page-'+tipo);
     if(!el) return;
     const list = convenios.filter(c=>c.tipo===tipo);
@@ -1570,23 +1750,50 @@ function renderConveniosPage(){
     }
     el.innerHTML = list.map(c=>{
       const hasImg = c.imgUrl && c.imgUrl.trim()!=='';
-      return `<div class="conv-manage-item">
-        ${hasImg
-          ? `<img class="conv-manage-img" src="${c.imgUrl}" alt="${c.titulo}" onerror="this.style.display='none'">`
-          : `<div class="conv-manage-img" style="background:linear-gradient(135deg,var(--navy),var(--blue));display:flex;align-items:center;justify-content:center">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="#fff"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"/></svg>
-            </div>`}
-        <div class="conv-manage-info">
-          <div class="conv-manage-title">${c.titulo}</div>
-          <div class="conv-manage-meta">${c.igrejas} Igrejas • ${c.dataCriacao||'recente'}</div>
-          ${c.imgUrl?`<div style="font-size:10px;color:var(--blue);margin-top:2px;word-break:break-all">${c.imgUrl.substring(0,40)}...</div>`:''}
+      const hasLink = c.link && c.link.trim()!=='';
+      return `<div class="conv-manage-item" style="${hasLink?'cursor:pointer':''}">
+        <div onclick="${hasLink?`window.open('${c.link}','_blank')`:'void(0)'}" style="display:flex;align-items:center;gap:10px;flex:1;min-width:0">
+          ${hasImg
+            ? `<img class="conv-manage-img" src="${c.imgUrl}" alt="${c.titulo}" onerror="this.style.display='none'">`
+            : `<div class="conv-manage-img" style="background:linear-gradient(135deg,var(--navy),var(--blue));display:flex;align-items:center;justify-content:center;flex-shrink:0">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="#fff"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"/></svg>
+              </div>`}
+          <div class="conv-manage-info">
+            <div class="conv-manage-title">${c.titulo}</div>
+            <div class="conv-manage-meta">${c.igrejas} Igrejas • ${c.dataCriacao||'recente'}</div>
+            ${hasLink?`<div style="font-size:10px;color:var(--blue);margin-top:2px">🔗 ${c.link.length>45?c.link.substring(0,45)+'...':c.link}</div>`:'<div style="font-size:10px;color:var(--muted);margin-top:2px">Sem link</div>'}
+          </div>
         </div>
-        <div class="conv-manage-actions">
+        <div class="conv-manage-actions" style="flex-shrink:0;display:flex;gap:6px;align-items:center">
+          <button class="btn btn-outline btn-sm" style="color:var(--blue);white-space:nowrap" onclick="openConvLinkModal(${c.id})" title="Inserir/editar link">🔗 Link</button>
           <button class="btn btn-red btn-sm" onclick="deleteConvenio(${c.id})">✕</button>
         </div>
       </div>`;
     }).join('');
   });
+}
+
+let editingConvLinkId = null;
+function openConvLinkModal(id){
+  editingConvLinkId = id;
+  const c = convenios.find(x=>x.id===id);
+  document.getElementById('conv-link-title-lbl').textContent = c ? c.titulo : '';
+  document.getElementById('conv-link-input').value = c ? (c.link||'') : '';
+  document.getElementById('modal-conv-link').classList.add('open');
+  setTimeout(()=>document.getElementById('conv-link-input').focus(),100);
+}
+function saveConvLink(){
+  if(editingConvLinkId===null) return;
+  const c = convenios.find(x=>x.id===editingConvLinkId);
+  if(!c) return;
+  let val = document.getElementById('conv-link-input').value.trim();
+  if(val && !val.startsWith('http')) val = 'https://'+val;
+  c.link = val;
+  document.getElementById('modal-conv-link').classList.remove('open');
+  renderConveniosPage();
+  renderConvDash();
+  toast('Link salvo!');
+  editingConvLinkId = null;
 }
 
 // ─── FORNECEDORES ─────────────────────────────────────────────────────────────
@@ -1595,6 +1802,10 @@ function populateCatFilter(){
   const sel=document.getElementById('filter-cat');
   sel.innerHTML='<option value="">Todas as categorias</option>'+cats.map(c=>`<option>${c}</option>`).join('');
 }
+function openNovoFornecedorForm(){
+  showPage('cad-fornecedor', document.querySelector('.nav-item[onclick*="fornecedores"]'));
+}
+
 function renderFornecedores(){
   const q=document.getElementById('search-forn').value.toLowerCase();
   const st=document.getElementById('filter-status').value;
@@ -1963,32 +2174,42 @@ function submitAval(){
 
 // ─── USUÁRIOS ────────────────────────────────────────────────────────────────
 function renderUsers(){
-  // Filtra por cidade se o usuário logado NÃO for admin e tiver cidade cadastrada
+  // Filtra por cidade se o usuário logado NÃO for master/regional e tiver cidade cadastrada
   let list = users;
   if(!isAdmin() && currentUser && currentUser.cidade){
-    list = users.filter(u => u.perfil === 'Administrador' || u.cidade === currentUser.cidade || u.id === currentUser.id);
+    list = users.filter(u => u.perfil === 'Master' || u.perfil === 'Regional' || u.cidade === currentUser.cidade || u.id === currentUser.id);
   }
+
+  const perfilColor = {Master:'badge-blue',Regional:'badge-blue',Administrador:'badge-green',Coordenador:'badge-yellow',Comprador:'badge-gray'};
 
   document.getElementById('users-body').innerHTML=list.map(u=>{
     const isPrincipal = u.id === PRINCIPAL_USER_ID;
     const cidadeDisplay = u.cidade || '<span style="color:var(--muted);font-style:italic">—</span>';
+    const cargoDisplay = u.cargo || '<span style="color:var(--muted);font-style:italic">—</span>';
+    const badgeCls = perfilColor[u.perfil] || 'badge-gray';
     return `<tr>
-      <td><b>${u.nome}</b>${isPrincipal ? ' <span class="badge badge-blue" style="font-size:9px">Principal</span>' : ''}</td>
+      <td><b>${u.nome}</b>${isPrincipal ? ' <span class="badge badge-blue" style="font-size:9px">Master</span>' : ''}</td>
       <td>${u.login}</td>
-      <td><span class="badge badge-blue">${u.perfil}</span></td>
+      <td><span class="badge ${badgeCls}">${u.perfil}</span></td>
+      <td style="font-size:12px">${cargoDisplay}</td>
       <td>${cidadeDisplay}</td>
       <td>${u.ativo?'<span class="badge badge-green">Ativo</span>':'<span class="badge badge-red">Inativo</span>'}</td>
       <td style="white-space:nowrap">
         <button class="btn btn-outline btn-sm" onclick="editUser(${u.id})">Editar</button>
         <button class="btn btn-outline btn-sm" style="color:${u.ativo?'var(--red)':'var(--green)'}" onclick="toggleUser(${u.id})">${u.ativo?'Desativar':'Ativar'}</button>
-        ${!isPrincipal ? `<button class="btn btn-red btn-sm" onclick="deleteUser(${u.id})" title="Excluir usuário">🗑 Excluir</button>` : `<button class="btn btn-sm" style="background:#eef2f9;color:var(--muted);cursor:not-allowed" disabled title="Usuário principal não pode ser excluído">🔒</button>`}
+        ${!isPrincipal ? `<button class="btn btn-red btn-sm" onclick="deleteUser(${u.id})" title="Excluir usuário">🗑 Excluir</button>` : `<button class="btn btn-sm" style="background:#eef2f9;color:var(--muted);cursor:not-allowed" disabled title="Master não pode ser excluído">🔒</button>`}
       </td></tr>`;
   }).join('');
 }
 
 function deleteUser(id){
   if(id === PRINCIPAL_USER_ID){
-    toast('O usuário principal não pode ser excluído!','error');
+    toast('O usuário Master não pode ser excluído!','error');
+    return;
+  }
+  const target = users.find(x=>x.id===id);
+  if(target && target.perfil === 'Master'){
+    toast('Usuários com perfil Master não podem ser excluídos!','error');
     return;
   }
   if(id === currentUser?.id){
@@ -2009,21 +2230,47 @@ function saveUser(){
   const login=document.getElementById('u-login').value.trim();
   const email=document.getElementById('u-email').value.trim();
   const perfil=document.getElementById('u-perfil').value;
+  const cargo=document.getElementById('u-cargo').value.trim();
   const cidade=document.getElementById('u-cidade').value.trim();
   const senha=document.getElementById('u-senha').value;
   const senha2=document.getElementById('u-senha2').value;
+
+  // Coordenador modules
+  let modulos = [];
+  if(perfil === 'Coordenador'){
+    document.querySelectorAll('#u-modulos-checkboxes input[type=checkbox]').forEach(cb=>{
+      if(cb.checked) modulos.push(cb.value);
+    });
+  }
+  // Coordenador extra cities
+  const cidadesCoord = (document.getElementById('u-cidades-coord')?.value||'').trim();
+
   if(!nome||!login){toast('Nome e Login são obrigatórios','error');return;}
   if(senha && senha!==senha2){toast('As senhas não conferem','error');return;}
+
+  // Prevent changing Master's profile
+  if(editingUserId === PRINCIPAL_USER_ID && perfil !== 'Master'){
+    toast('O perfil Master não pode ser alterado!','error');return;
+  }
+
   if(editingUserId){
     const u=users.find(x=>x.id===editingUserId);
-    u.nome=nome;u.login=login;u.email=email;u.perfil=perfil;u.cidade=cidade;
+    u.nome=nome;u.login=login;u.email=email;u.perfil=perfil;u.cargo=cargo;u.cidade=cidade;
+    u.modulos=modulos; if(cidadesCoord) u.cidadesCoord=cidadesCoord;
     if(senha) u.senha=senha;
     toast('Usuário atualizado!');
+    // Se o usuário editou o próprio perfil, atualiza currentUser em memória imediatamente
+    if(currentUser && currentUser.id === editingUserId){
+      currentUser = Object.assign({}, u);
+      const roleEl = document.getElementById('topbar-urole');
+      if(roleEl) roleEl.textContent = (currentUser.perfil||'') + (currentUser.cargo ? ' · ' + currentUser.cargo : '');
+      applyAdminVisibility();
+    }
   } else {
     if(!senha){toast('Informe uma senha','error');return;}
     const exists=users.find(x=>x.login===login);
     if(exists){toast('Login já existe','error');return;}
-    users.push({id:nextUserId++,nome,login,email,perfil,cidade,senha,ativo:true});
+    users.push({id:nextUserId++,nome,login,email,perfil,cargo,cidade,senha,ativo:true,modulos,cidadesCoord});
     toast('Usuário criado!');
   }
   editingUserId=null;
@@ -2031,11 +2278,17 @@ function saveUser(){
   renderUsers();
 }
 function clearUserForm(){
-  ['u-nome','u-login','u-email','u-cidade','u-senha','u-senha2'].forEach(id=>document.getElementById(id).value='');
-  document.getElementById('u-perfil').value='Consultor';
+  ['u-nome','u-login','u-email','u-cargo','u-cidade','u-senha','u-senha2'].forEach(id=>{ const el=document.getElementById(id); if(el) el.value=''; });
+  document.getElementById('u-perfil').value='Comprador';
+  document.getElementById('u-modulos-group').style.display='none';
+  document.getElementById('u-cidades-coord-group').style.display='none';
+  document.getElementById('u-perfil-info').style.display='none';
+  const ccEl = document.getElementById('u-cidades-coord'); if(ccEl) ccEl.value='';
+  document.querySelectorAll('#u-modulos-checkboxes input').forEach(cb=>cb.checked=false);
   editingUserId=null;
   document.getElementById('user-form-title').textContent='Novo Usuário';
   document.getElementById('u-save-btn').textContent='Salvar Usuário';
+  onPerfilChange();
 }
 function editUser(id){
   const u=users.find(x=>x.id===id);
@@ -2045,11 +2298,21 @@ function editUser(id){
   document.getElementById('u-login').value=u.login;
   document.getElementById('u-email').value=u.email||'';
   document.getElementById('u-perfil').value=u.perfil;
+  document.getElementById('u-cargo').value=u.cargo||'';
   document.getElementById('u-cidade').value=u.cidade||'';
   document.getElementById('u-senha').value='';
   document.getElementById('u-senha2').value='';
+  // Modulos
+  document.querySelectorAll('#u-modulos-checkboxes input').forEach(cb=>{
+    cb.checked = u.modulos && u.modulos.includes(cb.value);
+  });
+  const ccEl = document.getElementById('u-cidades-coord');
+  if(ccEl) ccEl.value = u.cidadesCoord||'';
+  onPerfilChange();
   document.getElementById('user-form-title').textContent='Editar Usuário';
   document.getElementById('u-save-btn').textContent='Atualizar Usuário';
+  // Scroll to form
+  document.querySelector('.form-section').scrollIntoView({behavior:'smooth'});
 }
 function toggleUser(id){
   const u=users.find(x=>x.id===id);
@@ -2058,41 +2321,79 @@ function toggleUser(id){
   u.ativo=!u.ativo;renderUsers();toast(u.ativo?'Usuário ativado!':'Usuário desativado!');
 }
 
-// ─── PRODUTOS (Convênio) ──────────────────────────────────────────────────────
-let produtos = ['Andaime','Alcool Gel','Copa','Etc.'];
+// ─── PRODUTOS ─────────────────────────────────────────────────────────────────
+let produtos = [
+  {nome:'Andaime', categoria:'Construção', fornecedorId:null, marca:''},
+  {nome:'Alcool Gel', categoria:'Limpeza', fornecedorId:null, marca:''},
+  {nome:'Copa', categoria:'Alimentação', fornecedorId:null, marca:''},
+  {nome:'Copos Descartáveis', categoria:'Outros', fornecedorId:null, marca:''},
+];
 let editingProdIndex = -1;
 
+function populateProdFornSelect(){
+  ['p-fornecedor','prod-filter-forn'].forEach(id=>{
+    const sel = document.getElementById(id);
+    if(!sel) return;
+    const isFilter = id.startsWith('prod-filter');
+    sel.innerHTML = (isFilter ? '<option value="">Todos fornecedores</option>' : '<option value="">Selecione o fornecedor...</option>')
+      + fornecedores.map(f=>`<option value="${f.id}">${f.nome}</option>`).join('');
+  });
+}
+
 function renderProdutos(){
+  populateProdFornSelect();
+  const qNome = (document.getElementById('prod-filter-nome')?.value||'').toLowerCase();
+  const qCat  = document.getElementById('prod-filter-cat')?.value||'';
+  const qForn = document.getElementById('prod-filter-forn')?.value||'';
+
+  let list = produtos.filter((p,i)=>{
+    if(qNome && !p.nome.toLowerCase().includes(qNome)) return false;
+    if(qCat  && p.categoria !== qCat) return false;
+    if(qForn && String(p.fornecedorId) !== qForn) return false;
+    return true;
+  });
+
   document.getElementById('prod-count').textContent = `Produtos Cadastrados (${produtos.length})`;
-  document.getElementById('produtos-body').innerHTML = produtos.map((p,i)=>`
-    <tr>
-      <td><b>${String(i+1).padStart(2,'0')}</b></td>
-      <td>${p}</td>
+  document.getElementById('produtos-body').innerHTML = list.map((p,_)=>{
+    const realIdx = produtos.indexOf(p);
+    const forn = fornecedores.find(f=>f.id===p.fornecedorId);
+    return `<tr>
+      <td><b>${String(realIdx+1).padStart(2,'0')}</b></td>
+      <td><b>${p.nome}</b></td>
+      <td>${p.categoria ? `<span class="badge badge-blue">${p.categoria}</span>` : '<span style="color:var(--muted)">—</span>'}</td>
+      <td style="font-size:12px">${forn ? forn.nome : '<span style="color:var(--muted)">—</span>'}</td>
+      <td style="font-size:12px">${p.marca || '<span style="color:var(--muted)">—</span>'}</td>
       <td style="white-space:nowrap">
-        <button class="btn btn-outline btn-sm" style="color:var(--blue)" onclick="editProduto(${i})">Editar</button>
-        <button class="btn btn-red btn-sm" onclick="deleteProduto(${i})">✕ Excluir</button>
+        <button class="btn btn-outline btn-sm" style="color:var(--blue)" onclick="editProduto(${realIdx})">Editar</button>
+        <button class="btn btn-red btn-sm" onclick="deleteProduto(${realIdx})">✕ Excluir</button>
       </td>
-    </tr>`).join('');
-  // Atualiza o select de produtos na agenda
+    </tr>`;
+  }).join('');
   populateProdutoSelect();
 }
 
 function populateProdutoSelect(){
   const sel = document.getElementById('ag-prod-conv');
   if(!sel) return;
-  sel.innerHTML = '<option value="">-- Selecione --</option>' + produtos.map(p=>`<option value="${p}">${p}</option>`).join('');
+  sel.innerHTML = '<option value="">-- Selecione --</option>' + produtos.map(p=>`<option value="${p.nome}">${p.nome}</option>`).join('');
 }
 
 function saveProduto(){
   const nome = document.getElementById('p-nome').value.trim();
   if(!nome){toast('Informe o nome do produto','error');return;}
+  const obj = {
+    nome,
+    categoria: document.getElementById('p-categoria').value,
+    fornecedorId: parseInt(document.getElementById('p-fornecedor').value)||null,
+    marca: document.getElementById('p-marca').value.trim()
+  };
   if(editingProdIndex >= 0){
-    produtos[editingProdIndex] = nome;
+    produtos[editingProdIndex] = obj;
     editingProdIndex = -1;
     toast('Produto atualizado!');
   } else {
-    if(produtos.find(p=>p.toLowerCase()===nome.toLowerCase())){toast('Produto já cadastrado','error');return;}
-    produtos.push(nome);
+    if(produtos.find(p=>p.nome.toLowerCase()===nome.toLowerCase())){toast('Produto já cadastrado','error');return;}
+    produtos.push(obj);
     toast('Produto cadastrado!');
   }
   clearProdForm();
@@ -2101,14 +2402,19 @@ function saveProduto(){
 
 function editProduto(i){
   editingProdIndex = i;
-  document.getElementById('p-nome').value = produtos[i];
+  const p = produtos[i];
+  document.getElementById('p-nome').value = p.nome;
+  document.getElementById('p-categoria').value = p.categoria||'';
+  document.getElementById('p-fornecedor').value = p.fornecedorId||'';
+  document.getElementById('p-marca').value = p.marca||'';
   document.getElementById('prod-form-title').textContent = 'Editar Produto';
   document.getElementById('p-save-btn').textContent = 'Atualizar Produto';
   document.getElementById('p-nome').focus();
+  document.getElementById('prod-form-section').scrollIntoView({behavior:'smooth'});
 }
 
 function deleteProduto(i){
-  if(confirm(`Excluir o produto "${produtos[i]}"?`)){
+  if(confirm(`Excluir o produto "${produtos[i].nome}"?`)){
     produtos.splice(i,1);
     renderProdutos();
     toast('Produto removido!');
@@ -2116,7 +2422,9 @@ function deleteProduto(i){
 }
 
 function clearProdForm(){
-  document.getElementById('p-nome').value='';
+  ['p-nome','p-marca'].forEach(id=>{ const el=document.getElementById(id); if(el) el.value=''; });
+  const cat=document.getElementById('p-categoria'); if(cat) cat.value='';
+  const forn=document.getElementById('p-fornecedor'); if(forn) forn.value='';
   document.getElementById('prod-form-title').textContent='Novo Produto';
   document.getElementById('p-save-btn').textContent='Salvar Produto';
   editingProdIndex = -1;
@@ -2138,13 +2446,14 @@ function renderPP(){
       <div class="pp-cidade">${it.cidade}</div>
       <div class="pp-valor">${it.val}</div>
       <div class="pp-perc">${it.pct}</div>
+      <div class="pp-ano-badge">${it.ano||2026}</div>
       <div class="pp-actions">
         <button class="pp-btn pp-btn-edit" title="Editar" onclick="openEditPP(${i})">
           <svg viewBox="0 0 24 24"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a1 1 0 0 0 0-1.41l-2.34-2.34a1 1 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>
         </button>
-        <button class="pp-btn pp-btn-del" title="Excluir" onclick="deletePPItem(${i})">
+        ${isMaster()?`<button class="pp-btn pp-btn-del" title="Excluir" onclick="deletePPItem(${i})">
           <svg viewBox="0 0 24 24"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>
-        </button>
+        </button>`:''}
       </div>
     </div>`).join('');
   document.getElementById('pp-implantadas').textContent = String(ppItems.length).padStart(2,'0');
@@ -2316,6 +2625,9 @@ function handleEcUpload(input){
   if(!file) return;
   const ext = file.name.split('.').pop().toLowerCase();
   if(!['xlsx','xls'].includes(ext)){toast('Formato inválido. Use .xlsx ou .xls','error');return;}
+  // Show filename in the upload bar
+  const nameEl = document.getElementById('ec-file-name');
+  if(nameEl) nameEl.textContent = '📄 ' + file.name;
 
   if(!window.XLSX){
     const s = document.createElement('script');
@@ -2718,6 +3030,7 @@ function renderCNS(){
       </td>
       <td style="white-space:nowrap">
         <button class="btn btn-outline btn-sm" style="color:var(--blue)" onclick="editCNS(${c.id})">Editar</button>
+        <button class="btn btn-outline btn-sm" style="color:var(--green)" onclick="reabrirCNS(${c.id})">Reabrir</button>
         <button class="btn btn-red btn-sm" onclick="deleteCNS(${c.id})">✕</button>
       </td>
     </tr>`;
@@ -2795,6 +3108,14 @@ function deleteCNS(id){
     renderCNS();
     toast('Cidade removida!');
   }
+}
+
+function reabrirCNS(id){
+  const c=cnsCidades.find(x=>x.id===id);
+  if(!c) return;
+  c.status='andamento';
+  renderCNS();
+  toast('Cidade reaberta!');
 }
 
 // ── Eco entries no form ────────────────────────────────────────────────────
@@ -2958,12 +3279,22 @@ async function loadFromSupabase(){
     if(us.data && us.data.length > 0){
       users = us.data.map(r=>({
         id:r.id, nome:r.nome||'', login:r.login||'', email:r.email||'',
-        perfil:r.perfil||'Consultor', cidade:r.cidade||'', senha:r.senha||'', ativo:r.ativo!==false
+        perfil:r.perfil||'Comprador', cargo:r.cargo||'', cidade:r.cidade||'', senha:r.senha||'', ativo:r.ativo!==false, modulos:r.modulos||[], cidadesCoord:r.cidades_coord||''
       }));
       nextUserId = Math.max(...users.map(u=>u.id), 0) + 1;
+      // Re-sync currentUser so perfil/cargo changes are not reverted after DB load
+      if(currentUser){
+        const fresh = users.find(u => u.id === currentUser.id);
+        if(fresh){
+          currentUser = Object.assign({}, fresh);
+          const roleEl = document.getElementById('topbar-urole');
+          if(roleEl) roleEl.textContent = (currentUser.perfil||'') + (currentUser.cargo ? ' · ' + currentUser.cargo : '');
+          applyAdminVisibility();
+        }
+      }
     }
     if(pr.data && pr.data.length > 0){
-      produtos = pr.data.map(r=>r.nome||'').filter(Boolean);
+      produtos = pr.data.map(r=>({nome:r.nome||'', categoria:r.categoria||'', fornecedorId:r.forn_id||null, marca:r.marca||''})).filter(p=>p.nome);
     }
     toast('Dados carregados!');
   } catch(e){ console.warn('Load error:', e); }
@@ -3048,7 +3379,7 @@ async function sbSavePPComponents(){
 async function sbSaveUser(obj){
   if(!db) return;
   showSyncing(true);
-  const row = {id:obj.id, nome:obj.nome, login:obj.login, email:obj.email||'', perfil:obj.perfil, cidade:obj.cidade||'', senha:obj.senha, ativo:obj.ativo};
+  const row = {id:obj.id, nome:obj.nome, login:obj.login, email:obj.email||'', perfil:obj.perfil, cargo:obj.cargo||'', cidade:obj.cidade||'', senha:obj.senha, ativo:obj.ativo};
   const {error} = await db.from('usuarios').upsert(row, {onConflict:'id'});
   if(error) console.error('Save user:', error);
   showSyncing(false);
@@ -3169,7 +3500,7 @@ async function sbSaveProdutos(){
   if(!db) return;
   showSyncing(true);
   await db.from('produtos').delete().neq('id', 0);
-  const rows = produtos.map((nome,i)=>({id:i+1, nome}));
+  const rows = produtos.map((p,i)=>({id:i+1, nome:p.nome||p, categoria:p.categoria||'', forn_id:p.fornecedorId||null, marca:p.marca||''}));
   if(rows.length) await db.from('produtos').insert(rows);
   showSyncing(false);
 }
@@ -3203,8 +3534,28 @@ initSupabase();
 
 </script>
 
-<!-- MODAL: Atribuir Link ao Componente -->
-<div class="modal-bg" id="modal-comp-link">
+<!-- MODAL: Link do Boletim/Convênio -->
+<div class="modal-bg" id="modal-conv-link">
+  <div class="modal" style="width:440px">
+    <div class="modal-header">
+      <span class="modal-title">🔗 Link — <span id="conv-link-title-lbl"></span></span>
+      <button class="modal-close" onclick="closeModal('modal-conv-link')">×</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label>URL do boletim / documento</label>
+        <input id="conv-link-input" type="url" placeholder="https://exemplo.com/boletim">
+      </div>
+      <p style="font-size:11px;color:var(--muted);margin-top:8px">Cole o link que este cartão deve abrir. Deixe em branco para remover.</p>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('modal-conv-link')">Cancelar</button>
+      <button class="btn btn-primary" onclick="saveConvLink()">Salvar Link</button>
+    </div>
+  </div>
+</div>
+
+</body>
   <div class="modal" style="width:440px">
     <div class="modal-header">
       <span class="modal-title">🔗 Atribuir Link — <span id="comp-link-label"></span></span>
