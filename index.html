@@ -290,6 +290,9 @@ textarea{resize:vertical;min-height:80px}
     <div class="nav-item" onclick="showPage('cad-fornecedor',this)">
       <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg> Novo Fornecedor
     </div>
+    <div class="nav-item admin-only-nav" onclick="showPage('produtos',this)">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 3c1.93 0 3.5 1.57 3.5 3.5S13.93 13 12 13s-3.5-1.57-3.5-3.5S10.07 6 12 6zm7 13H5v-.23c0-.62.28-1.2.76-1.58C7.47 15.82 9.64 15 12 15s4.53.82 6.24 2.19c.48.38.76.97.76 1.58V19z"/></svg> Produtos
+    </div>
     <div class="nav-section">Administração</div>
     <div class="nav-item" onclick="showPage('usuarios',this)">
       <svg viewBox="0 0 24 24" fill="currentColor"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg> Usuários
@@ -299,6 +302,12 @@ textarea{resize:vertical;min-height:80px}
     </div>
     <div class="nav-item" onclick="showPage('pintura',this)">
       <svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 14c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3zm13.71-9.37l-1.34-1.34a1 1 0 0 0-1.41 0L9 12.25 11.75 15l8.96-8.96a1 1 0 0 0 0-1.41z"/></svg> Pintura Programada
+    </div>
+    <div class="nav-item" onclick="showPage('economia',this)">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M11.8 10.9c-2.27-.59-3-1.2-3-2.15 0-1.09 1.01-1.85 2.7-1.85 1.78 0 2.44.85 2.5 2.1h2.21c-.07-1.72-1.12-3.3-3.21-3.81V3h-3v2.16c-1.94.42-3.5 1.68-3.5 3.61 0 2.31 1.91 3.46 4.7 4.13 2.5.6 3 1.48 3 2.41 0 .69-.49 1.79-2.7 1.79-2.06 0-2.87-.92-2.98-2.1h-2.2c.12 2.19 1.76 3.42 3.68 3.83V21h3v-2.15c1.95-.37 3.5-1.5 3.5-3.55 0-2.84-2.43-3.81-4.7-4.4z"/></svg> Economia de Compras
+    </div>
+    <div class="nav-item" onclick="showPage('cns-limpeza',this)">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19.36 2.72L20.78 4.14 16.19 8.72C17.24 10.41 17 12.55 15.59 14L9.13 7.53C10.57 6.12 12.71 5.88 14.4 6.94L19.36 2.72M5.93 17.57C3.92 15.56 2.69 13.16 2.36 10.72L7.46 8.53L15.48 16.56L13.29 21.65C10.84 21.33 8.44 20.09 6.43 18.08L5.93 17.57Z"/></svg> CNS Limpeza
     </div>
     <div class="nav-item" onclick="toggleSidebar()" style="color:rgba(255,255,255,.55)">
       <svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg> Ocultar Menu
@@ -352,7 +361,7 @@ textarea{resize:vertical;min-height:80px}
             </div>
             <div>Fornecedores Aprovados</div>
           </button>
-          <button class="menu-btn cyan" onclick="showPage('fornecedores',null)">
+          <button class="menu-btn cyan" onclick="showPage('cns-limpeza',null)">
             <div class="menu-btn-icon">
               <!-- Cleaning / limpeza -->
               <svg viewBox="0 0 24 24"><path d="M19.36 2.72L20.78 4.14 16.19 8.72C17.24 10.41 17 12.55 15.59 14L9.13 7.53C10.57 6.12 12.71 5.88 14.4 6.94L19.36 2.72M5.93 17.57C3.92 15.56 2.69 13.16 2.36 10.72L7.46 8.53L15.48 16.56L13.29 21.65C10.84 21.33 8.44 20.09 6.43 18.08L5.93 17.57Z"/></svg>
@@ -373,7 +382,7 @@ textarea{resize:vertical;min-height:80px}
             </div>
             <div>Pintura Programada</div>
           </button>
-          <button class="menu-btn" style="background:linear-gradient(135deg,#d97706,#f59e0b)" onclick="showPage('dashboard',null)">
+          <button class="menu-btn" style="background:linear-gradient(135deg,#d97706,#f59e0b)" onclick="showPage('economia',null)">
             <div class="menu-btn-icon">
               <svg viewBox="0 0 24 24"><path d="M11.8 10.9c-2.27-.59-3-1.2-3-2.15 0-1.09 1.01-1.85 2.7-1.85 1.78 0 2.44.85 2.5 2.1h2.21c-.07-1.72-1.12-3.3-3.21-3.81V3h-3v2.16c-1.94.42-3.5 1.68-3.5 3.61 0 2.31 1.91 3.46 4.7 4.13 2.5.6 3 1.48 3 2.41 0 .69-.49 1.79-2.7 1.79-2.06 0-2.87-.92-2.98-2.1h-2.2c.12 2.19 1.76 3.42 3.68 3.83V21h3v-2.15c1.95-.37 3.5-1.5 3.5-3.55 0-2.84-2.43-3.81-4.7-4.4z"/></svg>
             </div>
@@ -526,10 +535,6 @@ textarea{resize:vertical;min-height:80px}
             <div class="form-group"><label>Produto Convênio</label>
               <select id="ag-prod-conv">
                 <option value="">-- Selecione --</option>
-                <option value="Andaime">Andaime</option>
-                <option value="Alcool Gel">Alcool Gel</option>
-                <option value="Copa">Copa</option>
-                <option value="Etc.">Etc.</option>
               </select>
             </div>
             <div class="form-group"><label>Fornecedor</label><select id="ag-forn"></select></div>
@@ -612,6 +617,7 @@ textarea{resize:vertical;min-height:80px}
             <div class="form-group"><label>Perfil</label>
               <select id="u-perfil"><option>Administrador</option><option>Gestor</option><option>Consultor</option></select>
             </div>
+            <div class="form-group"><label>Cidade</label><input id="u-cidade" type="text" placeholder="Ex: Campinas"></div>
             <div class="form-group"><label>Senha *</label><input id="u-senha" type="password" placeholder="••••••••"></div>
             <div class="form-group"><label>Confirmar Senha *</label><input id="u-senha2" type="password" placeholder="••••••••"></div>
           </div>
@@ -627,13 +633,14 @@ textarea{resize:vertical;min-height:80px}
           <div class="card-body">
             <table style="table-layout:fixed;width:100%">
               <colgroup>
-                <col style="width:28%">
-                <col style="width:16%">
-                <col style="width:16%">
-                <col style="width:12%">
-                <col style="width:28%">
+                <col style="width:24%">
+                <col style="width:14%">
+                <col style="width:14%">
+                <col style="width:14%">
+                <col style="width:10%">
+                <col style="width:24%">
               </colgroup>
-              <thead><tr><th>Nome</th><th>Login</th><th>Perfil</th><th>Status</th><th>Ações</th></tr></thead>
+              <thead><tr><th>Nome</th><th>Login</th><th>Perfil</th><th>Cidade</th><th>Status</th><th>Ações</th></tr></thead>
               <tbody id="users-body"></tbody>
             </table>
           </div>
@@ -771,6 +778,379 @@ textarea{resize:vertical;min-height:80px}
       </div>
     </div>
 
+    <!-- PRODUTOS (Convênio) -->
+    <div class="page" id="page-produtos">
+      <div class="form-section" style="margin-bottom:16px">
+        <div class="form-section-title" id="prod-form-title">Novo Produto</div>
+        <div style="display:grid;grid-template-columns:1fr auto;gap:12px;align-items:end">
+          <div class="form-group" style="margin:0">
+            <label>Nome do Produto *</label>
+            <input id="p-nome" type="text" placeholder="Ex: Andaime, Álcool Gel, Tintas...">
+          </div>
+          <div style="display:flex;gap:8px">
+            <button class="btn btn-outline" onclick="clearProdForm()">Limpar</button>
+            <button class="btn btn-primary" id="p-save-btn" onclick="saveProduto()">Salvar Produto</button>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title" id="prod-count">Produtos Cadastrados</span>
+        </div>
+        <div class="card-body">
+          <table>
+            <thead><tr><th>#</th><th>Nome do Produto</th><th>Ações</th></tr></thead>
+            <tbody id="produtos-body"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ECONOMIA DE COMPRAS -->
+    <div class="page" id="page-economia">
+      <style>
+        /* ── ECONOMIA STYLES ── */
+        .ec-section-title{font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:800;color:var(--navy);text-align:center;margin-bottom:18px;letter-spacing:.5px}
+        .ec-section-title span{color:var(--blue)}
+        .ec-summary-grid{display:grid;grid-template-columns:auto 1fr 1fr 1fr;gap:10px;margin-bottom:20px;align-items:center}
+        .ec-summary-card{border-radius:10px;padding:12px 20px;text-align:center;border:2px solid var(--border)}
+        .ec-summary-card.navy{background:var(--navy);color:#fff;border-color:var(--navy)}
+        .ec-summary-card.outline{background:#fff;border:2.5px solid var(--text)}
+        .ec-summary-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;margin-bottom:6px;color:inherit;opacity:.8}
+        .ec-summary-value{font-family:'Barlow Condensed',sans-serif;font-size:28px;font-weight:800;font-style:italic;line-height:1}
+        .ec-summary-card.navy .ec-summary-value{color:#fff}
+        .ec-kpi-row{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:10px;margin-bottom:20px}
+        .ec-kpi{border-radius:10px;padding:14px 18px;text-align:center;color:#fff}
+        .ec-kpi.green{background:#1ea96a}
+        .ec-kpi.purple{background:#7c3aed}
+        .ec-kpi.red{background:#e03535}
+        .ec-kpi.g2{background:#22c55e}
+        .ec-kpi-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;opacity:.85;margin-bottom:4px}
+        .ec-kpi-value{font-family:'Barlow Condensed',sans-serif;font-size:30px;font-weight:800;font-style:italic;line-height:1}
+        .ec-upload-zone{border:2px dashed var(--blue);border-radius:12px;padding:28px;text-align:center;background:#f8fbff;cursor:pointer;transition:.2s;margin-bottom:18px}
+        .ec-upload-zone:hover{background:#eef4ff;border-color:var(--navy)}
+        .ec-upload-zone svg{width:36px;height:36px;fill:var(--blue);margin-bottom:8px}
+        .ec-upload-zone p{font-size:13px;color:var(--muted);font-weight:500}
+        .ec-upload-zone strong{color:var(--blue)}
+        .ec-table-wrap{overflow-x:auto;max-height:420px;overflow-y:auto}
+        .ec-table{width:100%;border-collapse:collapse;font-size:12px;min-width:1100px}
+        .ec-table th{background:var(--navy);color:#fff;padding:8px 10px;text-align:left;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;position:sticky;top:0;z-index:10;white-space:nowrap}
+        .ec-table td{padding:7px 10px;border-bottom:1px solid #eef2f9;vertical-align:middle;white-space:nowrap}
+        .ec-table tr:hover td{background:#fafcff}
+        .ec-table td input,.ec-table td select{border:1.5px solid var(--border);border-radius:5px;padding:3px 7px;font-size:11px;font-family:'Barlow',sans-serif;background:#fff;width:100%;min-width:80px}
+        .ec-table td input:focus,.ec-table td select:focus{border-color:var(--blue);outline:none}
+        .ec-badge-sim{background:#d4f5e5;color:#0f6e3d;padding:2px 8px;border-radius:12px;font-size:10px;font-weight:700}
+        .ec-badge-nao{background:#fde2e2;color:#9a1515;padding:2px 8px;border-radius:12px;font-size:10px;font-weight:700}
+        .ec-badge-cns{background:#dce8ff;color:#1a4db3;padding:2px 8px;border-radius:12px;font-size:10px;font-weight:700}
+        .ec-badge-srv{background:#fff3d4;color:#9a6000;padding:2px 8px;border-radius:12px;font-size:10px;font-weight:700}
+        .ec-apurada-row{display:grid;grid-template-columns:28px 1fr 1fr 1fr 1fr 1fr 1fr auto auto;gap:8px;align-items:center;padding:10px 14px;border:1px solid var(--border);border-radius:10px;margin-bottom:8px;background:#fff;font-size:12px}
+        .ec-apurada-city{background:var(--navy);color:#fff;border-radius:20px;padding:5px 14px;font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:800;white-space:nowrap}
+        .ec-apurada-mes{background:#9eaab8;color:#fff;border-radius:20px;padding:5px 14px;font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:800;white-space:nowrap}
+        .ec-apurada-ano{background:#3a7bd5;color:#fff;border-radius:20px;padding:5px 14px;font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:800;white-space:nowrap}
+        .ec-pct-badge{border-radius:20px;padding:5px 14px;font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:800;font-style:italic;text-align:center;color:#fff}
+        .ec-pct-sim{background:#1ea96a}
+        .ec-pct-conv{background:#7c3aed}
+        .ec-pct-nao{background:#e03535}
+        .ec-sub-val{font-size:10px;font-weight:600;text-align:center;margin-top:2px;color:inherit;opacity:.75}
+        .ec-btn-add{background:var(--green);color:#fff;border:none;border-radius:50%;width:28px;height:28px;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:.15s}
+        .ec-btn-add:hover{background:#159c5e}
+        .ec-btn-pdf{background:var(--red);color:#fff;border:none;border-radius:6px;width:28px;height:28px;font-size:12px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:.15s}
+        .ec-btn-pdf:hover{opacity:.85}
+        .ec-actions-bar{display:flex;gap:10px;justify-content:flex-end;margin-top:14px;flex-wrap:wrap}
+        .ec-no-data{text-align:center;padding:40px;color:var(--muted);font-size:13px}
+        .ec-col-edit{background:#fffbeb}
+      </style>
+
+      <!-- PAINEL SUPERIOR: Resumo geral -->
+      <div class="form-section" style="margin-bottom:18px">
+        <div class="ec-section-title"><em>Economia</em> <span style="font-style:normal">Compras</span></div>
+        <div id="ec-summary-top">
+          <div style="color:var(--muted);text-align:center;font-size:12px;padding:12px">Carregue um arquivo Excel para visualizar o resumo.</div>
+        </div>
+      </div>
+
+      <!-- APURAÇÃO: Upload + Tabela editável -->
+      <div class="form-section" style="margin-bottom:18px">
+        <div class="ec-section-title"><em>Apurar</em> <span style="font-style:normal;color:var(--text)">Economia</span></div>
+
+        <!-- Upload Zone -->
+        <label for="ec-file-input" class="ec-upload-zone" id="ec-drop-zone">
+          <svg viewBox="0 0 24 24"><path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM14 13v4h-4v-4H7l5-5 5 5h-3z"/></svg>
+          <p><strong>Clique para selecionar</strong> ou arraste o arquivo Excel aqui</p>
+          <p style="font-size:11px;margin-top:4px">Formatos aceitos: .xlsx, .xls</p>
+          <input type="file" id="ec-file-input" accept=".xlsx,.xls" style="display:none" onchange="handleEcUpload(this)">
+        </label>
+
+        <!-- Meta fields: Cidade, Mês, Ano -->
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr auto;gap:12px;margin-bottom:14px;align-items:end">
+          <div class="form-group"><label>Cidade</label><input id="ec-cidade" type="text" placeholder="Ex: Caieiras"></div>
+          <div class="form-group"><label>Mês</label>
+            <select id="ec-mes">
+              <option value="">Selecione...</option>
+              <option>JANEIRO</option><option>FEVEREIRO</option><option>MARÇO</option>
+              <option>ABRIL</option><option>MAIO</option><option>JUNHO</option>
+              <option>JULHO</option><option>AGOSTO</option><option>SETEMBRO</option>
+              <option>OUTUBRO</option><option>NOVEMBRO</option><option>DEZEMBRO</option>
+            </select>
+          </div>
+          <div class="form-group"><label>Ano</label><input id="ec-ano" type="number" value="2026" min="2020" max="2099"></div>
+          <button class="btn btn-green" onclick="addEcApurada()" style="margin-bottom:1px">+ Lançar</button>
+        </div>
+
+        <!-- Table -->
+        <div id="ec-table-container">
+          <div class="ec-no-data">📂 Nenhum arquivo carregado. Faça o upload do Excel para começar.</div>
+        </div>
+
+        <div class="ec-actions-bar" id="ec-actions-bar" style="display:none">
+          <button class="btn btn-outline" onclick="clearEcData()">🗑 Limpar</button>
+          <button class="btn btn-primary" onclick="gerarRelatorioEc()">📄 Gerar Relatório</button>
+          <button class="btn btn-green" onclick="addEcApurada()">✓ Lançar</button>
+        </div>
+      </div>
+
+      <!-- ECONOMIA APURADA: lista de lançamentos -->
+      <div class="form-section">
+        <div class="ec-section-title"><em>Economia</em> <span style="font-style:normal;color:var(--text)">Apurada</span></div>
+        <div style="display:grid;grid-template-columns:28px 1fr 1fr 1fr 1fr 1fr 1fr auto auto;gap:8px;padding:6px 14px;margin-bottom:6px">
+          <div></div>
+          <div style="font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase">Cidade</div>
+          <div style="font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase">Mês</div>
+          <div style="font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase">Ano</div>
+          <div style="font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase">SIM</div>
+          <div style="font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase">Convênio</div>
+          <div style="font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase">Não</div>
+          <div style="font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase">Incluir</div>
+          <div style="font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase">Links</div>
+        </div>
+        <div id="ec-apurada-list">
+          <div class="ec-no-data">Nenhum lançamento realizado ainda.</div>
+        </div>
+      </div>
+
+      <!-- MODAL: Relatório / Visualização -->
+      <div class="modal-bg" id="modal-ec-rel" style="z-index:9500">
+        <div class="modal" style="width:900px;max-width:98vw;max-height:95vh">
+          <div class="modal-header" style="background:var(--navy);color:#fff">
+            <span class="modal-title" style="color:#fff">📄 Relatório — Apuração Mensal de Economia</span>
+            <button class="modal-close" style="color:#fff" onclick="closeModal('modal-ec-rel')">✕</button>
+          </div>
+          <div class="modal-body" id="ec-rel-body" style="padding:0"></div>
+          <div class="modal-footer">
+            <button class="btn btn-outline" onclick="closeModal('modal-ec-rel')">Fechar</button>
+            <button class="btn btn-primary" onclick="printEcRel()">🖨 Imprimir / Salvar PDF</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CNS LIMPEZA -->
+    <div class="page" id="page-cns-limpeza">
+      <style>
+        .cns-header{font-family:'Barlow Condensed',sans-serif;font-size:24px;font-weight:800;color:#fff;background:var(--navy);text-align:center;padding:10px 24px;border-radius:10px;margin-bottom:18px;letter-spacing:.5px}
+        .cns-header span{color:#7dd3fc;font-style:normal}
+        .cns-kpi-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-bottom:20px}
+        .cns-kpi{border-radius:12px;padding:16px 20px;text-align:center}
+        .cns-kpi-label{font-size:12px;font-weight:700;color:var(--text);margin-bottom:8px;text-transform:uppercase;letter-spacing:.5px}
+        .cns-kpi-val{font-family:'Barlow Condensed',sans-serif;font-size:34px;font-weight:800;font-style:italic;line-height:1;color:#fff}
+        .cns-kpi.navy{background:var(--navy)}
+        .cns-kpi.outline{background:#fff;border:2.5px solid var(--text)}
+        .cns-kpi.outline .cns-kpi-val{color:var(--text)}
+        .cns-kpi.green{background:var(--green)}
+        .cns-status-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-bottom:20px}
+        .cns-status-chip{border-radius:12px;padding:14px 18px;text-align:center;color:#fff}
+        .cns-status-chip.green{background:var(--green)}
+        .cns-status-chip.yellow{background:#d97706}
+        .cns-status-chip.red{background:var(--red)}
+        .cns-status-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;opacity:.85;margin-bottom:4px}
+        .cns-status-num{font-family:'Barlow Condensed',sans-serif;font-size:36px;font-weight:800;line-height:1}
+        .cns-subtitle{font-family:'Barlow Condensed',sans-serif;font-size:17px;font-weight:800;color:var(--navy);text-align:center;margin-bottom:14px}
+        .cns-subtitle em{color:var(--blue)}
+        .cns-table-wrap{overflow-x:auto}
+        .cns-table{width:100%;border-collapse:collapse;font-size:13px}
+        .cns-table th{background:#f4f7fd;padding:8px 10px;font-size:10px;font-weight:700;text-transform:uppercase;color:var(--muted);letter-spacing:.6px;text-align:center;border-bottom:2px solid var(--border)}
+        .cns-table th:first-child,.cns-table th:nth-child(2){text-align:left}
+        .cns-table td{padding:9px 10px;border-bottom:1px solid #eef2f9;text-align:center;vertical-align:middle}
+        .cns-table td:first-child{text-align:left;font-weight:700;font-size:11px}
+        .cns-table tr:hover td{background:#fafcff}
+        .cns-city-badge{background:var(--navy);color:#fff;border-radius:20px;padding:5px 14px;font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:800;display:inline-block}
+        .cns-num-badge{border-radius:20px;padding:5px 12px;font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:800;display:inline-block;color:#fff;min-width:44px}
+        .cns-num-badge.gray{background:#9eaab8}
+        .cns-num-badge.green{background:var(--green)}
+        .cns-num-badge.red{background:var(--red)}
+        .cns-eco-badge{border-radius:20px;padding:5px 12px;font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;display:inline-block;border:1.5px solid var(--text);background:#fff;color:var(--text);min-width:90px}
+        .cns-pct-badge{border-radius:20px;padding:5px 12px;font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:800;display:inline-block;color:#fff;background:var(--green);min-width:54px}
+        .cns-ano-badge{border-radius:20px;padding:5px 12px;font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:800;display:inline-block;color:#fff;min-width:58px}
+        .cns-ano-badge.green{background:var(--green)}
+        .cns-ano-badge.yellow{background:#d97706}
+        .cns-ano-badge.red{background:var(--red)}
+        .cns-bell-btn{background:none;border:none;font-size:18px;cursor:pointer;padding:2px 6px;border-radius:6px;transition:.15s}
+        .cns-bell-btn:hover{background:#fef9c3}
+        .cns-add-btn{background:var(--green);color:#fff;border:none;border-radius:50%;width:28px;height:28px;font-size:18px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;transition:.15s;line-height:1}
+        .cns-add-btn:hover{background:#159c5e;transform:scale(1.1)}
+        .cns-legend{display:flex;gap:14px;align-items:center;font-size:11px;flex-wrap:wrap}
+        .cns-legend-dot{width:12px;height:12px;border-radius:50%;flex-shrink:0}
+        .cns-form-row{display:grid;grid-template-columns:1fr 80px 80px 100px 100px 80px 80px auto;gap:10px;align-items:end;margin-bottom:12px}
+        .cns-eco-history{font-size:11px;color:var(--muted);margin-top:4px}
+      </style>
+
+      <!-- Cabeçalho -->
+      <div class="cns-header"><em>CNS</em> Limpeza</div>
+
+      <!-- KPIs -->
+      <div class="form-section" style="margin-bottom:16px">
+        <div class="cns-kpi-row">
+          <div class="cns-kpi navy">
+            <div class="cns-kpi-label" style="color:rgba(255,255,255,.7)">Implantadas</div>
+            <div class="cns-kpi-val" id="cns-kpi-impl">00</div>
+          </div>
+          <div class="cns-kpi outline">
+            <div class="cns-kpi-label">Economia ($)</div>
+            <div class="cns-kpi-val" id="cns-kpi-eco">—</div>
+          </div>
+          <div class="cns-kpi green">
+            <div class="cns-kpi-label" style="color:rgba(255,255,255,.8)">Economia (%)</div>
+            <div class="cns-kpi-val" id="cns-kpi-pct">—</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Status geral -->
+      <div class="form-section" style="margin-bottom:16px">
+        <div class="cns-subtitle"><em>CNS</em> Limpeza | <span id="cns-subtitle-txt">Cidades Implantadas CRS Jundiaí</span></div>
+        <div class="cns-status-row">
+          <div class="cns-status-chip green">
+            <div class="cns-status-label">Implantadas</div>
+            <div class="cns-status-num" id="cns-s-impl">00</div>
+          </div>
+          <div class="cns-status-chip yellow">
+            <div class="cns-status-label">Em Andamento</div>
+            <div class="cns-status-num" id="cns-s-and">00</div>
+          </div>
+          <div class="cns-status-chip red">
+            <div class="cns-status-label">Pendente</div>
+            <div class="cns-status-num" id="cns-s-pend">00</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Formulário de nova cidade -->
+      <div class="form-section" style="margin-bottom:16px" id="cns-form-wrap">
+        <div style="font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:800;color:var(--navy);margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid var(--border)">
+          ➕ Adicionar / Editar Cidade
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 90px 80px 80px 110px 110px 90px 90px auto;gap:10px;align-items:end">
+          <div class="form-group" style="margin:0"><label>Cidade</label><input id="cns-f-cidade" type="text" placeholder="Ex: Caieiras"></div>
+          <div class="form-group" style="margin:0"><label>Prédios</label><input id="cns-f-predios" type="number" min="0" value="15" placeholder="15"></div>
+          <div class="form-group" style="margin:0"><label>SIM</label><input id="cns-f-sim" type="number" min="0" value="0"></div>
+          <div class="form-group" style="margin:0"><label>NÃO</label><input id="cns-f-nao" type="number" min="0" value="0"></div>
+          <div class="form-group" style="margin:0"><label>Economia (R$)</label><input id="cns-f-eco" type="text" placeholder="5.000,00"></div>
+          <div class="form-group" style="margin:0"><label>Economia (%)</label><input id="cns-f-pct" type="text" placeholder="15%"></div>
+          <div class="form-group" style="margin:0"><label>Ano Ref.</label><input id="cns-f-ano" type="number" value="2026" min="2020" max="2099"></div>
+          <div class="form-group" style="margin:0"><label>Status</label>
+            <select id="cns-f-status">
+              <option value="implantada">Implantada</option>
+              <option value="andamento">Em Andamento</option>
+              <option value="pendente">Pendente</option>
+            </select>
+          </div>
+          <div style="display:flex;gap:8px;align-items:flex-end">
+            <button class="btn btn-outline btn-sm" onclick="clearCNSForm()">Limpar</button>
+            <button class="btn btn-primary btn-sm" id="cns-save-btn" onclick="saveCNSCidade()">Salvar</button>
+          </div>
+        </div>
+        <div class="form-group" style="margin-top:10px">
+          <label>Justificativa (campo "?")</label>
+          <textarea id="cns-f-just" rows="2" placeholder="Ex: A Casa de oração 1 está em reforma; A Casa de oração 2 ainda não recebeu os equipamentos"></textarea>
+        </div>
+        <!-- Lançar economia acumulada -->
+        <div style="margin-top:14px;padding-top:12px;border-top:1px solid var(--border)">
+          <div style="font-size:12px;font-weight:700;color:var(--navy);margin-bottom:8px">💰 Lançar Economia por Ano (acumulado)</div>
+          <div style="display:flex;gap:8px;align-items:flex-end;flex-wrap:wrap" id="cns-eco-entries">
+            <!-- entradas dinâmicas -->
+          </div>
+          <div style="display:flex;gap:8px;margin-top:8px">
+            <button class="btn btn-outline btn-sm" onclick="addCNSEcoEntry()">+ Adicionar Ano</button>
+          </div>
+          <div class="cns-eco-history" id="cns-eco-acum"></div>
+        </div>
+      </div>
+
+      <!-- Tabela de cidades -->
+      <div class="form-section">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;flex-wrap:wrap;gap:8px">
+          <div class="cns-subtitle" style="margin:0"><em>CNS</em> Limpeza | Andamento na CRS Jundiaí</div>
+          <div style="display:flex;align-items:center;gap:16px">
+            <div class="cns-legend">
+              <div style="display:flex;align-items:center;gap:5px"><div class="cns-legend-dot" style="background:var(--green)"></div><span>Atualizado Recente</span></div>
+              <div style="display:flex;align-items:center;gap:5px"><div class="cns-legend-dot" style="background:#d97706"></div><span>Precisa Atualizar</span></div>
+              <div style="display:flex;align-items:center;gap:5px"><div class="cns-legend-dot" style="background:var(--red)"></div><span>Atualização Pendente</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="cns-table-wrap">
+          <table class="cns-table">
+            <thead>
+              <tr>
+                <th style="width:30px">#</th>
+                <th style="min-width:110px;text-align:left">Cidade</th>
+                <th>Prédios</th>
+                <th>SIM</th>
+                <th>NÃO</th>
+                <th>(?)</th>
+                <th>Economia ($)</th>
+                <th>Economia (%)</th>
+                <th>Ult.</th>
+                <th>Incluir</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody id="cns-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- MODAL: Justificativa / Sino -->
+      <div class="modal-bg" id="modal-cns-just">
+        <div class="modal" style="width:480px">
+          <div class="modal-header">
+            <span class="modal-title">🔔 Justificativa — <span id="cns-just-city"></span></span>
+            <button class="modal-close" onclick="closeModal('modal-cns-just')">✕</button>
+          </div>
+          <div class="modal-body">
+            <div class="form-group">
+              <label>Justificativa dos imóveis não implantados</label>
+              <textarea id="cns-just-text" rows="4" placeholder="Ex: A Casa de oração 1 está em reforma..."></textarea>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button class="btn btn-outline" onclick="closeModal('modal-cns-just')">Cancelar</button>
+            <button class="btn btn-primary" onclick="saveCNSJust()">Salvar</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- MODAL: Lançar Economia Acumulada -->
+      <div class="modal-bg" id="modal-cns-eco">
+        <div class="modal" style="width:520px">
+          <div class="modal-header">
+            <span class="modal-title">💰 Lançar Economia — <span id="cns-eco-city-lbl"></span></span>
+            <button class="modal-close" onclick="closeModal('modal-cns-eco')">✕</button>
+          </div>
+          <div class="modal-body">
+            <p style="font-size:12px;color:var(--muted);margin-bottom:14px">Informe o valor economizado por ano. O sistema calcula o acumulado automaticamente.</p>
+            <div id="cns-eco-modal-entries" style="display:flex;flex-direction:column;gap:10px"></div>
+            <button class="btn btn-outline btn-sm" style="margin-top:10px" onclick="addCNSEcoModalEntry()">+ Adicionar Ano</button>
+            <div style="margin-top:14px;padding:10px;background:#f4f7fd;border-radius:8px;font-size:12px;font-weight:700;color:var(--navy)" id="cns-eco-modal-acum"></div>
+          </div>
+          <div class="modal-footer">
+            <button class="btn btn-outline" onclick="closeModal('modal-cns-eco')">Cancelar</button>
+            <button class="btn btn-primary" onclick="saveCNSEcoModal()">Salvar Economia</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- MODAL: Adicionar Igreja PP -->
     <div class="modal-bg" id="modal-pp-add">
       <div class="modal" style="width:480px">
@@ -888,6 +1268,9 @@ function applyAdminVisibility(){
   document.querySelectorAll('.admin-only-field').forEach(el=>{
     el.style.display = isAdmin() ? '' : 'none';
   });
+  document.querySelectorAll('.admin-only-nav').forEach(el=>{
+    el.style.display = isAdmin() ? '' : 'none';
+  });
 }
 
 let fornecedores = [
@@ -919,8 +1302,8 @@ let agenda = [
 ];
 
 let users = [
-  {id:1,nome:'Administrador CNS',login:'admin',email:'admin@cns.com',perfil:'Administrador',senha:'cns@2024',ativo:true},
-  {id:2,nome:'Gestor Regional',login:'gestor1',email:'gestor@cns.com',perfil:'Gestor',senha:'gestor123',ativo:true},
+  {id:1,nome:'Administrador CNS',login:'admin',email:'admin@cns.com',perfil:'Administrador',cidade:'',senha:'cns@2024',ativo:true},
+  {id:2,nome:'Gestor Regional',login:'gestor1',email:'gestor@cns.com',perfil:'Gestor',cidade:'Campinas',senha:'gestor123',ativo:true},
 ];
 
 // Convênios data - suporta URL de imagem
@@ -1002,7 +1385,7 @@ function toggleSidebar(){
 document.getElementById('l-pass').addEventListener('keydown',e=>{if(e.key==='Enter')doLogin()});
 
 // ─── NAVIGATION ──────────────────────────────────────────────────────────────
-const pageTitles={dashboard:'Dashboard',fornecedores:'Fornecedores',ranking:'Ranking de Fornecedores','cad-fornecedor':'Cadastrar Fornecedor',agenda:'Compras Coordenadas',usuarios:'Gestão de Usuários',convenios:'Convênios'};
+const pageTitles={dashboard:'Dashboard',fornecedores:'Fornecedores',ranking:'Ranking de Fornecedores','cad-fornecedor':'Cadastrar Fornecedor',agenda:'Compras Coordenadas',usuarios:'Gestão de Usuários',convenios:'Convênios',produtos:'Gestão de Produtos',economia:'Economia de Compras','cns-limpeza':'CNS Limpeza'};
 function showPage(id, el){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
@@ -1016,6 +1399,9 @@ function showPage(id, el){
   if(id==='usuarios') renderUsers();
   if(id==='convenios') renderConveniosPage();
   if(id==='pintura') renderPP();
+  if(id==='produtos') renderProdutos();
+  if(id==='economia') renderEconomia();
+  if(id==='cns-limpeza') renderCNS();
   if(id==='cad-fornecedor'){ clearFornForm(); if(!editingFornId) document.getElementById('f-score').value='3.0'; applyAdminVisibility(); }
 }
 
@@ -1045,6 +1431,7 @@ function renderAll(){
   renderDashboard();
   renderFornSelectAgenda();
   populateCatFilter();
+  populateProdutoSelect();
 }
 
 // ─── DASHBOARD ───────────────────────────────────────────────────────────────
@@ -1576,12 +1963,20 @@ function submitAval(){
 
 // ─── USUÁRIOS ────────────────────────────────────────────────────────────────
 function renderUsers(){
-  document.getElementById('users-body').innerHTML=users.map(u=>{
+  // Filtra por cidade se o usuário logado NÃO for admin e tiver cidade cadastrada
+  let list = users;
+  if(!isAdmin() && currentUser && currentUser.cidade){
+    list = users.filter(u => u.perfil === 'Administrador' || u.cidade === currentUser.cidade || u.id === currentUser.id);
+  }
+
+  document.getElementById('users-body').innerHTML=list.map(u=>{
     const isPrincipal = u.id === PRINCIPAL_USER_ID;
+    const cidadeDisplay = u.cidade || '<span style="color:var(--muted);font-style:italic">—</span>';
     return `<tr>
       <td><b>${u.nome}</b>${isPrincipal ? ' <span class="badge badge-blue" style="font-size:9px">Principal</span>' : ''}</td>
       <td>${u.login}</td>
       <td><span class="badge badge-blue">${u.perfil}</span></td>
+      <td>${cidadeDisplay}</td>
       <td>${u.ativo?'<span class="badge badge-green">Ativo</span>':'<span class="badge badge-red">Inativo</span>'}</td>
       <td style="white-space:nowrap">
         <button class="btn btn-outline btn-sm" onclick="editUser(${u.id})">Editar</button>
@@ -1614,20 +2009,21 @@ function saveUser(){
   const login=document.getElementById('u-login').value.trim();
   const email=document.getElementById('u-email').value.trim();
   const perfil=document.getElementById('u-perfil').value;
+  const cidade=document.getElementById('u-cidade').value.trim();
   const senha=document.getElementById('u-senha').value;
   const senha2=document.getElementById('u-senha2').value;
   if(!nome||!login){toast('Nome e Login são obrigatórios','error');return;}
   if(senha && senha!==senha2){toast('As senhas não conferem','error');return;}
   if(editingUserId){
     const u=users.find(x=>x.id===editingUserId);
-    u.nome=nome;u.login=login;u.email=email;u.perfil=perfil;
+    u.nome=nome;u.login=login;u.email=email;u.perfil=perfil;u.cidade=cidade;
     if(senha) u.senha=senha;
     toast('Usuário atualizado!');
   } else {
     if(!senha){toast('Informe uma senha','error');return;}
     const exists=users.find(x=>x.login===login);
     if(exists){toast('Login já existe','error');return;}
-    users.push({id:nextUserId++,nome,login,email,perfil,senha,ativo:true});
+    users.push({id:nextUserId++,nome,login,email,perfil,cidade,senha,ativo:true});
     toast('Usuário criado!');
   }
   editingUserId=null;
@@ -1635,7 +2031,7 @@ function saveUser(){
   renderUsers();
 }
 function clearUserForm(){
-  ['u-nome','u-login','u-email','u-senha','u-senha2'].forEach(id=>document.getElementById(id).value='');
+  ['u-nome','u-login','u-email','u-cidade','u-senha','u-senha2'].forEach(id=>document.getElementById(id).value='');
   document.getElementById('u-perfil').value='Consultor';
   editingUserId=null;
   document.getElementById('user-form-title').textContent='Novo Usuário';
@@ -1649,6 +2045,7 @@ function editUser(id){
   document.getElementById('u-login').value=u.login;
   document.getElementById('u-email').value=u.email||'';
   document.getElementById('u-perfil').value=u.perfil;
+  document.getElementById('u-cidade').value=u.cidade||'';
   document.getElementById('u-senha').value='';
   document.getElementById('u-senha2').value='';
   document.getElementById('user-form-title').textContent='Editar Usuário';
@@ -1660,6 +2057,71 @@ function toggleUser(id){
   if(u.id===PRINCIPAL_USER_ID && u.ativo){toast('Não é possível desativar o usuário principal','error');return;}
   u.ativo=!u.ativo;renderUsers();toast(u.ativo?'Usuário ativado!':'Usuário desativado!');
 }
+
+// ─── PRODUTOS (Convênio) ──────────────────────────────────────────────────────
+let produtos = ['Andaime','Alcool Gel','Copa','Etc.'];
+let editingProdIndex = -1;
+
+function renderProdutos(){
+  document.getElementById('prod-count').textContent = `Produtos Cadastrados (${produtos.length})`;
+  document.getElementById('produtos-body').innerHTML = produtos.map((p,i)=>`
+    <tr>
+      <td><b>${String(i+1).padStart(2,'0')}</b></td>
+      <td>${p}</td>
+      <td style="white-space:nowrap">
+        <button class="btn btn-outline btn-sm" style="color:var(--blue)" onclick="editProduto(${i})">Editar</button>
+        <button class="btn btn-red btn-sm" onclick="deleteProduto(${i})">✕ Excluir</button>
+      </td>
+    </tr>`).join('');
+  // Atualiza o select de produtos na agenda
+  populateProdutoSelect();
+}
+
+function populateProdutoSelect(){
+  const sel = document.getElementById('ag-prod-conv');
+  if(!sel) return;
+  sel.innerHTML = '<option value="">-- Selecione --</option>' + produtos.map(p=>`<option value="${p}">${p}</option>`).join('');
+}
+
+function saveProduto(){
+  const nome = document.getElementById('p-nome').value.trim();
+  if(!nome){toast('Informe o nome do produto','error');return;}
+  if(editingProdIndex >= 0){
+    produtos[editingProdIndex] = nome;
+    editingProdIndex = -1;
+    toast('Produto atualizado!');
+  } else {
+    if(produtos.find(p=>p.toLowerCase()===nome.toLowerCase())){toast('Produto já cadastrado','error');return;}
+    produtos.push(nome);
+    toast('Produto cadastrado!');
+  }
+  clearProdForm();
+  renderProdutos();
+}
+
+function editProduto(i){
+  editingProdIndex = i;
+  document.getElementById('p-nome').value = produtos[i];
+  document.getElementById('prod-form-title').textContent = 'Editar Produto';
+  document.getElementById('p-save-btn').textContent = 'Atualizar Produto';
+  document.getElementById('p-nome').focus();
+}
+
+function deleteProduto(i){
+  if(confirm(`Excluir o produto "${produtos[i]}"?`)){
+    produtos.splice(i,1);
+    renderProdutos();
+    toast('Produto removido!');
+  }
+}
+
+function clearProdForm(){
+  document.getElementById('p-nome').value='';
+  document.getElementById('prod-form-title').textContent='Novo Produto';
+  document.getElementById('p-save-btn').textContent='Salvar Produto';
+  editingProdIndex = -1;
+}
+
 // ─── PINTURA PROGRAMADA ──────────────────────────────────────────────────────
 let ppItems = [
   {cidade:'Caieiras', val:'R$ 5.000,00', pct:'15%', ano:2026},
@@ -1790,6 +2252,649 @@ function saveCompLink(){
 
 setTimeout(renderPPChecklist, 310);
 
+// ─── ECONOMIA DE COMPRAS ──────────────────────────────────────────────────────
+let ecRows = [];       // linhas do excel carregado (com edições manuais)
+let ecApurada = [];    // lançamentos finais
+let ecMeta = {cidade:'', mes:'', ano:'2026'};
+
+function renderEconomia(){
+  renderEcSummaryTop();
+  renderEcApuradaList();
+}
+
+// ── Summary Top ───────────────────────────────────────────────────────────────
+function renderEcSummaryTop(){
+  const el = document.getElementById('ec-summary-top');
+  if(!ecApurada.length){
+    el.innerHTML='<div style="color:var(--muted);text-align:center;font-size:12px;padding:12px">Carregue um arquivo Excel para visualizar o resumo.</div>';
+    return;
+  }
+  // Agrupa por cidade única
+  const cidades = [...new Set(ecApurada.map(a=>a.cidade))];
+  // Totais globais
+  let totalSim=0, totalCNS=0, totalNao=0;
+  ecApurada.forEach(a=>{totalSim+=a.valSim||0; totalCNS+=a.valCNS||0; totalNao+=a.valNao||0;});
+  const totalGeral = totalSim+totalCNS+totalNao;
+  const pctEco = totalGeral > 0 ? Math.round((totalSim/(totalGeral))*100) : 0;
+
+  el.innerHTML=`
+    <div class="ec-summary-grid" style="margin-bottom:14px">
+      <div class="ec-summary-card navy">
+        <div class="ec-summary-label">Cidades</div>
+        <div class="ec-summary-value">${String(cidades.length).padStart(2,'0')}</div>
+      </div>
+      ${cidades.slice(0,3).map(c=>{
+        const items = ecApurada.filter(a=>a.cidade===c);
+        const tot = items.reduce((s,a)=>s+(a.valSim||0)+(a.valCNS||0)+(a.valNao||0),0);
+        return `<div class="ec-summary-card outline">
+          <div class="ec-summary-label">${c}</div>
+          <div class="ec-summary-value" style="font-size:22px">${fmtMil(tot)}</div>
+        </div>`;
+      }).join('')}
+    </div>
+    <div class="ec-kpi-row">
+      <div class="ec-kpi green"><div class="ec-kpi-label">SIM</div><div class="ec-kpi-value">${fmtNum2(totalSim)}</div></div>
+      <div class="ec-kpi purple"><div class="ec-kpi-label">Convênio</div><div class="ec-kpi-value">${fmtNum2(totalCNS)}</div></div>
+      <div class="ec-kpi red"><div class="ec-kpi-label">NÃO</div><div class="ec-kpi-value">${fmtNum2(totalNao)}</div></div>
+      <div class="ec-kpi g2"><div class="ec-kpi-label">Economia (%)</div><div class="ec-kpi-value">${pctEco}%</div></div>
+    </div>`;
+}
+
+function fmtMil(v){
+  if(!v) return 'R$ 0';
+  if(v>=1000) return (v/1000).toFixed(0)+'mil';
+  return 'R$ '+v.toFixed(0);
+}
+function fmtNum2(v){
+  if(!v) return '0,00';
+  return v.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2});
+}
+
+// ── File Upload ───────────────────────────────────────────────────────────────
+function handleEcUpload(input){
+  const file = input.files[0];
+  if(!file) return;
+  const ext = file.name.split('.').pop().toLowerCase();
+  if(!['xlsx','xls'].includes(ext)){toast('Formato inválido. Use .xlsx ou .xls','error');return;}
+
+  if(!window.XLSX){
+    const s = document.createElement('script');
+    s.src='https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js';
+    s.onload=()=>readEcXLSX(file);
+    document.head.appendChild(s);
+  } else {
+    readEcXLSX(file);
+  }
+}
+
+function readEcXLSX(file){
+  const reader = new FileReader();
+  reader.onload = e=>{
+    try{
+      const wb = XLSX.read(e.target.result, {type:'array'});
+      const ws = wb.Sheets[wb.SheetNames[0]];
+      const json = XLSX.utils.sheet_to_json(ws, {defval:''});
+      processEcRows(json);
+    } catch(err){ toast('Erro ao ler arquivo: '+err.message,'error'); }
+  };
+  reader.readAsArrayBuffer(file);
+}
+
+function processEcRows(json){
+  // Map colunas do Excel para nosso modelo interno
+  ecRows = json.map((r,i)=>({
+    _idx: i,
+    data:    r['Data']||r['data']||'',
+    hora:    r['Hora']||r['hora']||'',
+    numero:  r['Número']||r['Numero']||r['numero']||'',
+    remetente: r['Remetente']||r['remetente']||'',
+    valorFechado: parseFloat(String(r['Valor Fechado']||r['valor_fechado']||0).replace(',','.'))||0,
+    valorMaior:   parseFloat(String(r['Valor Maior']||r['valor_maior']||0).replace(',','.'))||0,
+    economia:     parseFloat(String(r['Economia']||r['economia']||0).replace(',','.'))||0,
+    // colunas manuais (podem vir do excel ou serem preenchidas)
+    documento: r['Documento']||r['documento']||'Produto',
+    cotacaoNome: r['Cotação']||r['Cotacao']||r['cotacao']||'',
+    cotacaoNum:  String(r['Cotação.1']||r['cotacao_num']||''),
+    quantas:     r['Quantas?']||r['quantas']||'',
+    pedido:      String(r['Pedido']||r['pedido']||''),
+  }));
+
+  renderEcTable();
+  document.getElementById('ec-actions-bar').style.display='flex';
+  document.getElementById('ec-drop-zone').style.borderColor='var(--green)';
+  toast(`${ecRows.length} linhas carregadas!`);
+}
+
+// ── Table Render ─────────────────────────────────────────────────────────────
+function renderEcTable(){
+  const container = document.getElementById('ec-table-container');
+  if(!ecRows.length){
+    container.innerHTML='<div class="ec-no-data">Nenhum dado carregado.</div>';
+    return;
+  }
+  container.innerHTML=`
+    <div class="ec-table-wrap">
+      <table class="ec-table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Data</th>
+            <th>Hora</th>
+            <th>Número</th>
+            <th style="min-width:200px">Remetente</th>
+            <th>Valor Fechado</th>
+            <th>Valor Maior</th>
+            <th>Economia</th>
+            <th class="ec-col-edit" title="Coluna manual">Documento ✎</th>
+            <th class="ec-col-edit" title="Coluna manual">Cotação ✎</th>
+            <th class="ec-col-edit" title="Coluna manual">Cotação Nº ✎</th>
+            <th class="ec-col-edit" title="Coluna manual">Quantas? ✎</th>
+            <th class="ec-col-edit" title="Coluna manual">Pedido ✎</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${ecRows.map((r,i)=>`
+            <tr>
+              <td><b>${i+1}</b></td>
+              <td>${fmtEcDate(r.data)}</td>
+              <td>${r.hora}</td>
+              <td>${r.numero}</td>
+              <td style="max-width:220px;white-space:normal;word-break:break-word;font-size:11px">${r.remetente}</td>
+              <td style="text-align:right">${fmtNum2(r.valorFechado)}</td>
+              <td style="text-align:right">${fmtNum2(r.valorMaior)}</td>
+              <td style="text-align:right;font-weight:700;color:${r.economia>0?'var(--green)':'var(--muted)'}">${fmtNum2(r.economia)}</td>
+              <td class="ec-col-edit">
+                <select onchange="ecEditRow(${i},'documento',this.value)" style="min-width:80px">
+                  <option ${r.documento==='Produto'?'selected':''}>Produto</option>
+                  <option ${r.documento==='Serviço'?'selected':''}>Serviço</option>
+                </select>
+              </td>
+              <td class="ec-col-edit">
+                <select onchange="ecEditRow(${i},'cotacaoNome',this.value)" style="min-width:65px">
+                  <option value="" ${!r.cotacaoNome?'selected':''}>—</option>
+                  <option ${r.cotacaoNome==='SIM'?'selected':''}>SIM</option>
+                  <option ${r.cotacaoNome==='NÃO'?'selected':''}>NÃO</option>
+                  <option ${r.cotacaoNome==='CNS'?'selected':''}>CNS</option>
+                </select>
+              </td>
+              <td class="ec-col-edit"><input type="text" value="${r.cotacaoNum}" onchange="ecEditRow(${i},'cotacaoNum',this.value)" style="width:68px"></td>
+              <td class="ec-col-edit">
+                <select onchange="ecEditRow(${i},'quantas',this.value)" style="min-width:55px">
+                  <option value="" ${!r.quantas?'selected':''}>—</option>
+                  <option ${r.quantas==='C1'?'selected':''}>C1</option>
+                  <option ${r.quantas==='C2'?'selected':''}>C2</option>
+                  <option ${r.quantas==='C3'?'selected':''}>C3</option>
+                  <option ${r.quantas==='C4'?'selected':''}>C4</option>
+                  <option ${r.quantas==='C5'?'selected':''}>C5</option>
+                </select>
+              </td>
+              <td class="ec-col-edit"><input type="text" value="${r.pedido}" onchange="ecEditRow(${i},'pedido',this.value)" style="width:60px"></td>
+            </tr>`).join('')}
+        </tbody>
+      </table>
+    </div>
+    <div style="font-size:11px;color:var(--muted);margin-top:6px">
+      ✎ Colunas com fundo amarelo são <b>editáveis manualmente</b>. Clique em qualquer campo para editar.
+    </div>`;
+}
+
+function ecEditRow(i, field, val){
+  if(ecRows[i]) ecRows[i][field] = val;
+}
+
+function fmtEcDate(d){
+  if(!d) return '—';
+  const s = String(d);
+  if(s.includes('T')) return s.split('T')[0].split('-').reverse().join('/');
+  return s;
+}
+
+// ── Lançar / Apurada ─────────────────────────────────────────────────────────
+function addEcApurada(){
+  const cidade = document.getElementById('ec-cidade').value.trim();
+  const mes    = document.getElementById('ec-mes').value;
+  const ano    = document.getElementById('ec-ano').value;
+  if(!cidade||!mes||!ano){toast('Informe Cidade, Mês e Ano','error');return;}
+  if(!ecRows.length){toast('Carregue um arquivo Excel primeiro','error');return;}
+
+  // Calcula totais com base no campo Cotação
+  let valSim=0, valCNS=0, valNao=0;
+  ecRows.forEach(r=>{
+    const vf = r.valorFechado||0;
+    const vm = r.valorMaior||vf;
+    if(r.cotacaoNome==='SIM') valSim += r.economia||Math.max(0,vm-vf);
+    else if(r.cotacaoNome==='CNS') valCNS += vf;
+    else if(r.cotacaoNome==='NÃO') valNao += vf;
+    else valNao += vf; // sem cotação conta como NÃO
+  });
+
+  const total = valSim+valCNS+valNao;
+  const pctSim  = total>0 ? Math.round((valSim/total)*100) : 0;
+  const pctCNS  = total>0 ? Math.round((valCNS/total)*100) : 0;
+  const pctNao  = total>0 ? Math.round((valNao/total)*100) : 0;
+
+  const entry = {
+    id: Date.now(),
+    cidade, mes, ano,
+    valSim, valCNS, valNao,
+    pctSim, pctCNS, pctNao,
+    rows: JSON.parse(JSON.stringify(ecRows))
+  };
+
+  ecApurada.push(entry);
+  renderEcApuradaList();
+  renderEcSummaryTop();
+  toast(`Lançamento de ${cidade} — ${mes}/${ano} registrado!`);
+}
+
+function renderEcApuradaList(){
+  const el = document.getElementById('ec-apurada-list');
+  if(!ecApurada.length){
+    el.innerHTML='<div class="ec-no-data">Nenhum lançamento realizado ainda.</div>';
+    return;
+  }
+  el.innerHTML = ecApurada.map((a,i)=>`
+    <div class="ec-apurada-row">
+      <div style="font-weight:800;color:var(--muted);font-size:12px">${String(i+1).padStart(2,'0')}.</div>
+      <div><span class="ec-apurada-city">${a.cidade}</span></div>
+      <div><span class="ec-apurada-mes">${a.mes}</span></div>
+      <div><span class="ec-apurada-ano">${a.ano}</span></div>
+      <div style="text-align:center">
+        <div class="ec-pct-badge ec-pct-sim">${a.pctSim}%</div>
+        <div class="ec-sub-val" style="color:var(--green)">R$ ${fmtNum2(a.valSim)}</div>
+      </div>
+      <div style="text-align:center">
+        <div class="ec-pct-badge ec-pct-conv">${a.pctCNS}%</div>
+        <div class="ec-sub-val" style="color:#7c3aed">R$ ${fmtNum2(a.valCNS)}</div>
+      </div>
+      <div style="text-align:center">
+        <div class="ec-pct-badge ec-pct-nao">${a.pctNao}%</div>
+        <div class="ec-sub-val" style="color:var(--red)">R$ ${fmtNum2(a.valNao)}</div>
+      </div>
+      <button class="ec-btn-add" title="Ver / Adicionar" onclick="verEcApurada(${i})">+</button>
+      <button class="ec-btn-pdf" title="Gerar Relatório PDF" onclick="gerarRelatorioEcItem(${i})">📄</button>
+    </div>`).join('');
+}
+
+function verEcApurada(i){
+  const a = ecApurada[i];
+  // Carrega os dados deste lançamento de volta para a tabela
+  ecRows = JSON.parse(JSON.stringify(a.rows));
+  document.getElementById('ec-cidade').value = a.cidade;
+  document.getElementById('ec-mes').value = a.mes;
+  document.getElementById('ec-ano').value = a.ano;
+  renderEcTable();
+  document.getElementById('ec-actions-bar').style.display='flex';
+  document.querySelector('#page-economia .form-section:nth-child(2)').scrollIntoView({behavior:'smooth'});
+  toast(`Dados de ${a.cidade} — ${a.mes}/${a.ano} carregados`);
+}
+
+function clearEcData(){
+  if(confirm('Limpar os dados da tabela atual?')){
+    ecRows=[];
+    renderEcTable();
+    document.getElementById('ec-actions-bar').style.display='none';
+    document.getElementById('ec-drop-zone').style.borderColor='var(--blue)';
+    document.getElementById('ec-file-input').value='';
+    toast('Dados limpos!');
+  }
+}
+
+// ── Relatório ─────────────────────────────────────────────────────────────────
+function gerarRelatorioEc(){
+  if(!ecRows.length){toast('Nenhum dado para gerar relatório','error');return;}
+  const cidade = document.getElementById('ec-cidade').value||'—';
+  const mes    = document.getElementById('ec-mes').value||'—';
+  const ano    = document.getElementById('ec-ano').value||'—';
+  buildEcRelatorio({cidade, mes, ano, rows: ecRows});
+}
+
+function gerarRelatorioEcItem(i){
+  const a = ecApurada[i];
+  buildEcRelatorio(a);
+}
+
+function buildEcRelatorio(a){
+  let totalFechado=0, totalMaior=0, totalEco=0;
+  a.rows.forEach(r=>{totalFechado+=r.valorFechado||0; totalMaior+=r.valorMaior||0; totalEco+=r.economia||0;});
+
+  const rows = a.rows.map((r,i)=>{
+    const cBadge = r.cotacaoNome==='SIM'?'#1ea96a':r.cotacaoNome==='CNS'?'#2256c7':r.cotacaoNome==='NÃO'?'#e03535':'#9eaab8';
+    return `<tr style="font-size:11px;${i%2===0?'background:#f9fbff':''}">
+      <td style="padding:4px 7px;border:1px solid #ddd;color:#555">${fmtEcDate(r.data)}</td>
+      <td style="padding:4px 7px;border:1px solid #ddd;color:#555">${r.hora}</td>
+      <td style="padding:4px 7px;border:1px solid #ddd">${r.numero}</td>
+      <td style="padding:4px 7px;border:1px solid #ddd;max-width:180px;white-space:normal;word-break:break-word">${r.remetente}</td>
+      <td style="padding:4px 7px;border:1px solid #ddd;text-align:right">${fmtNum2(r.valorFechado)}</td>
+      <td style="padding:4px 7px;border:1px solid #ddd;text-align:right">${fmtNum2(r.valorMaior)}</td>
+      <td style="padding:4px 7px;border:1px solid #ddd;text-align:right;font-weight:700">${fmtNum2(r.economia)}</td>
+      <td style="padding:4px 7px;border:1px solid #ddd">${r.documento}</td>
+      <td style="padding:4px 7px;border:1px solid #ddd;text-align:center"><span style="background:${cBadge};color:#fff;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">${r.cotacaoNome||'—'}</span></td>
+      <td style="padding:4px 7px;border:1px solid #ddd;text-align:center">${r.cotacaoNum}</td>
+      <td style="padding:4px 7px;border:1px solid #ddd;text-align:center">${r.quantas}</td>
+      <td style="padding:4px 7px;border:1px solid #ddd;text-align:center">${r.pedido}</td>
+    </tr>`;
+  }).join('');
+
+  document.getElementById('ec-rel-body').innerHTML = `
+    <div style="padding:24px;font-family:'Barlow',sans-serif" id="ec-print-area">
+      <div style="text-align:center;margin-bottom:20px">
+        <div style="font-family:'Barlow Condensed',sans-serif;font-size:26px;font-weight:800;color:#1a3a6b;letter-spacing:1px">
+          <em>Apurar</em> Economia
+        </div>
+        <div style="font-size:13px;font-weight:700;color:#1a3a6b;text-transform:uppercase;margin-top:6px;letter-spacing:.5px">
+          Apuração Mensal de Economia das Compras Realizadas
+        </div>
+        <div style="font-size:11px;color:#6b7a99;margin-top:4px">Ref: ${a.mes||''}/${a.ano||''}</div>
+      </div>
+      <table style="width:100%;border-collapse:collapse;margin-bottom:20px">
+        <thead>
+          <tr style="background:#1a3a6b;color:#fff">
+            <th style="padding:7px;border:1px solid #ddd;font-size:10px;text-align:left">Data</th>
+            <th style="padding:7px;border:1px solid #ddd;font-size:10px;text-align:left">Hora</th>
+            <th style="padding:7px;border:1px solid #ddd;font-size:10px;text-align:left">Número</th>
+            <th style="padding:7px;border:1px solid #ddd;font-size:10px;text-align:left;min-width:140px">Remetente</th>
+            <th style="padding:7px;border:1px solid #ddd;font-size:10px;text-align:right">Valor Fechado</th>
+            <th style="padding:7px;border:1px solid #ddd;font-size:10px;text-align:right">Valor Maior</th>
+            <th style="padding:7px;border:1px solid #ddd;font-size:10px;text-align:right">Economia</th>
+            <th style="padding:7px;border:1px solid #ddd;font-size:10px">Documento</th>
+            <th style="padding:7px;border:1px solid #ddd;font-size:10px;text-align:center">Cotação</th>
+            <th style="padding:7px;border:1px solid #ddd;font-size:10px;text-align:center">Cotação Nº</th>
+            <th style="padding:7px;border:1px solid #ddd;font-size:10px;text-align:center">Quantas?</th>
+            <th style="padding:7px;border:1px solid #ddd;font-size:10px;text-align:center">Pedido</th>
+          </tr>
+        </thead>
+        <tbody>${rows}</tbody>
+        <tfoot>
+          <tr style="background:#f0f4fa;font-weight:800">
+            <td colspan="4" style="padding:7px;border:1px solid #ddd;text-align:right;font-size:12px">TOTAIS</td>
+            <td style="padding:7px;border:1px solid #ddd;text-align:right;font-size:12px">${fmtNum2(totalFechado)}</td>
+            <td style="padding:7px;border:1px solid #ddd;text-align:right;font-size:12px">${fmtNum2(totalMaior)}</td>
+            <td style="padding:7px;border:1px solid #ddd;text-align:right;font-size:12px;color:var(--green)">${fmtNum2(totalEco)}</td>
+            <td colspan="5" style="border:1px solid #ddd"></td>
+          </tr>
+        </tfoot>
+      </table>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:30px;margin-top:48px;text-align:center">
+        <div><div style="border-top:2px solid #1a3a6b;padding-top:8px;font-size:11px;font-weight:700;color:#1a3a6b">Administrador Responsável</div></div>
+        <div><div style="border-top:2px solid #1a3a6b;padding-top:8px;font-size:11px;font-weight:700;color:#1a3a6b">Coordenador de Compras</div></div>
+        <div><div style="border-top:2px solid #1a3a6b;padding-top:8px;font-size:11px;font-weight:700;color:#1a3a6b">Comprador</div></div>
+      </div>
+    </div>`;
+  document.getElementById('modal-ec-rel').classList.add('open');
+}
+
+function printEcRel(){
+  const area = document.getElementById('ec-print-area');
+  const win = window.open('','_blank','width=950,height=700');
+  win.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8">
+    <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;600;700;800&family=Barlow+Condensed:wght@700;800&display=swap" rel="stylesheet">
+    <style>body{font-family:'Barlow',sans-serif;margin:20px}@media print{body{margin:0}}</style>
+    </head><body>${area.innerHTML}</body></html>`);
+  win.document.close();
+  setTimeout(()=>win.print(),800);
+}
+
+// ─── CNS LIMPEZA ──────────────────────────────────────────────────────────────
+let cnsCidades = [
+  {id:1, cidade:'Caieiras', predios:15, sim:15, nao:0,  ecoVal:'R$ 5.000,00', ecoPct:'15%', ano:2026, status:'implantada', just:'',  ecoHistorico:[]},
+  {id:2, cidade:'Morato',   predios:15, sim:10, nao:5,  ecoVal:'R$ 5.000,00', ecoPct:'15%', ano:2025, status:'andamento',  just:'🔔 A Casa de oração 1 está em reforma; A Casa de oração 2 ainda não recebeu os equipamentos', ecoHistorico:[]},
+  {id:3, cidade:'Morato',   predios:15, sim:14, nao:1,  ecoVal:'R$ 5.000,00', ecoPct:'15%', ano:2024, status:'pendente',   just:'', ecoHistorico:[]},
+];
+let nextCNSId = 4;
+let editingCNSId = null;
+let cnsJustEditId = null;
+let cnsEcoEditId  = null;
+let cnsEcoEntries = [{ano: new Date().getFullYear(), val:''}]; // form entries
+let cnsEcoModalEntries = [];
+
+function anoColor(ano){
+  const cur = new Date().getFullYear();
+  if(ano >= cur)   return 'green';
+  if(ano === cur-1) return 'yellow';
+  return 'red';
+}
+
+function renderCNS(){
+  // KPIs
+  const impl  = cnsCidades.filter(c=>c.status==='implantada').length;
+  const and   = cnsCidades.filter(c=>c.status==='andamento').length;
+  const pend  = cnsCidades.filter(c=>c.status==='pendente').length;
+
+  document.getElementById('cns-kpi-impl').textContent = String(impl).padStart(2,'0');
+  document.getElementById('cns-s-impl').textContent   = String(impl).padStart(2,'0');
+  document.getElementById('cns-s-and').textContent    = String(and).padStart(2,'0');
+  document.getElementById('cns-s-pend').textContent   = String(pend).padStart(2,'0');
+
+  // Economia total acumulada
+  let totalEco = 0;
+  cnsCidades.forEach(c=>{
+    if(c.ecoHistorico && c.ecoHistorico.length){
+      c.ecoHistorico.forEach(e=>{ totalEco += parseFloat(String(e.val).replace(/[^\d,]/g,'').replace(',','.'))||0; });
+    } else {
+      totalEco += parseFloat(String(c.ecoVal).replace(/[^\d,]/g,'').replace(',','.'))||0;
+    }
+  });
+  const totalK = totalEco >= 1000 ? (totalEco/1000).toFixed(0)+'mil' : 'R$ '+totalEco.toFixed(0);
+  document.getElementById('cns-kpi-eco').textContent = totalK;
+
+  const avgPct = cnsCidades.length
+    ? cnsCidades.map(c=>parseFloat(String(c.ecoPct).replace(/[^\d.,]/g,'').replace(',','.'))||0).reduce((s,v)=>s+v,0)/cnsCidades.length
+    : 0;
+  document.getElementById('cns-kpi-pct').textContent = Math.round(avgPct)+'%';
+
+  // Tabela
+  const tbody = document.getElementById('cns-tbody');
+  if(!cnsCidades.length){
+    tbody.innerHTML = `<tr><td colspan="11" style="text-align:center;color:var(--muted);padding:24px">Nenhuma cidade cadastrada. Use o formulário acima para adicionar.</td></tr>`;
+    return;
+  }
+  tbody.innerHTML = cnsCidades.map((c,i)=>{
+    const ac = anoColor(c.ano);
+    const hasJust = c.just && c.just.trim().length > 0;
+    const bellColor = hasJust ? '#f59e0b' : '#9eaab8';
+    // Eco acumulada label
+    let ecoLabel = c.ecoVal||'—';
+    if(c.ecoHistorico && c.ecoHistorico.length){
+      const acum = c.ecoHistorico.reduce((s,e)=>s+(parseFloat(String(e.val).replace(/[^\d,]/g,'').replace(',','.'))||0),0);
+      ecoLabel = 'R$ '+acum.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2});
+    }
+    return `<tr>
+      <td><b>${String(i+1).padStart(2,'0')}.</b></td>
+      <td><span class="cns-city-badge">${c.cidade}</span></td>
+      <td><span class="cns-num-badge gray">${String(c.predios).padStart(2,'0')}</span></td>
+      <td><span class="cns-num-badge green">${String(c.sim).padStart(2,'0')}</span></td>
+      <td><span class="cns-num-badge red">${String(c.nao).padStart(2,'0')}</span></td>
+      <td>
+        <button class="cns-bell-btn" title="${hasJust?'Ver justificativa':'Adicionar justificativa'}" onclick="openCNSJust(${c.id})">
+          <span style="color:${bellColor}">🔔</span>
+        </button>
+      </td>
+      <td><span class="cns-eco-badge">${ecoLabel}</span></td>
+      <td><span class="cns-pct-badge">${c.ecoPct||'—'}</span></td>
+      <td><span class="cns-ano-badge ${ac}">${c.ano}</span></td>
+      <td>
+        <button class="cns-add-btn" title="Lançar economia acumulada" onclick="openCNSEco(${c.id})">+</button>
+      </td>
+      <td style="white-space:nowrap">
+        <button class="btn btn-outline btn-sm" style="color:var(--blue)" onclick="editCNS(${c.id})">Editar</button>
+        <button class="btn btn-red btn-sm" onclick="deleteCNS(${c.id})">✕</button>
+      </td>
+    </tr>`;
+  }).join('');
+}
+
+// ── Form ────────────────────────────────────────────────────────────────────
+function saveCNSCidade(){
+  const cidade = document.getElementById('cns-f-cidade').value.trim();
+  if(!cidade){toast('Informe o nome da cidade','error');return;}
+  const obj = {
+    id:       editingCNSId || nextCNSId++,
+    cidade,
+    predios:  parseInt(document.getElementById('cns-f-predios').value)||0,
+    sim:      parseInt(document.getElementById('cns-f-sim').value)||0,
+    nao:      parseInt(document.getElementById('cns-f-nao').value)||0,
+    ecoVal:   'R$ '+(document.getElementById('cns-f-eco').value.trim()||'0'),
+    ecoPct:   document.getElementById('cns-f-pct').value.trim()||'0%',
+    ano:      parseInt(document.getElementById('cns-f-ano').value)||new Date().getFullYear(),
+    status:   document.getElementById('cns-f-status').value,
+    just:     document.getElementById('cns-f-just').value.trim(),
+    ecoHistorico: cnsEcoEntries.filter(e=>e.val).map(e=>({ano:e.ano, val:e.val})),
+  };
+  if(editingCNSId){
+    const idx = cnsCidades.findIndex(c=>c.id===editingCNSId);
+    if(idx>=0) cnsCidades[idx]=obj;
+    toast('Cidade atualizada!');
+  } else {
+    cnsCidades.push(obj);
+    toast('Cidade adicionada!');
+  }
+  editingCNSId=null;
+  clearCNSForm();
+  renderCNS();
+}
+
+function clearCNSForm(){
+  document.getElementById('cns-f-cidade').value='';
+  document.getElementById('cns-f-predios').value='15';
+  document.getElementById('cns-f-sim').value='0';
+  document.getElementById('cns-f-nao').value='0';
+  document.getElementById('cns-f-eco').value='';
+  document.getElementById('cns-f-pct').value='';
+  document.getElementById('cns-f-ano').value=new Date().getFullYear();
+  document.getElementById('cns-f-status').value='implantada';
+  document.getElementById('cns-f-just').value='';
+  document.getElementById('cns-save-btn').textContent='Salvar';
+  editingCNSId=null;
+  cnsEcoEntries=[{ano:new Date().getFullYear(),val:''}];
+  renderCNSEcoEntries();
+}
+
+function editCNS(id){
+  const c=cnsCidades.find(x=>x.id===id);
+  if(!c) return;
+  editingCNSId=id;
+  document.getElementById('cns-f-cidade').value=c.cidade;
+  document.getElementById('cns-f-predios').value=c.predios;
+  document.getElementById('cns-f-sim').value=c.sim;
+  document.getElementById('cns-f-nao').value=c.nao;
+  document.getElementById('cns-f-eco').value=String(c.ecoVal||'').replace('R$ ','');
+  document.getElementById('cns-f-pct').value=c.ecoPct||'';
+  document.getElementById('cns-f-ano').value=c.ano;
+  document.getElementById('cns-f-status').value=c.status||'implantada';
+  document.getElementById('cns-f-just').value=c.just||'';
+  document.getElementById('cns-save-btn').textContent='Atualizar';
+  cnsEcoEntries = (c.ecoHistorico && c.ecoHistorico.length) ? [...c.ecoHistorico] : [{ano:c.ano||new Date().getFullYear(), val:''}];
+  renderCNSEcoEntries();
+  document.getElementById('cns-form-wrap').scrollIntoView({behavior:'smooth'});
+}
+
+function deleteCNS(id){
+  if(confirm('Excluir esta cidade?')){
+    cnsCidades=cnsCidades.filter(c=>c.id!==id);
+    renderCNS();
+    toast('Cidade removida!');
+  }
+}
+
+// ── Eco entries no form ────────────────────────────────────────────────────
+function addCNSEcoEntry(){
+  cnsEcoEntries.push({ano:new Date().getFullYear(), val:''});
+  renderCNSEcoEntries();
+}
+
+function renderCNSEcoEntries(){
+  const wrap = document.getElementById('cns-eco-entries');
+  wrap.innerHTML = cnsEcoEntries.map((e,i)=>`
+    <div style="display:flex;align-items:center;gap:6px">
+      <input type="number" value="${e.ano}" min="2020" max="2099" style="width:70px;padding:6px;border:1.5px solid var(--border);border-radius:7px;font-size:12px" onchange="cnsEcoEntries[${i}].ano=parseInt(this.value)">
+      <input type="text" value="${e.val}" placeholder="R$ 0,00" style="width:100px;padding:6px;border:1.5px solid var(--border);border-radius:7px;font-size:12px" onchange="cnsEcoEntries[${i}].val=this.value;updateCNSEcoAcum()">
+      ${cnsEcoEntries.length>1?`<button onclick="cnsEcoEntries.splice(${i},1);renderCNSEcoEntries()" style="background:none;border:none;color:var(--red);cursor:pointer;font-size:15px;padding:0 4px">✕</button>`:''}
+    </div>`).join('');
+  updateCNSEcoAcum();
+}
+
+function updateCNSEcoAcum(){
+  const total = cnsEcoEntries.reduce((s,e)=>s+(parseFloat(String(e.val).replace(/[^\d,]/g,'').replace(',','.'))||0),0);
+  const cur = new Date().getFullYear();
+  document.getElementById('cns-eco-acum').textContent = total>0
+    ? `Acumulado: R$ ${total.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2})} — ${cur}`
+    : '';
+}
+
+// ── Justificativa modal ────────────────────────────────────────────────────
+function openCNSJust(id){
+  const c=cnsCidades.find(x=>x.id===id);
+  if(!c) return;
+  cnsJustEditId=id;
+  document.getElementById('cns-just-city').textContent=c.cidade;
+  document.getElementById('cns-just-text').value=c.just||'';
+  document.getElementById('modal-cns-just').classList.add('open');
+}
+function saveCNSJust(){
+  const c=cnsCidades.find(x=>x.id===cnsJustEditId);
+  if(c){ c.just=document.getElementById('cns-just-text').value; }
+  closeModal('modal-cns-just');
+  renderCNS();
+  toast('Justificativa salva!');
+}
+
+// ── Economia acumulada modal ───────────────────────────────────────────────
+function openCNSEco(id){
+  const c=cnsCidades.find(x=>x.id===id);
+  if(!c) return;
+  cnsEcoEditId=id;
+  document.getElementById('cns-eco-city-lbl').textContent=c.cidade;
+  cnsEcoModalEntries = (c.ecoHistorico && c.ecoHistorico.length)
+    ? JSON.parse(JSON.stringify(c.ecoHistorico))
+    : [{ano: c.ano||new Date().getFullYear(), val: String(c.ecoVal||'').replace('R$ ','')}];
+  renderCNSEcoModal();
+  document.getElementById('modal-cns-eco').classList.add('open');
+}
+
+function addCNSEcoModalEntry(){
+  cnsEcoModalEntries.push({ano:new Date().getFullYear(), val:''});
+  renderCNSEcoModal();
+}
+
+function renderCNSEcoModal(){
+  document.getElementById('cns-eco-modal-entries').innerHTML = cnsEcoModalEntries.map((e,i)=>`
+    <div style="display:flex;align-items:center;gap:10px">
+      <div class="form-group" style="margin:0;flex:1"><label>Ano</label>
+        <input type="number" value="${e.ano}" min="2020" max="2099" style="width:80px" onchange="cnsEcoModalEntries[${i}].ano=parseInt(this.value);renderCNSEcoModalAcum()">
+      </div>
+      <div class="form-group" style="margin:0;flex:2"><label>Valor Economizado (R$)</label>
+        <input type="text" value="${e.val}" placeholder="2.000,00" onchange="cnsEcoModalEntries[${i}].val=this.value;renderCNSEcoModalAcum()">
+      </div>
+      ${cnsEcoModalEntries.length>1?`<button onclick="cnsEcoModalEntries.splice(${i},1);renderCNSEcoModal()" style="background:none;border:none;color:var(--red);cursor:pointer;font-size:18px;margin-top:18px">✕</button>`:''}
+    </div>`).join('');
+  renderCNSEcoModalAcum();
+}
+
+function renderCNSEcoModalAcum(){
+  const total = cnsEcoModalEntries.reduce((s,e)=>s+(parseFloat(String(e.val).replace(/[^\d,]/g,'').replace(',','.'))||0),0);
+  const maxAno = cnsEcoModalEntries.reduce((m,e)=>Math.max(m,e.ano||0),0);
+  document.getElementById('cns-eco-modal-acum').innerHTML = total>0
+    ? `💰 Acumulado: <b>R$ ${total.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2})}</b> — ${maxAno}`
+    : 'Informe valores para ver o acumulado.';
+}
+
+function saveCNSEcoModal(){
+  const c=cnsCidades.find(x=>x.id===cnsEcoEditId);
+  if(c){
+    c.ecoHistorico=JSON.parse(JSON.stringify(cnsEcoModalEntries.filter(e=>e.val)));
+    // Atualiza o ano para o mais recente lançado
+    const maxAno = c.ecoHistorico.reduce((m,e)=>Math.max(m,e.ano||0),c.ano);
+    c.ano = maxAno;
+  }
+  closeModal('modal-cns-eco');
+  renderCNS();
+  toast('Economia lançada!');
+}
+
+// Init eco entries no form
+renderCNSEcoEntries();
+
 // ─── SUPABASE INTEGRATION ────────────────────────────────────────────────────
 const SUPA_URL = 'https://fyggsslndwsguavhduly.supabase.co';
 const SUPA_KEY = 'sb_publishable_BrjU1nekPGhSgRFoh607XQ_H8G9BetM';
@@ -1810,13 +2915,14 @@ async function loadFromSupabase(){
   if(!db){ renderAll(); return; }
   showSyncing(true);
   try {
-    const [f, a, c, pp, pc, us] = await Promise.all([
+    const [f, a, c, pp, pc, us, pr] = await Promise.all([
       db.from('fornecedores').select('*'),
       db.from('agenda_compras').select('*'),
       db.from('convenios').select('*'),
       db.from('pp_items').select('*'),
       db.from('pp_components').select('*'),
       db.from('usuarios').select('*'),
+      db.from('produtos').select('*'),
     ]);
     if(f.data && f.data.length > 0){
       fornecedores = f.data.map(r=>({
@@ -1852,9 +2958,12 @@ async function loadFromSupabase(){
     if(us.data && us.data.length > 0){
       users = us.data.map(r=>({
         id:r.id, nome:r.nome||'', login:r.login||'', email:r.email||'',
-        perfil:r.perfil||'Consultor', senha:r.senha||'', ativo:r.ativo!==false
+        perfil:r.perfil||'Consultor', cidade:r.cidade||'', senha:r.senha||'', ativo:r.ativo!==false
       }));
       nextUserId = Math.max(...users.map(u=>u.id), 0) + 1;
+    }
+    if(pr.data && pr.data.length > 0){
+      produtos = pr.data.map(r=>r.nome||'').filter(Boolean);
     }
     toast('Dados carregados!');
   } catch(e){ console.warn('Load error:', e); }
@@ -1939,7 +3048,7 @@ async function sbSavePPComponents(){
 async function sbSaveUser(obj){
   if(!db) return;
   showSyncing(true);
-  const row = {id:obj.id, nome:obj.nome, login:obj.login, email:obj.email||'', perfil:obj.perfil, senha:obj.senha, ativo:obj.ativo};
+  const row = {id:obj.id, nome:obj.nome, login:obj.login, email:obj.email||'', perfil:obj.perfil, cidade:obj.cidade||'', senha:obj.senha, ativo:obj.ativo};
   const {error} = await db.from('usuarios').upsert(row, {onConflict:'id'});
   if(error) console.error('Save user:', error);
   showSyncing(false);
@@ -2055,6 +3164,28 @@ toggleUser = async function(id){
   if(u) await sbSaveUser(u);
 };
 
+// ── Patch Produtos ────────────────────────────────────────────────────────────
+async function sbSaveProdutos(){
+  if(!db) return;
+  showSyncing(true);
+  await db.from('produtos').delete().neq('id', 0);
+  const rows = produtos.map((nome,i)=>({id:i+1, nome}));
+  if(rows.length) await db.from('produtos').insert(rows);
+  showSyncing(false);
+}
+
+const _origSaveProduto = saveProduto;
+saveProduto = async function(){
+  _origSaveProduto();
+  await sbSaveProdutos();
+};
+
+const _origDeleteProduto = deleteProduto;
+deleteProduto = async function(i){
+  _origDeleteProduto(i);
+  await sbSaveProdutos();
+};
+
 // ── Supabase SQL setup hint (run once in Supabase SQL Editor) ──────────────────
 /*
 CREATE TABLE IF NOT EXISTS fornecedores (id int primary key, codigo text, nome text, cnpj text, cat text, email text, tel text, resp text, cidade text, uf text, endereco text, status text, score float, obs text, avals jsonb default '[]');
@@ -2062,7 +3193,8 @@ CREATE TABLE IF NOT EXISTS agenda_compras (id int primary key, prod text, forn_i
 CREATE TABLE IF NOT EXISTS convenios (id int primary key, titulo text, tipo text, img_url text, igrejas int, descricao text, data_criacao text);
 CREATE TABLE IF NOT EXISTS pp_items (id int primary key, cidade text, val text, pct text, ano int);
 CREATE TABLE IF NOT EXISTS pp_components (id int primary key, label text, link text);
-CREATE TABLE IF NOT EXISTS usuarios (id int primary key, nome text, login text unique, email text, perfil text, senha text, ativo boolean default true);
+CREATE TABLE IF NOT EXISTS usuarios (id int primary key, nome text, login text unique, email text, perfil text, cidade text, senha text, ativo boolean default true);
+CREATE TABLE IF NOT EXISTS produtos (id int primary key, nome text unique);
 -- Enable RLS and add policies as needed
 */
 
