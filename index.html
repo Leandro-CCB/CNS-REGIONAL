@@ -1506,9 +1506,10 @@ async function doLogin(){
   btn.disabled=true;
 
   // 1) Tenta autenticar direto no Supabase (usuários do banco)
+  let supabaseOk = false;
   if(db){
     try{
-      const {data, error} = await db.from('usuarios').select('*').eq('login', u).eq('senha', p).eq('ativo', true);
+      const {data, error} = await db.schema('suprimentos').from('usuarios').select('*').eq('login', u).eq('senha', p).eq('ativo', true);
       if(!error && data && data.length > 0){
         const r = data[0];
         const found = {id:r.id, nome:r.nome||'', login:r.login||'', email:r.email||'', perfil:r.perfil||'Comprador', cargo:r.cargo||'', senha:r.senha||'', ativo:r.ativo!==false, modulos:r.modulos||[], cidadesCoord:r.cidades_coord||''};
@@ -1516,11 +1517,13 @@ async function doLogin(){
         btn.textContent='Entrar'; btn.disabled=false;
         return;
       }
+      // Se retornou sem dados mas sem erro crítico (ex: usuário/senha errados no banco)
+      if(!error) supabaseOk = true;
     } catch(e){ console.warn('Supabase login query failed:', e); }
   }
 
-  // 2) Fallback: verifica usuários locais
-  const found = users.find(x=>x.login===u && x.senha===p && x.ativo);
+  // 2) Fallback: verifica usuários locais (sempre tenta, inclusive se Supabase falhou com 406)
+  const found = users.find(x=>x.login===u && x.senha===p && x.ativo!==false);
   if(found){
     _loginSuccess(found);
   } else {
@@ -3218,7 +3221,7 @@ renderCNSEcoEntries();
 
 // ─── SUPABASE INTEGRATION ────────────────────────────────────────────────────
 const SUPA_URL = 'https://fyggsslndwsguavhduly.supabase.co';
-const SUPA_KEY = 'sb_publishable_BrjU1nekPGhSgRFoh607XQ_H8G9BetM';
+const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZ5Z2dzc2xuZHdzZ3VhdmhkdWx5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzYxNzYyNDksImV4cCI6MjA5MTc1MjI0OX0.xxoROa9LNFBgSitG_sEP4IknAzIU7vxZuinRC_P0Lh4';
 let db = null;
 
 function initSupabase(){
@@ -3237,14 +3240,21 @@ async function loadFromSupabase(){
   showSyncing(true);
   try {
     const [f, a, c, pp, pc, us, pr] = await Promise.all([
-      db.from('fornecedores').select('*'),
-      db.from('agenda_compras').select('*'),
-      db.from('convenios').select('*'),
-      db.from('pp_items').select('*'),
-      db.from('pp_components').select('*'),
-      db.from('usuarios').select('*'),
-      db.from('produtos').select('*'),
+      db.schema('suprimentos').from('fornecedores').select('*'),
+      db.schema('suprimentos').from('agenda_compras').select('*'),
+      db.schema('suprimentos').from('convenios').select('*'),
+      db.schema('suprimentos').from('pp_items').select('*'),
+      db.schema('suprimentos').from('pp_components').select('*'),
+      db.schema('suprimentos').from('usuarios').select('*'),
+      db.schema('suprimentos').from('produtos').select('*'),
     ]);
+    // Detecta erro 406 (schema não exposto na API do Supabase)
+    if(f.error){
+      console.warn('Schema suprimentos nao exposto na API. Usando dados locais. Veja: Supabase > Settings > API > Exposed schemas.', f.error);
+      showSyncing(false);
+      renderAll();
+      return;
+    }
     if(f.data && f.data.length > 0){
       fornecedores = f.data.map(r=>({
         id:r.id, codigo:r.codigo||'', nome:r.nome, cnpj:r.cnpj||'', cat:r.cat||'',
@@ -3311,7 +3321,7 @@ async function sbSaveFornecedor(obj){
     email:obj.email, tel:obj.tel, resp:obj.resp, cidade:obj.cidade, uf:obj.uf,
     endereco:obj.end, status:obj.status, score:obj.score, obs:obj.obs, avals:obj.avals
   };
-  const {error} = await db.from('fornecedores').upsert(row, {onConflict:'id'});
+  const {error} = await db.schema('suprimentos').from('fornecedores').upsert(row, {onConflict:'id'});
   if(error) console.error('Save forn:', error);
   showSyncing(false);
 }
@@ -3319,7 +3329,7 @@ async function sbSaveFornecedor(obj){
 async function sbDeleteFornecedor(id){
   if(!db) return;
   showSyncing(true);
-  const {error} = await db.from('fornecedores').delete().eq('id', id);
+  const {error} = await db.schema('suprimentos').from('fornecedores').delete().eq('id', id);
   if(error) console.error('Del forn:', error);
   showSyncing(false);
 }
@@ -3328,7 +3338,7 @@ async function sbSaveAgenda(obj){
   if(!db) return;
   showSyncing(true);
   const row = {id:obj.id, prod:obj.prod, forn_id:obj.fornId, data:obj.data, igrejas:obj.igrejas, obs:obj.obs, status:obj.status};
-  const {error} = await db.from('agenda_compras').upsert(row, {onConflict:'id'});
+  const {error} = await db.schema('suprimentos').from('agenda_compras').upsert(row, {onConflict:'id'});
   if(error) console.error('Save agenda:', error);
   showSyncing(false);
 }
@@ -3336,7 +3346,7 @@ async function sbSaveAgenda(obj){
 async function sbDeleteAgenda(id){
   if(!db) return;
   showSyncing(true);
-  await db.from('agenda_compras').delete().eq('id', id);
+  await db.schema('suprimentos').from('agenda_compras').delete().eq('id', id);
   showSyncing(false);
 }
 
@@ -3344,7 +3354,7 @@ async function sbSaveConvenio(obj){
   if(!db) return;
   showSyncing(true);
   const row = {id:obj.id, titulo:obj.titulo, tipo:obj.tipo, img_url:obj.imgUrl, igrejas:obj.igrejas, descricao:obj.desc, data_criacao:obj.dataCriacao};
-  const {error} = await db.from('convenios').upsert(row, {onConflict:'id'});
+  const {error} = await db.schema('suprimentos').from('convenios').upsert(row, {onConflict:'id'});
   if(error) console.error('Save conv:', error);
   showSyncing(false);
 }
@@ -3352,17 +3362,17 @@ async function sbSaveConvenio(obj){
 async function sbDeleteConvenio(id){
   if(!db) return;
   showSyncing(true);
-  await db.from('convenios').delete().eq('id', id);
+  await db.schema('suprimentos').from('convenios').delete().eq('id', id);
   showSyncing(false);
 }
 
 async function sbSavePPItems(){
   if(!db) return;
   showSyncing(true);
-  await db.from('pp_items').delete().neq('id', 0);
+  await db.schema('suprimentos').from('pp_items').delete().neq('id', 0);
   if(ppItems.length > 0){
     const rows = ppItems.map((it,i)=>({id:i+1, cidade:it.cidade, val:it.val, pct:it.pct, ano:it.ano||2026}));
-    await db.from('pp_items').insert(rows);
+    await db.schema('suprimentos').from('pp_items').insert(rows);
   }
   showSyncing(false);
 }
@@ -3370,17 +3380,17 @@ async function sbSavePPItems(){
 async function sbSavePPComponents(){
   if(!db) return;
   showSyncing(true);
-  await db.from('pp_components').delete().neq('id', 0);
+  await db.schema('suprimentos').from('pp_components').delete().neq('id', 0);
   const rows = ppComponents.map((c,i)=>({id:i+1, label:c.label, link:c.link||''}));
-  await db.from('pp_components').insert(rows);
+  await db.schema('suprimentos').from('pp_components').insert(rows);
   showSyncing(false);
 }
 
 async function sbSaveUser(obj){
   if(!db) return;
   showSyncing(true);
-  const row = {id:obj.id, nome:obj.nome, login:obj.login, email:obj.email||'', perfil:obj.perfil, cargo:obj.cargo||'', cidade:obj.cidade||'', senha:obj.senha, ativo:obj.ativo};
-  const {error} = await db.from('usuarios').upsert(row, {onConflict:'id'});
+  const row = {id:obj.id, nome:obj.nome, login:obj.login, email:obj.email||'', perfil:obj.perfil, cargo:obj.cargo||'', cidade:obj.cidade||'', senha:obj.senha, ativo:obj.ativo, modulos:obj.modulos||[], cidades_coord:obj.cidadesCoord||''};
+  const {error} = await db.schema('suprimentos').from('usuarios').upsert(row, {onConflict:'id'});
   if(error) console.error('Save user:', error);
   showSyncing(false);
 }
@@ -3388,7 +3398,7 @@ async function sbSaveUser(obj){
 async function sbDeleteUser(id){
   if(!db) return;
   showSyncing(true);
-  const {error} = await db.from('usuarios').delete().eq('id', id);
+  const {error} = await db.schema('suprimentos').from('usuarios').delete().eq('id', id);
   if(error) console.error('Del user:', error);
   showSyncing(false);
 }
@@ -3499,9 +3509,9 @@ toggleUser = async function(id){
 async function sbSaveProdutos(){
   if(!db) return;
   showSyncing(true);
-  await db.from('produtos').delete().neq('id', 0);
+  await db.schema('suprimentos').from('produtos').delete().neq('id', 0);
   const rows = produtos.map((p,i)=>({id:i+1, nome:p.nome||p, categoria:p.categoria||'', forn_id:p.fornecedorId||null, marca:p.marca||''}));
-  if(rows.length) await db.from('produtos').insert(rows);
+  if(rows.length) await db.schema('suprimentos').from('produtos').insert(rows);
   showSyncing(false);
 }
 
@@ -3524,7 +3534,7 @@ CREATE TABLE IF NOT EXISTS agenda_compras (id int primary key, prod text, forn_i
 CREATE TABLE IF NOT EXISTS convenios (id int primary key, titulo text, tipo text, img_url text, igrejas int, descricao text, data_criacao text);
 CREATE TABLE IF NOT EXISTS pp_items (id int primary key, cidade text, val text, pct text, ano int);
 CREATE TABLE IF NOT EXISTS pp_components (id int primary key, label text, link text);
-CREATE TABLE IF NOT EXISTS usuarios (id int primary key, nome text, login text unique, email text, perfil text, cidade text, senha text, ativo boolean default true);
+CREATE TABLE IF NOT EXISTS usuarios (id int primary key, nome text, login text unique, email text, perfil text, cargo text, cidade text, senha text, ativo boolean default true, modulos jsonb default '[]', cidades_coord text default '');
 CREATE TABLE IF NOT EXISTS produtos (id int primary key, nome text unique);
 -- Enable RLS and add policies as needed
 */
