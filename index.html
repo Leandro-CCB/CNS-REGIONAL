@@ -1178,6 +1178,7 @@ textarea{resize:vertical;min-height:80px}
                 <th>Economia (%)</th>
                 <th>Ult.</th>
                 <th>Incluir</th>
+                <th>Planilha</th>
                 <th>Ações</th>
               </tr>
             </thead>
@@ -1684,7 +1685,10 @@ function renderConvDash(){
 
   listEl.innerHTML = filtered.slice(0,3).map(c => {
     const hasImg = c.imgUrl && c.imgUrl.trim() !== '';
-    return `<div class="conv-card" title="${c.titulo}">
+    const hasLink = c.link && c.link.trim() !== '';
+    return `<div class="conv-card" title="${hasLink ? 'Clique para abrir: '+c.link : c.titulo}"
+      onclick="${hasLink ? `window.open('${c.link}','_blank')` : `showPage('convenios',document.querySelector('.nav-item[onclick*=convenios]'))`}"
+      style="cursor:${hasLink?'pointer':'default'}">
       ${hasImg
         ? `<img class="conv-img" src="${c.imgUrl}" alt="${c.titulo}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">`
         : ''}
@@ -1694,6 +1698,7 @@ function renderConvDash(){
       <div class="conv-info">
         <div class="conv-title">${c.titulo}</div>
         <div class="conv-meta">${c.igrejas} Igrejas • ${c.dataCriacao||'recente'}</div>
+        ${hasLink ? `<div style="font-size:10px;color:var(--blue);margin-top:2px">🔗 Abrir documento</div>` : ''}
       </div>
     </div>`;
   }).join('');
@@ -1769,6 +1774,7 @@ function renderConveniosPage(){
         </div>
         <div class="conv-manage-actions" style="flex-shrink:0;display:flex;gap:6px;align-items:center">
           <button class="btn btn-outline btn-sm" style="color:var(--blue);white-space:nowrap" onclick="openConvLinkModal(${c.id})" title="Inserir/editar link">🔗 Link</button>
+          <button class="btn btn-outline btn-sm" style="color:var(--navy);white-space:nowrap" onclick="openConvEditModal(${c.id})" title="Editar convênio">✏️ Editar</button>
           <button class="btn btn-red btn-sm" onclick="deleteConvenio(${c.id})">✕</button>
         </div>
       </div>`;
@@ -1795,8 +1801,47 @@ function saveConvLink(){
   document.getElementById('modal-conv-link').classList.remove('open');
   renderConveniosPage();
   renderConvDash();
+  // Save to Supabase
+  if(typeof sbSaveConvenio === 'function') sbSaveConvenio(c);
   toast('Link salvo!');
   editingConvLinkId = null;
+}
+
+// ─── EDITAR CONVÊNIO ─────────────────────────────────────────────────────────
+let editingConvId = null;
+function openConvEditModal(id){
+  const c = convenios.find(x=>x.id===id);
+  if(!c) return;
+  editingConvId = id;
+  document.getElementById('conv-edit-titulo').value  = c.titulo || '';
+  document.getElementById('conv-edit-tipo').value    = c.tipo   || 'nacionais';
+  document.getElementById('conv-edit-img').value     = c.imgUrl || '';
+  document.getElementById('conv-edit-link').value    = c.link   || '';
+  document.getElementById('conv-edit-igrejas').value = c.igrejas || 0;
+  document.getElementById('conv-edit-desc').value    = c.desc   || '';
+  document.getElementById('modal-conv-edit').classList.add('open');
+  setTimeout(()=>document.getElementById('conv-edit-titulo').focus(),100);
+}
+function saveConvEdit(){
+  if(editingConvId===null) return;
+  const c = convenios.find(x=>x.id===editingConvId);
+  if(!c) return;
+  const titulo = document.getElementById('conv-edit-titulo').value.trim();
+  if(!titulo){toast('Informe o título','error');return;}
+  c.titulo  = titulo;
+  c.tipo    = document.getElementById('conv-edit-tipo').value;
+  c.imgUrl  = document.getElementById('conv-edit-img').value.trim();
+  let lnk   = document.getElementById('conv-edit-link').value.trim();
+  if(lnk && !lnk.startsWith('http')) lnk = 'https://'+lnk;
+  c.link    = lnk;
+  c.igrejas = parseInt(document.getElementById('conv-edit-igrejas').value)||0;
+  c.desc    = document.getElementById('conv-edit-desc').value.trim();
+  document.getElementById('modal-conv-edit').classList.remove('open');
+  renderConveniosPage();
+  renderConvDash();
+  if(typeof sbSaveConvenio === 'function') sbSaveConvenio(c);
+  toast('Convênio atualizado!');
+  editingConvId = null;
 }
 
 // ─── FORNECEDORES ─────────────────────────────────────────────────────────────
@@ -2080,27 +2125,48 @@ function processImportRows(rows){
   if(hasHeader) dataRows = rows.slice(1);
 
   // Map columns: try header names first, else use positional (Código=0, Nome=1, CNPJ=2, Cidade=3, UF=4)
-  let colMap = {codigo:0, nome:1, cnpj:2, cidade:3, uf:4};
+  let colMap = {codigo:0, nome:1, cnpj:2, cidade:3, uf:4, email:-1, tel:-1, resp:-1, cat:-1, end:-1};
   if(hasHeader){
     rows[0].forEach((h,i)=>{
       const hl = String(h).toLowerCase().replace(/[^a-z]/g,'');
-      if(['codigo','cdigo'].includes(hl)) colMap.codigo = i;
-      if(hl==='nome') colMap.nome = i;
-      if(hl==='cnpj') colMap.cnpj = i;
-      if(hl==='cidade') colMap.cidade = i;
-      if(hl==='uf') colMap.uf = i;
+      if(['codigo','cdigo','cod','code'].includes(hl)) colMap.codigo = i;
+      if(['nome','razaosocial','razao','empresa','fornecedor'].includes(hl)) colMap.nome = i;
+      if(['cnpj','cpf','cnpjcpf','documento','doc'].includes(hl)) colMap.cnpj = i;
+      if(['cidade','municipio','city'].includes(hl)) colMap.cidade = i;
+      if(['uf','estado','state'].includes(hl)) colMap.uf = i;
+      if(['email','emaileletrônico','emaileletronico','correio'].includes(hl)) colMap.email = i;
+      if(['tel','telefone','fone','celular','contato','phone'].includes(hl)) colMap.tel = i;
+      if(['resp','responsavel','responsável','contato','representante'].includes(hl) && colMap.resp===-1) colMap.resp = i;
+      if(['cat','categoria','category','segmento','ramo'].includes(hl)) colMap.cat = i;
+      if(['end','endereco','endereço','address','logradouro'].includes(hl)) colMap.end = i;
     });
   }
 
+  const catMap = {
+    'construção':'Construção','construcao':'Construção','limpeza':'Limpeza',
+    'tecnologia':'Tecnologia','alimentação':'Alimentação','alimentacao':'Alimentação',
+    'saude':'Saúde','saúde':'Saúde','materiais':'Materiais',
+    'servicos gerais':'Serviços Gerais','serviços gerais':'Serviços Gerais',
+    'transporte':'Transporte','outros':'Outros'
+  };
+
   const parsed = dataRows
     .filter(r => r.some(c => String(c).trim()))
-    .map(r => ({
-      codigo: String(r[colMap.codigo]||'').trim(),
-      nome:   String(r[colMap.nome]||'').trim(),
-      cnpj:   String(r[colMap.cnpj]||'').trim(),
-      cidade: String(r[colMap.cidade]||'').trim(),
-      uf:     String(r[colMap.uf]||'').trim().toUpperCase(),
-    }))
+    .map(r => {
+      const rawCat = String(r[colMap.cat]||'').trim().toLowerCase();
+      return {
+        codigo: String(r[colMap.codigo]||'').trim(),
+        nome:   String(r[colMap.nome]||'').trim(),
+        cnpj:   String(r[colMap.cnpj]||'').trim(),
+        cidade: String(r[colMap.cidade]||'').trim(),
+        uf:     String(r[colMap.uf]||'').trim().toUpperCase(),
+        email:  colMap.email>=0 ? String(r[colMap.email]||'').trim() : '',
+        tel:    colMap.tel>=0   ? String(r[colMap.tel]||'').trim()   : '',
+        resp:   colMap.resp>=0  ? String(r[colMap.resp]||'').trim()  : '',
+        cat:    catMap[rawCat] || '',
+        end:    colMap.end>=0   ? String(r[colMap.end]||'').trim()   : '',
+      };
+    })
     .filter(r => r.nome);
 
   if(!parsed.length){ toast('Nenhum dado válido encontrado no arquivo','error'); return; }
@@ -2135,9 +2201,16 @@ function applyImportRow(i){
   document.getElementById('f-cnpj').value   = r.cnpj   || '';
   document.getElementById('f-cidade').value = r.cidade || '';
   document.getElementById('f-uf').value     = r.uf     || '';
-  // Auto-fill endereço se cidade/uf presentes
-  if(r.cidade && !document.getElementById('f-end').value)
+  if(r.email) document.getElementById('f-email').value = r.email;
+  if(r.tel)   document.getElementById('f-tel').value   = r.tel;
+  if(r.resp)  document.getElementById('f-resp').value  = r.resp;
+  if(r.cat)   document.getElementById('f-cat').value   = r.cat;
+  // Auto-fill endereço se cidade/uf presentes e end não preenchido
+  if(r.end){
+    document.getElementById('f-end').value = r.end;
+  } else if(r.cidade && !document.getElementById('f-end').value){
     document.getElementById('f-end').value = r.cidade + (r.uf ? ' - ' + r.uf : '');
+  }
   document.getElementById('xls-import-preview').style.display='none';
   document.getElementById('xls-import-input').value='';
   toast('Dados preenchidos! Complete os campos restantes e salve.');
@@ -2952,9 +3025,9 @@ function printEcRel(){
 
 // ─── CNS LIMPEZA ──────────────────────────────────────────────────────────────
 let cnsCidades = [
-  {id:1, cidade:'Caieiras', predios:15, sim:15, nao:0,  ecoVal:'R$ 5.000,00', ecoPct:'15%', ano:2026, status:'implantada', just:'',  ecoHistorico:[]},
-  {id:2, cidade:'Morato',   predios:15, sim:10, nao:5,  ecoVal:'R$ 5.000,00', ecoPct:'15%', ano:2025, status:'andamento',  just:'🔔 A Casa de oração 1 está em reforma; A Casa de oração 2 ainda não recebeu os equipamentos', ecoHistorico:[]},
-  {id:3, cidade:'Morato',   predios:15, sim:14, nao:1,  ecoVal:'R$ 5.000,00', ecoPct:'15%', ano:2024, status:'pendente',   just:'', ecoHistorico:[]},
+  {id:1, cidade:'Caieiras', predios:15, sim:15, nao:0,  ecoVal:'R$ 5.000,00', ecoPct:'15%', ano:2026, status:'implantada', just:'',  ecoHistorico:[], linkAdmin:''},
+  {id:2, cidade:'Morato',   predios:15, sim:10, nao:5,  ecoVal:'R$ 5.000,00', ecoPct:'15%', ano:2025, status:'andamento',  just:'🔔 A Casa de oração 1 está em reforma; A Casa de oração 2 ainda não recebeu os equipamentos', ecoHistorico:[], linkAdmin:''},
+  {id:3, cidade:'Morato',   predios:15, sim:14, nao:1,  ecoVal:'R$ 5.000,00', ecoPct:'15%', ano:2024, status:'pendente',   just:'', ecoHistorico:[], linkAdmin:''},
 ];
 let nextCNSId = 4;
 let editingCNSId = null;
@@ -3001,13 +3074,14 @@ function renderCNS(){
   // Tabela
   const tbody = document.getElementById('cns-tbody');
   if(!cnsCidades.length){
-    tbody.innerHTML = `<tr><td colspan="11" style="text-align:center;color:var(--muted);padding:24px">Nenhuma cidade cadastrada. Use o formulário acima para adicionar.</td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="12" style="text-align:center;color:var(--muted);padding:24px">Nenhuma cidade cadastrada. Use o formulário acima para adicionar.</td></tr>`;
     return;
   }
   tbody.innerHTML = cnsCidades.map((c,i)=>{
     const ac = anoColor(c.ano);
     const hasJust = c.just && c.just.trim().length > 0;
     const bellColor = hasJust ? '#f59e0b' : '#9eaab8';
+    const hasLink = c.linkAdmin && c.linkAdmin.trim() !== '';
     // Eco acumulada label
     let ecoLabel = c.ecoVal||'—';
     if(c.ecoHistorico && c.ecoHistorico.length){
@@ -3030,6 +3104,14 @@ function renderCNS(){
       <td><span class="cns-ano-badge ${ac}">${c.ano}</span></td>
       <td>
         <button class="cns-add-btn" title="Lançar economia acumulada" onclick="openCNSEco(${c.id})">+</button>
+      </td>
+      <td>
+        <button class="btn btn-sm" style="background:${hasLink?'#dce8ff':'#f4f7fd'};color:${hasLink?'var(--blue)':'var(--muted)'};border:1.5px solid ${hasLink?'#b8d0ff':'var(--border)'};white-space:nowrap;font-size:11px;padding:4px 9px;border-radius:7px;cursor:pointer;font-weight:700"
+          onclick="openCNSLinkAdmin(${c.id})" title="${hasLink?'Ver/editar planilha de controle':'Adicionar planilha de controle'}">
+          ${hasLink
+            ? `<a href="${c.linkAdmin}" target="_blank" rel="noopener" style="color:var(--blue);text-decoration:none" onclick="event.stopPropagation()">🔗 Abrir</a> <span style="margin-left:4px;opacity:.6" onclick="openCNSLinkAdmin(${c.id})">✏️</span>`
+            : '📎 Link'}
+        </button>
       </td>
       <td style="white-space:nowrap">
         <button class="btn btn-outline btn-sm" style="color:var(--blue)" onclick="editCNS(${c.id})">Editar</button>
@@ -3056,6 +3138,7 @@ function saveCNSCidade(){
     status:   document.getElementById('cns-f-status').value,
     just:     document.getElementById('cns-f-just').value.trim(),
     ecoHistorico: cnsEcoEntries.filter(e=>e.val).map(e=>({ano:e.ano, val:e.val})),
+    linkAdmin: editingCNSId ? (cnsCidades.find(c=>c.id===editingCNSId)||{}).linkAdmin||'' : '',
   };
   if(editingCNSId){
     const idx = cnsCidades.findIndex(c=>c.id===editingCNSId);
@@ -3119,6 +3202,31 @@ function reabrirCNS(id){
   c.status='andamento';
   renderCNS();
   toast('Cidade reaberta!');
+}
+
+// ── Link Planilha de Controle por Administração ────────────────────────────
+let cnsLinkAdminId = null;
+function openCNSLinkAdmin(id){
+  const c = cnsCidades.find(x=>x.id===id);
+  if(!c) return;
+  cnsLinkAdminId = id;
+  document.getElementById('cns-link-admin-city').textContent = c.cidade;
+  document.getElementById('cns-link-admin-input').value = c.linkAdmin || '';
+  document.getElementById('modal-cns-link-admin').classList.add('open');
+  setTimeout(()=>document.getElementById('cns-link-admin-input').focus(),100);
+}
+function saveCNSLinkAdmin(){
+  if(cnsLinkAdminId === null) return;
+  const c = cnsCidades.find(x=>x.id===cnsLinkAdminId);
+  if(!c) return;
+  let val = document.getElementById('cns-link-admin-input').value.trim();
+  if(val && !val.startsWith('http')) val = 'https://'+val;
+  c.linkAdmin = val;
+  closeModal('modal-cns-link-admin');
+  renderCNS();
+  if(typeof sbSaveCNSCidades === 'function') sbSaveCNSCidades();
+  toast(val ? 'Planilha de controle salva!' : 'Link removido!');
+  cnsLinkAdminId = null;
 }
 
 // ── Eco entries no form ────────────────────────────────────────────────────
@@ -3239,17 +3347,25 @@ async function loadFromSupabase(){
   if(!db){ renderAll(); return; }
   showSyncing(true);
   try {
-    const [f, a, c, pp, pc, us, pr] = await Promise.all([
-      db.schema('suprimentos').from('fornecedores').select('*'),
-      db.schema('suprimentos').from('agenda_compras').select('*'),
-      db.schema('suprimentos').from('convenios').select('*'),
-      db.schema('suprimentos').from('pp_items').select('*'),
-      db.schema('suprimentos').from('pp_components').select('*'),
-      db.schema('suprimentos').from('usuarios').select('*'),
-      db.schema('suprimentos').from('produtos').select('*'),
+    // Carrega cada tabela individualmente — falha em uma não bloqueia as outras
+    const safeLoad = async (table) => {
+      try { return await db.schema('suprimentos').from(table).select('*'); }
+      catch(e){ console.warn(`Erro ao carregar ${table}:`, e); return {data:null, error:e}; }
+    };
+
+    const [f, a, c, pp, pc, us, pr, cns] = await Promise.all([
+      safeLoad('fornecedores'),
+      safeLoad('agenda_compras'),
+      safeLoad('convenios'),
+      safeLoad('pp_items'),
+      safeLoad('pp_components'),
+      safeLoad('usuarios'),
+      safeLoad('produtos'),
+      safeLoad('cns_limpeza'),
     ]);
+
     // Detecta erro 406 (schema não exposto na API do Supabase)
-    if(f.error){
+    if(f.error && (f.error.code === '406' || String(f.error.message||'').includes('406') || String(f.error.message||'').includes('schema'))){
       console.warn('Schema suprimentos nao exposto na API. Usando dados locais. Veja: Supabase > Settings > API > Exposed schemas.', f.error);
       showSyncing(false);
       renderAll();
@@ -3274,8 +3390,8 @@ async function loadFromSupabase(){
     }
     if(c.data && c.data.length > 0){
       convenios = c.data.map(r=>({
-        id:r.id, titulo:r.titulo||'', tipo:r.tipo||'convenios',
-        imgUrl:r.img_url||'', igrejas:r.igrejas||0, desc:r.descricao||'',
+        id:r.id, titulo:r.titulo||'', tipo:r.tipo||'nacionais',
+        imgUrl:r.img_url||'', link:r.link||'', igrejas:r.igrejas||0, desc:r.descricao||'',
         dataCriacao:r.data_criacao||'recente'
       }));
       nextConvId = Math.max(...convenios.map(x=>x.id), 0) + 1;
@@ -3305,6 +3421,23 @@ async function loadFromSupabase(){
     }
     if(pr.data && pr.data.length > 0){
       produtos = pr.data.map(r=>({nome:r.nome||'', categoria:r.categoria||'', fornecedorId:r.forn_id||null, marca:r.marca||''})).filter(p=>p.nome);
+    }
+    if(cns.data && cns.data.length > 0){
+      cnsCidades = cns.data.map(r=>({
+        id: r.id,
+        cidade: r.cidade||'',
+        predios: r.predios||0,
+        sim: r.sim||0,
+        nao: r.nao||0,
+        ecoVal: r.eco_val||'',
+        ecoPct: r.eco_pct||'',
+        ano: r.ano||new Date().getFullYear(),
+        status: r.status||'implantada',
+        just: r.just||'',
+        ecoHistorico: r.eco_historico||[],
+        linkAdmin: r.link_admin||''
+      }));
+      nextCNSId = Math.max(...cnsCidades.map(x=>x.id), 0) + 1;
     }
     toast('Dados carregados!');
   } catch(e){ console.warn('Load error:', e); }
@@ -3353,7 +3486,7 @@ async function sbDeleteAgenda(id){
 async function sbSaveConvenio(obj){
   if(!db) return;
   showSyncing(true);
-  const row = {id:obj.id, titulo:obj.titulo, tipo:obj.tipo, img_url:obj.imgUrl, igrejas:obj.igrejas, descricao:obj.desc, data_criacao:obj.dataCriacao};
+  const row = {id:obj.id, titulo:obj.titulo, tipo:obj.tipo, img_url:obj.imgUrl, link:obj.link||'', igrejas:obj.igrejas, descricao:obj.desc, data_criacao:obj.dataCriacao};
   const {error} = await db.schema('suprimentos').from('convenios').upsert(row, {onConflict:'id'});
   if(error) console.error('Save conv:', error);
   showSyncing(false);
@@ -3389,9 +3522,17 @@ async function sbSavePPComponents(){
 async function sbSaveUser(obj){
   if(!db) return;
   showSyncing(true);
-  const row = {id:obj.id, nome:obj.nome, login:obj.login, email:obj.email||'', perfil:obj.perfil, cargo:obj.cargo||'', cidade:obj.cidade||'', senha:obj.senha, ativo:obj.ativo, modulos:obj.modulos||[], cidades_coord:obj.cidadesCoord||''};
-  const {error} = await db.schema('suprimentos').from('usuarios').upsert(row, {onConflict:'id'});
-  if(error) console.error('Save user:', error);
+  // Tenta com todos os campos primeiro
+  const rowFull = {id:obj.id, nome:obj.nome, login:obj.login, email:obj.email||'', perfil:obj.perfil, cargo:obj.cargo||'', cidade:obj.cidade||'', senha:obj.senha, ativo:obj.ativo, modulos:obj.modulos||[], cidades_coord:obj.cidadesCoord||''};
+  let {error} = await db.schema('suprimentos').from('usuarios').upsert(rowFull, {onConflict:'id'});
+  if(error){
+    console.warn('sbSaveUser full row failed, trying without optional columns:', error.message);
+    // Fallback: salva sem colunas que podem não existir na tabela antiga
+    const rowMin = {id:obj.id, nome:obj.nome, login:obj.login, email:obj.email||'', perfil:obj.perfil, cargo:obj.cargo||'', senha:obj.senha, ativo:obj.ativo, modulos:obj.modulos||[]};
+    const r2 = await db.schema('suprimentos').from('usuarios').upsert(rowMin, {onConflict:'id'});
+    if(r2.error) console.error('Save user fallback error:', r2.error);
+    else toast('⚠️ Usuário salvo sem campo Cidade — rode o SQL de migração no Supabase.','error');
+  }
   showSyncing(false);
 }
 
@@ -3505,6 +3646,57 @@ toggleUser = async function(id){
   if(u) await sbSaveUser(u);
 };
 
+// ── CNS Limpeza Supabase ──────────────────────────────────────────────────────
+async function sbSaveCNSCidades(){
+  if(!db) return;
+  showSyncing(true);
+  try {
+    await db.schema('suprimentos').from('cns_limpeza').delete().neq('id', 0);
+    if(cnsCidades.length){
+      const rows = cnsCidades.map(c=>({
+        id: c.id,
+        cidade: c.cidade,
+        predios: c.predios,
+        sim: c.sim,
+        nao: c.nao,
+        eco_val: c.ecoVal||'',
+        eco_pct: c.ecoPct||'',
+        ano: c.ano,
+        status: c.status||'implantada',
+        just: c.just||'',
+        eco_historico: c.ecoHistorico||[],
+        link_admin: c.linkAdmin||''
+      }));
+      await db.schema('suprimentos').from('cns_limpeza').insert(rows);
+    }
+  } catch(e){ console.error('Save CNS:', e); }
+  showSyncing(false);
+}
+
+const _origSaveCNS = saveCNSCidade;
+saveCNSCidade = async function(){
+  _origSaveCNS();
+  await sbSaveCNSCidades();
+};
+
+const _origDeleteCNS = deleteCNS;
+deleteCNS = async function(id){
+  _origDeleteCNS(id);
+  await sbSaveCNSCidades();
+};
+
+const _origSaveCNSEcoModal = saveCNSEcoModal;
+saveCNSEcoModal = async function(){
+  _origSaveCNSEcoModal();
+  await sbSaveCNSCidades();
+};
+
+const _origSaveCNSJust = saveCNSJust;
+saveCNSJust = async function(){
+  _origSaveCNSJust();
+  await sbSaveCNSCidades();
+};
+
 // ── Patch Produtos ────────────────────────────────────────────────────────────
 async function sbSaveProdutos(){
   if(!db) return;
@@ -3531,11 +3723,15 @@ deleteProduto = async function(i){
 /*
 CREATE TABLE IF NOT EXISTS fornecedores (id int primary key, codigo text, nome text, cnpj text, cat text, email text, tel text, resp text, cidade text, uf text, endereco text, status text, score float, obs text, avals jsonb default '[]');
 CREATE TABLE IF NOT EXISTS agenda_compras (id int primary key, prod text, forn_id int, data text, igrejas int, obs text, status text);
-CREATE TABLE IF NOT EXISTS convenios (id int primary key, titulo text, tipo text, img_url text, igrejas int, descricao text, data_criacao text);
+CREATE TABLE IF NOT EXISTS convenios (id int primary key, titulo text, tipo text, img_url text, link text default '', igrejas int, descricao text, data_criacao text);
 CREATE TABLE IF NOT EXISTS pp_items (id int primary key, cidade text, val text, pct text, ano int);
 CREATE TABLE IF NOT EXISTS pp_components (id int primary key, label text, link text);
 CREATE TABLE IF NOT EXISTS usuarios (id int primary key, nome text, login text unique, email text, perfil text, cargo text, cidade text, senha text, ativo boolean default true, modulos jsonb default '[]', cidades_coord text default '');
 CREATE TABLE IF NOT EXISTS produtos (id int primary key, nome text unique);
+CREATE TABLE IF NOT EXISTS cns_limpeza (id int primary key, cidade text, predios int, sim int, nao int, eco_val text, eco_pct text, ano int, status text, just text, eco_historico jsonb default '[]', link_admin text default '');
+-- Para tabelas já existentes, adicionar colunas faltando:
+-- ALTER TABLE suprimentos.convenios ADD COLUMN IF NOT EXISTS link text DEFAULT '';
+-- ALTER TABLE suprimentos.cns_limpeza ADD COLUMN IF NOT EXISTS link_admin text DEFAULT '';
 -- Enable RLS and add policies as needed
 */
 
@@ -3543,6 +3739,32 @@ CREATE TABLE IF NOT EXISTS produtos (id int primary key, nome text unique);
 initSupabase();
 
 </script>
+
+<!-- MODAL: Editar Convênio -->
+<div class="modal-bg" id="modal-conv-edit">
+  <div class="modal" style="width:500px">
+    <div class="modal-header">
+      <span class="modal-title">✏️ Editar Convênio / Boletim</span>
+      <button class="modal-close" onclick="closeModal('modal-conv-edit')">×</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-grid">
+        <div class="form-group full"><label>Título *</label><input id="conv-edit-titulo" type="text" placeholder="Ex: Boletim CNS Convênios Abril 2024"></div>
+        <div class="form-group"><label>Tipo</label>
+          <select id="conv-edit-tipo"><option value="nacionais">Nacionais</option><option value="regionais">Regionais</option></select>
+        </div>
+        <div class="form-group"><label>Igrejas</label><input id="conv-edit-igrejas" type="number" min="0" value="0"></div>
+        <div class="form-group full"><label>URL da Imagem</label><input id="conv-edit-img" type="url" placeholder="https://exemplo.com/imagem.jpg"></div>
+        <div class="form-group full"><label>Link do Boletim</label><input id="conv-edit-link" type="url" placeholder="https://exemplo.com/boletim"></div>
+        <div class="form-group full"><label>Descrição</label><textarea id="conv-edit-desc" rows="2" placeholder="Descrição opcional"></textarea></div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('modal-conv-edit')">Cancelar</button>
+      <button class="btn btn-primary" onclick="saveConvEdit()">Salvar Alterações</button>
+    </div>
+  </div>
+</div>
 
 <!-- MODAL: Link do Boletim/Convênio -->
 <div class="modal-bg" id="modal-conv-link">
@@ -3565,7 +3787,8 @@ initSupabase();
   </div>
 </div>
 
-</body>
+<!-- MODAL: Comp Link (Pintura Programada) -->
+<div class="modal-bg" id="modal-comp-link">
   <div class="modal" style="width:440px">
     <div class="modal-header">
       <span class="modal-title">🔗 Atribuir Link — <span id="comp-link-label"></span></span>
@@ -3581,6 +3804,30 @@ initSupabase();
     <div class="modal-footer">
       <button class="btn btn-outline" onclick="document.getElementById('modal-comp-link').classList.remove('open')">Cancelar</button>
       <button class="btn btn-primary" onclick="saveCompLink()">Salvar Link</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: Planilha de Controle CNS Limpeza por Administração -->
+<div class="modal-bg" id="modal-cns-link-admin">
+  <div class="modal" style="width:480px">
+    <div class="modal-header">
+      <span class="modal-title">📎 Planilha de Controle — <span id="cns-link-admin-city"></span></span>
+      <button class="modal-close" onclick="closeModal('modal-cns-link-admin')">×</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label>Link da Planilha / Documento de Controle</label>
+        <input id="cns-link-admin-input" type="url" placeholder="https://docs.google.com/spreadsheets/...">
+      </div>
+      <p style="font-size:11px;color:var(--muted);margin-top:8px">
+        Cole o link da planilha onde a Administração controla a apuração da economia do CNS Limpeza.<br>
+        Deixe em branco para remover o link.
+      </p>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('modal-cns-link-admin')">Cancelar</button>
+      <button class="btn btn-primary" onclick="saveCNSLinkAdmin()">💾 Salvar Link</button>
     </div>
   </div>
 </div>
