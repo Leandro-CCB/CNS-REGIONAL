@@ -196,7 +196,7 @@ textarea{resize:vertical;min-height:80px}
 .conv-tab.active{color:var(--blue);border-bottom-color:var(--blue);background:#fff}
 .conv-body{padding:12px}
 .conv-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
-.conv-location{background:var(--blue);color:#fff;border-radius:20px;padding:6px 14px;font-size:12px;font-weight:700;display:flex;align-items:center;gap:6px;cursor:pointer}
+.conv-location{background:var(--blue);color:#fff;border-radius:8px;padding:6px 14px;font-size:12px;font-weight:700;display:flex;align-items:center;gap:6px;cursor:pointer}
 .conv-location svg{width:14px;height:14px;fill:#fff}
 .conv-add-btn{background:none;border:1.5px solid var(--border);border-radius:7px;padding:5px 10px;font-size:11px;font-weight:600;cursor:pointer;color:var(--blue);display:flex;align-items:center;gap:4px}
 .conv-card{display:flex;align-items:center;gap:10px;padding:10px;border:1px solid var(--border);border-radius:10px;margin-bottom:8px;cursor:pointer;transition:.15s}
@@ -745,7 +745,7 @@ textarea{resize:vertical;min-height:80px}
         .pp-stat-label{font-size:12px;opacity:.8;margin-top:4px;font-family:'Barlow',sans-serif;font-weight:600}
         .pp-year-row{display:flex;align-items:center;gap:12px;margin-bottom:20px}
         .pp-year-bar{flex:1;background:#fff;border:2px solid var(--border);border-radius:30px;padding:10px 20px;font-size:14px;color:var(--muted)}
-        .pp-year-badge{background:var(--blue);color:#fff;border-radius:20px;padding:10px 24px;font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:800;letter-spacing:1px}
+        .pp-year-badge{background:var(--blue);color:#fff;border-radius:8px;padding:10px 24px;font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:800;letter-spacing:1px}
         .pp-list{display:flex;flex-direction:column;gap:10px}
         .pp-item{display:grid;grid-template-columns:40px 1fr 1fr 120px 80px auto;align-items:center;gap:10px}
         .pp-actions{display:flex;gap:6px;flex-shrink:0}
@@ -913,11 +913,11 @@ textarea{resize:vertical;min-height:80px}
         .ec-badge-nao{background:#fde2e2;color:#9a1515;padding:2px 8px;border-radius:12px;font-size:10px;font-weight:700}
         .ec-badge-cns{background:#dce8ff;color:#1a4db3;padding:2px 8px;border-radius:12px;font-size:10px;font-weight:700}
         .ec-badge-srv{background:#fff3d4;color:#9a6000;padding:2px 8px;border-radius:12px;font-size:10px;font-weight:700}
-        .ec-apurada-row{display:grid;grid-template-columns:28px 1fr 1fr 1fr 1fr 1fr 1fr auto auto;gap:8px;align-items:center;padding:10px 14px;border:1px solid var(--border);border-radius:10px;margin-bottom:8px;background:#fff;font-size:12px}
-        .ec-apurada-city{background:var(--navy);color:#fff;border-radius:20px;padding:5px 14px;font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:800;white-space:nowrap}
-        .ec-apurada-mes{background:#9eaab8;color:#fff;border-radius:20px;padding:5px 14px;font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:800;white-space:nowrap}
-        .ec-apurada-ano{background:#3a7bd5;color:#fff;border-radius:20px;padding:5px 14px;font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:800;white-space:nowrap}
-        .ec-pct-badge{border-radius:20px;padding:5px 14px;font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:800;font-style:italic;text-align:center;color:#fff}
+        .ec-apurada-row{display:grid;grid-template-columns:28px minmax(110px,1.2fr) 100px 70px 1fr 1fr 1fr auto auto;gap:10px;align-items:center;padding:12px 16px;border:1px solid var(--border);border-radius:10px;margin-bottom:8px;background:#fff;font-size:12px;box-shadow:0 1px 4px rgba(0,0,0,.05)}
+        .ec-apurada-city{background:var(--navy);color:#fff;border-radius:8px;padding:5px 14px;font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:800;white-space:nowrap;letter-spacing:.3px}
+        .ec-apurada-mes{background:#6b7a99;color:#fff;border-radius:8px;padding:5px 14px;font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:700;white-space:nowrap}
+        .ec-apurada-ano{background:#3a7bd5;color:#fff;border-radius:8px;padding:5px 12px;font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:700;white-space:nowrap}
+        .ec-pct-badge{border-radius:8px;padding:5px 10px;font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:800;font-style:italic;text-align:center;color:#fff;min-width:48px}
         .ec-pct-sim{background:#1ea96a}
         .ec-pct-conv{background:#7c3aed}
         .ec-pct-nao{background:#e03535}
@@ -929,6 +929,8 @@ textarea{resize:vertical;min-height:80px}
         .ec-actions-bar{display:flex;gap:10px;justify-content:flex-end;margin-top:14px;flex-wrap:wrap}
         .ec-no-data{text-align:center;padding:40px;color:var(--muted);font-size:13px}
         .ec-col-edit{background:#fffbeb}
+        .ec-col-edit input,.ec-col-edit select{background:#fff;border:1px solid #e2c97a;border-radius:5px;padding:4px 6px;font-size:12px;font-family:'Barlow',sans-serif;color:var(--text);width:100%}
+        .ec-col-edit input:focus,.ec-col-edit select:focus{border-color:var(--gold);outline:none;box-shadow:0 0 0 2px rgba(240,165,0,.15)}
       </style>
 
       <!-- PAINEL SUPERIOR: Resumo geral -->
@@ -1049,14 +1051,14 @@ textarea{resize:vertical;min-height:80px}
         .cns-table td{padding:9px 10px;border-bottom:1px solid #eef2f9;text-align:center;vertical-align:middle}
         .cns-table td:first-child{text-align:left;font-weight:700;font-size:11px}
         .cns-table tr:hover td{background:#fafcff}
-        .cns-city-badge{background:var(--navy);color:#fff;border-radius:20px;padding:5px 14px;font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:800;display:inline-block}
-        .cns-num-badge{border-radius:20px;padding:5px 12px;font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:800;display:inline-block;color:#fff;min-width:44px}
+        .cns-city-badge{background:var(--navy);color:#fff;border-radius:8px;padding:5px 14px;font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:800;display:inline-block}
+        .cns-num-badge{border-radius:8px;padding:5px 12px;font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:800;display:inline-block;color:#fff;min-width:44px}
         .cns-num-badge.gray{background:#9eaab8}
         .cns-num-badge.green{background:var(--green)}
         .cns-num-badge.red{background:var(--red)}
-        .cns-eco-badge{border-radius:20px;padding:5px 12px;font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;display:inline-block;border:1.5px solid var(--text);background:#fff;color:var(--text);min-width:90px}
-        .cns-pct-badge{border-radius:20px;padding:5px 12px;font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:800;display:inline-block;color:#fff;background:var(--green);min-width:54px}
-        .cns-ano-badge{border-radius:20px;padding:5px 12px;font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:800;display:inline-block;color:#fff;min-width:58px}
+        .cns-eco-badge{border-radius:8px;padding:5px 12px;font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;display:inline-block;border:1.5px solid var(--text);background:#fff;color:var(--text);min-width:90px}
+        .cns-pct-badge{border-radius:8px;padding:5px 12px;font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:800;display:inline-block;color:#fff;background:var(--green);min-width:54px}
+        .cns-ano-badge{border-radius:8px;padding:5px 12px;font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:800;display:inline-block;color:#fff;min-width:58px}
         .cns-ano-badge.green{background:var(--green)}
         .cns-ano-badge.yellow{background:#d97706}
         .cns-ano-badge.red{background:var(--red)}
@@ -2118,20 +2120,29 @@ function parseCSVImport(text){
 function processImportRows(rows){
   if(!rows || rows.length < 1){ toast('Arquivo vazio ou inválido','error'); return; }
 
-  // Detect header row: look for columns Código, Nome, CNPJ, Cidade, UF (case-insensitive)
+  // Detect header row: scan all rows for the first one containing 'nome' or 'código'
+  // This handles CCB-style XLS files that have many metadata rows before actual data
+  let headerRowIdx = -1;
+  for(let ri=0; ri<Math.min(rows.length,30); ri++){
+    const r = rows[ri].map(c => String(c).toLowerCase().replace(/[^a-záéíóúâêîôûãõçüàèìòùñ]/gi,'').trim());
+    if(r.some(c => ['nome','codigo','cnpj','cpf'].includes(c))){
+      headerRowIdx = ri;
+      break;
+    }
+  }
+
   let dataRows = rows;
-  const firstRow = rows[0].map(c => String(c).toLowerCase());
-  const hasHeader = firstRow.some(c => ['código','codigo','nome','cnpj','cidade','uf'].includes(c));
-  if(hasHeader) dataRows = rows.slice(1);
+  const hasHeader = headerRowIdx >= 0;
+  if(hasHeader) dataRows = rows.slice(headerRowIdx + 1);
 
   // Map columns: try header names first, else use positional (Código=0, Nome=1, CNPJ=2, Cidade=3, UF=4)
   let colMap = {codigo:0, nome:1, cnpj:2, cidade:3, uf:4, email:-1, tel:-1, resp:-1, cat:-1, end:-1};
   if(hasHeader){
-    rows[0].forEach((h,i)=>{
-      const hl = String(h).toLowerCase().replace(/[^a-z]/g,'');
+    rows[headerRowIdx].forEach((h,i)=>{
+      const hl = String(h).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z]/g,'');
       if(['codigo','cdigo','cod','code'].includes(hl)) colMap.codigo = i;
       if(['nome','razaosocial','razao','empresa','fornecedor'].includes(hl)) colMap.nome = i;
-      if(['cnpj','cpf','cnpjcpf','documento','doc'].includes(hl)) colMap.cnpj = i;
+      if(['cnpj','cpf','cnpjcpf','cpfcnpj','documento','doc'].includes(hl)) colMap.cnpj = i;
       if(['cidade','municipio','city'].includes(hl)) colMap.cidade = i;
       if(['uf','estado','state'].includes(hl)) colMap.uf = i;
       if(['email','emaileletrônico','emaileletronico','correio'].includes(hl)) colMap.email = i;
@@ -2176,16 +2187,20 @@ function processImportRows(rows){
   preview.style.display = 'block';
 
   list.innerHTML = parsed.map((r,i) => `
-    <div style="display:flex;align-items:center;gap:10px;background:#fff;border:1px solid var(--border);border-radius:7px;padding:8px 12px;font-size:12px;cursor:pointer;transition:.15s"
+    <div style="display:grid;grid-template-columns:24px 1fr auto;align-items:center;gap:10px;background:#fff;border:1px solid var(--border);border-radius:8px;padding:10px 14px;font-size:12px;cursor:pointer;transition:.15s;box-shadow:0 1px 3px rgba(0,0,0,.05)"
+         onmouseover="this.style.borderColor='var(--blue)';this.style.background='#f8fbff'"
+         onmouseout="this.style.borderColor='var(--border)';this.style.background='#fff'"
          onclick="applyImportRow(${i})" title="Clique para preencher o formulário">
-      <div style="width:22px;height:22px;border-radius:50%;background:var(--blue);color:#fff;font-size:10px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0">${i+1}</div>
-      <div style="flex:1;min-width:0">
-        <b style="color:var(--navy)">${r.nome||'—'}</b>
-        <span style="color:var(--muted);margin-left:8px">${r.cnpj||''}</span>
-        ${r.cidade?`<span style="color:var(--muted);margin-left:8px">📍 ${r.cidade}${r.uf?'/'+r.uf:''}</span>`:''}
-        ${r.codigo?`<span style="color:var(--muted);margin-left:8px">Cód: ${r.codigo}</span>`:''}
+      <div style="width:22px;height:22px;border-radius:6px;background:var(--blue);color:#fff;font-size:10px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0">${i+1}</div>
+      <div style="min-width:0">
+        <div style="font-weight:700;color:var(--navy);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${r.nome||'—'}</div>
+        <div style="color:var(--muted);font-size:11px;margin-top:2px;display:flex;flex-wrap:wrap;gap:6px">
+          ${r.cnpj?`<span>📄 ${r.cnpj}</span>`:''}
+          ${r.cidade?`<span>📍 ${r.cidade}${r.uf?'/'+r.uf:''}</span>`:''}
+          ${r.codigo?`<span>🔢 Cód: ${r.codigo}</span>`:''}
+        </div>
       </div>
-      <span style="color:var(--blue);font-weight:700;font-size:11px">Usar →</span>
+      <button style="background:var(--blue);color:#fff;border:none;border-radius:6px;padding:5px 12px;font-size:11px;font-weight:700;cursor:pointer;white-space:nowrap">Usar →</button>
     </div>`).join('');
 
   // Store parsed rows for selection
@@ -2742,7 +2757,15 @@ function processEcRows(json){
     // colunas manuais (podem vir do excel ou serem preenchidas)
     documento: r['Documento']||r['documento']||'Produto',
     cotacaoNome: r['Cotação']||r['Cotacao']||r['cotacao']||'',
-    cotacaoNum:  String(r['Cotação.1']||r['cotacao_num']||''),
+    cotacaoNum:  (()=>{
+      // SheetJS duplica colunas com mesmo nome adicionando _1, _2...
+      // Pandas usa .1, .2 — testamos ambas as variantes
+      const v = r['Cotação.1']||r['Cotação_1']||r['cotacao_num']||r['Nº Cotação']||r['Num Cotacao']||r['N° Cotação']||r['CotacaoNum']||r['cotacaoNum']||r['Número da Cotação']||r['Num. Cotação']||'';
+      if(v) return String(v);
+      // Fallback: procura qualquer chave que contenha "cotac" e também "1","num","nº"
+      const k = Object.keys(r).find(k=>/cotac/i.test(k)&&(/[_\.]1$/.test(k)||/num/i.test(k)||/nº/i.test(k)||/n°/i.test(k)));
+      return k ? String(r[k]||'') : '';
+    })(),
     quantas:     r['Quantas?']||r['quantas']||'',
     pedido:      String(r['Pedido']||r['pedido']||''),
   }));
@@ -2768,10 +2791,10 @@ function renderEcTable(){
             <th>#</th>
             <th>Data</th>
             <th>Hora</th>
-            <th>Número</th>
+            <th class="ec-col-edit" title="Editável">Número ✎</th>
             <th style="min-width:200px">Remetente</th>
             <th>Valor Fechado</th>
-            <th>Valor Maior</th>
+            <th class="ec-col-edit" title="Campo editável manualmente">Valor Maior ✎</th>
             <th>Economia</th>
             <th class="ec-col-edit" title="Coluna manual">Documento ✎</th>
             <th class="ec-col-edit" title="Coluna manual">Cotação ✎</th>
@@ -2786,10 +2809,10 @@ function renderEcTable(){
               <td><b>${i+1}</b></td>
               <td>${fmtEcDate(r.data)}</td>
               <td>${r.hora}</td>
-              <td>${r.numero}</td>
+              <td class="ec-col-edit"><input type="text" value="${r.numero}" onchange="ecEditRow(${i},'numero',this.value)" style="width:80px"></td>
               <td style="max-width:220px;white-space:normal;word-break:break-word;font-size:11px">${r.remetente}</td>
               <td style="text-align:right">${fmtNum2(r.valorFechado)}</td>
-              <td style="text-align:right">${fmtNum2(r.valorMaior)}</td>
+              <td class="ec-col-edit"><input type="number" step="0.01" value="${r.valorMaior||''}" onchange="ecEditRow(${i},'valorMaior',parseFloat(this.value)||0)" style="width:90px;text-align:right" placeholder="0,00"></td>
               <td style="text-align:right;font-weight:700;color:${r.economia>0?'var(--green)':'var(--muted)'}">${fmtNum2(r.economia)}</td>
               <td class="ec-col-edit">
                 <select onchange="ecEditRow(${i},'documento',this.value)" style="min-width:80px">
@@ -2827,7 +2850,25 @@ function renderEcTable(){
 }
 
 function ecEditRow(i, field, val){
-  if(ecRows[i]) ecRows[i][field] = val;
+  if(!ecRows[i]) return;
+  ecRows[i][field] = val;
+  // Recalcular economia quando valorFechado ou valorMaior muda
+  if(field === 'valorFechado' || field === 'valorMaior'){
+    const r = ecRows[i];
+    const vf = r.valorFechado||0;
+    const vm = r.valorMaior||0;
+    if(vm > vf) r.economia = vm - vf;
+    // Re-render apenas a célula de economia
+    const rows = document.querySelectorAll('#ec-table-container tbody tr');
+    if(rows[i]){
+      const ecoTd = rows[i].querySelector('td:nth-child(8)');
+      if(ecoTd){
+        const eco = r.economia||0;
+        ecoTd.style.color = eco>0 ? 'var(--green)' : 'var(--muted)';
+        ecoTd.textContent = fmtNum2(eco);
+      }
+    }
+  }
 }
 
 function fmtEcDate(d){
@@ -2881,7 +2922,8 @@ function renderEcApuradaList(){
     el.innerHTML='<div class="ec-no-data">Nenhum lançamento realizado ainda.</div>';
     return;
   }
-  el.innerHTML = ecApurada.map((a,i)=>`
+  const headerHtml = `<div style="display:grid;grid-template-columns:28px minmax(110px,1.2fr) 100px 70px 1fr 1fr 1fr auto auto;gap:10px;padding:4px 16px;font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.6px"><div></div><div>Cidade</div><div>Mês</div><div>Ano</div><div style="text-align:center">SIM</div><div style="text-align:center">Convênio</div><div style="text-align:center">Não</div><div></div><div></div></div>`;
+  el.innerHTML = headerHtml + ecApurada.map((a,i)=>`
     <div class="ec-apurada-row">
       <div style="font-weight:800;color:var(--muted);font-size:12px">${String(i+1).padStart(2,'0')}.</div>
       <div><span class="ec-apurada-city">${a.cidade}</span></div>
@@ -3373,7 +3415,7 @@ async function loadFromSupabase(){
     }
     if(f.data && f.data.length > 0){
       fornecedores = f.data.map(r=>({
-        id:r.id, codigo:r.codigo||'', nome:r.nome, cnpj:r.cnpj||'', cat:r.cat||'',
+        id:r.id, _dbId:r.id, codigo:r.codigo||'', nome:r.nome, cnpj:r.cnpj||'', cat:r.cat||'',
         email:r.email||'', tel:r.tel||'', resp:r.resp||'', cidade:r.cidade||'',
         uf:r.uf||'', end:r.endereco||'', status:r.status||'Pendente',
         score:parseFloat(r.score)||3.0, obs:r.obs||'', avals:r.avals||[]
@@ -3382,7 +3424,7 @@ async function loadFromSupabase(){
     }
     if(a.data && a.data.length > 0){
       agenda = a.data.map(r=>({
-        id:r.id, prod:r.prod||'', fornId:r.forn_id||0, data:r.data||'',
+        id:r.id, _dbId:r.id, prod:r.prod||'', fornId:r.forn_id||0, data:r.data||'',
         igrejas:r.igrejas||1, obs:r.obs||'', status:r.status||'Agendado',
         admin:r.admin||'', comprador:r.comprador||'', contato:r.contato||''
       }));
@@ -3390,7 +3432,7 @@ async function loadFromSupabase(){
     }
     if(c.data && c.data.length > 0){
       convenios = c.data.map(r=>({
-        id:r.id, titulo:r.titulo||'', tipo:r.tipo||'nacionais',
+        id:r.id, _dbId:r.id, titulo:r.titulo||'', tipo:r.tipo||'nacionais',
         imgUrl:r.img_url||'', link:r.link||'', igrejas:r.igrejas||0, desc:r.descricao||'',
         dataCriacao:r.data_criacao||'recente'
       }));
@@ -3404,7 +3446,7 @@ async function loadFromSupabase(){
     }
     if(us.data && us.data.length > 0){
       users = us.data.map(r=>({
-        id:r.id, nome:r.nome||'', login:r.login||'', email:r.email||'',
+        id:r.id, _dbId:r.id, nome:r.nome||'', login:r.login||'', email:r.email||'',
         perfil:r.perfil||'Comprador', cargo:r.cargo||'', cidade:r.cidade||'', senha:r.senha||'', ativo:r.ativo!==false, modulos:r.modulos||[], cidadesCoord:r.cidades_coord||''
       }));
       nextUserId = Math.max(...users.map(u=>u.id), 0) + 1;
@@ -3450,11 +3492,20 @@ async function sbSaveFornecedor(obj){
   if(!db) return;
   showSyncing(true);
   const row = {
-    id:obj.id, codigo:obj.codigo, nome:obj.nome, cnpj:obj.cnpj, cat:obj.cat,
-    email:obj.email, tel:obj.tel, resp:obj.resp, cidade:obj.cidade, uf:obj.uf,
-    endereco:obj.end, status:obj.status, score:obj.score, obs:obj.obs, avals:obj.avals
+    codigo:obj.codigo||'', nome:obj.nome, cnpj:obj.cnpj||'', cat:obj.cat||'',
+    email:obj.email||'', tel:obj.tel||'', resp:obj.resp||'', cidade:obj.cidade||'', uf:obj.uf||'',
+    endereco:obj.end||'', status:obj.status||'Pendente', score:obj.score||3.0, obs:obj.obs||'', avals:obj.avals||[]
   };
-  const {error} = await db.schema('suprimentos').from('fornecedores').upsert(row, {onConflict:'id'});
+  const dbId = obj._dbId || (typeof obj.id === 'number' && obj.id > 0 ? obj.id : null);
+  let error;
+  if(dbId){
+    const res = await db.schema('suprimentos').from('fornecedores').update(row).eq('id', dbId);
+    error = res.error;
+  } else {
+    const res = await db.schema('suprimentos').from('fornecedores').insert(row).select();
+    error = res.error;
+    if(!error && res.data && res.data[0]) obj._dbId = res.data[0].id;
+  }
   if(error) console.error('Save forn:', error);
   showSyncing(false);
 }
@@ -3470,8 +3521,18 @@ async function sbDeleteFornecedor(id){
 async function sbSaveAgenda(obj){
   if(!db) return;
   showSyncing(true);
-  const row = {id:obj.id, prod:obj.prod, forn_id:obj.fornId, data:obj.data, igrejas:obj.igrejas, obs:obj.obs, status:obj.status};
-  const {error} = await db.schema('suprimentos').from('agenda_compras').upsert(row, {onConflict:'id'});
+  const row = {prod:obj.prod, forn_id:obj.fornId, data:obj.data, igrejas:obj.igrejas||1, obs:obj.obs||'', status:obj.status||'Agendado', admin:obj.admin||'', comprador:obj.comprador||'', contato:obj.contato||''};
+  const dbId = obj._dbId || (typeof obj.id === 'number' && obj.id > 0 ? obj.id : null);
+  let error;
+  if(dbId){
+    const res = await db.schema('suprimentos').from('agenda_compras').update(row).eq('id', dbId);
+    error = res.error;
+    if(error && error.code === '428C9') error = null; // ignorar se identity
+  } else {
+    const res = await db.schema('suprimentos').from('agenda_compras').insert(row).select();
+    error = res.error;
+    if(!error && res.data && res.data[0]) obj._dbId = res.data[0].id;
+  }
   if(error) console.error('Save agenda:', error);
   showSyncing(false);
 }
@@ -3486,9 +3547,26 @@ async function sbDeleteAgenda(id){
 async function sbSaveConvenio(obj){
   if(!db) return;
   showSyncing(true);
-  const row = {id:obj.id, titulo:obj.titulo, tipo:obj.tipo, img_url:obj.imgUrl, link:obj.link||'', igrejas:obj.igrejas, descricao:obj.desc, data_criacao:obj.dataCriacao};
-  const {error} = await db.schema('suprimentos').from('convenios').upsert(row, {onConflict:'id'});
-  if(error) console.error('Save conv:', error);
+  const row = {titulo:obj.titulo, tipo:obj.tipo, img_url:obj.imgUrl||'', link:obj.link||'', igrejas:obj.igrejas||0, descricao:obj.desc||'', data_criacao:obj.dataCriacao||''};
+  let error, data;
+  if(obj._dbId){
+    // Atualiza registro existente
+    const res = await db.schema('suprimentos').from('convenios').update(row).eq('id', obj._dbId).select();
+    error = res.error; data = res.data;
+  } else {
+    // Insere novo registro — sem enviar o campo id (é GENERATED ALWAYS)
+    const res = await db.schema('suprimentos').from('convenios').insert(row).select();
+    error = res.error; data = res.data;
+    if(!error && data && data[0]){
+      obj._dbId = data[0].id; // guarda o id gerado pelo banco
+    }
+  }
+  if(error){
+    console.error('Save conv:', error);
+    toast('Erro ao salvar convênio: '+error.message,'error');
+  } else {
+    toast('Convênio salvo!','success');
+  }
   showSyncing(false);
 }
 
@@ -3504,7 +3582,7 @@ async function sbSavePPItems(){
   showSyncing(true);
   await db.schema('suprimentos').from('pp_items').delete().neq('id', 0);
   if(ppItems.length > 0){
-    const rows = ppItems.map((it,i)=>({id:i+1, cidade:it.cidade, val:it.val, pct:it.pct, ano:it.ano||2026}));
+    const rows = ppItems.map((it,i)=>({cidade:it.cidade, val:it.val, pct:it.pct, ano:it.ano||2026}));
     await db.schema('suprimentos').from('pp_items').insert(rows);
   }
   showSyncing(false);
@@ -3514,7 +3592,7 @@ async function sbSavePPComponents(){
   if(!db) return;
   showSyncing(true);
   await db.schema('suprimentos').from('pp_components').delete().neq('id', 0);
-  const rows = ppComponents.map((c,i)=>({id:i+1, label:c.label, link:c.link||''}));
+  const rows = ppComponents.map((c,i)=>({label:c.label, link:c.link||''}));
   await db.schema('suprimentos').from('pp_components').insert(rows);
   showSyncing(false);
 }
@@ -3522,16 +3600,29 @@ async function sbSavePPComponents(){
 async function sbSaveUser(obj){
   if(!db) return;
   showSyncing(true);
-  // Tenta com todos os campos primeiro
-  const rowFull = {id:obj.id, nome:obj.nome, login:obj.login, email:obj.email||'', perfil:obj.perfil, cargo:obj.cargo||'', cidade:obj.cidade||'', senha:obj.senha, ativo:obj.ativo, modulos:obj.modulos||[], cidades_coord:obj.cidadesCoord||''};
-  let {error} = await db.schema('suprimentos').from('usuarios').upsert(rowFull, {onConflict:'id'});
+  // Não envia o campo id no insert (coluna GENERATED ALWAYS no Supabase)
+  const rowFull = {nome:obj.nome, login:obj.login, email:obj.email||'', perfil:obj.perfil, cargo:obj.cargo||'', cidade:obj.cidade||'', senha:obj.senha, ativo:obj.ativo, modulos:obj.modulos||[], cidades_coord:obj.cidadesCoord||''};
+  const dbId = obj._dbId || (typeof obj.id === 'number' ? obj.id : null);
+  let error;
+  if(dbId){
+    // Registro já existe no banco — atualiza
+    const res = await db.schema('suprimentos').from('usuarios').update(rowFull).eq('id', dbId);
+    error = res.error;
+  } else {
+    // Novo registro — insert sem id
+    const res = await db.schema('suprimentos').from('usuarios').insert(rowFull).select();
+    error = res.error;
+    if(!error && res.data && res.data[0]) obj._dbId = res.data[0].id;
+  }
   if(error){
-    console.warn('sbSaveUser full row failed, trying without optional columns:', error.message);
-    // Fallback: salva sem colunas que podem não existir na tabela antiga
-    const rowMin = {id:obj.id, nome:obj.nome, login:obj.login, email:obj.email||'', perfil:obj.perfil, cargo:obj.cargo||'', senha:obj.senha, ativo:obj.ativo, modulos:obj.modulos||[]};
-    const r2 = await db.schema('suprimentos').from('usuarios').upsert(rowMin, {onConflict:'id'});
+    console.warn('sbSaveUser falhou:', error.message);
+    // Fallback: tenta sem colunas que podem não existir na tabela antiga
+    const rowMin = {nome:obj.nome, login:obj.login, email:obj.email||'', perfil:obj.perfil, cargo:obj.cargo||'', senha:obj.senha, ativo:obj.ativo, modulos:obj.modulos||[]};
+    const r2 = dbId
+      ? await db.schema('suprimentos').from('usuarios').update(rowMin).eq('id', dbId)
+      : await db.schema('suprimentos').from('usuarios').insert(rowMin).select();
     if(r2.error) console.error('Save user fallback error:', r2.error);
-    else toast('⚠️ Usuário salvo sem campo Cidade — rode o SQL de migração no Supabase.','error');
+    else if(!dbId && r2.data && r2.data[0]) obj._dbId = r2.data[0].id;
   }
   showSyncing(false);
 }
