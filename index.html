@@ -1479,8 +1479,9 @@ let agenda = [
 ];
 
 let users = [
-  {id:1,nome:'Master CNS',login:'admin',email:'admin@cns.com',perfil:'Master',cargo:'Gestão Central',cidade:'',senha:'cns@2024',ativo:true,modulos:[]},
-  {id:2,nome:'Gestor Regional',login:'gestor1',email:'gestor@cns.com',perfil:'Regional',cargo:'Regional Sudeste',cidade:'Campinas',senha:'gestor123',ativo:true,modulos:[]},
+  {id:1,nome:'Leandro Machado',login:'leandro',email:'',perfil:'Master',cargo:'',cidade:'',senha:'190485',ativo:true,modulos:[]},
+  {id:2,nome:'Rodrigo Barbosa',login:'rodrigo',email:'',perfil:'Master',cargo:'',cidade:'',senha:'abacaxi',ativo:true,modulos:[]},
+  {id:3,nome:'Teste',login:'teste',email:'',perfil:'Comprador',cargo:'',cidade:'',senha:'123456',ativo:true,modulos:[]},
 ];
 
 // Convênios data - suporta URL de imagem
@@ -1560,14 +1561,10 @@ async function doLogin(){
         }
       } catch(e){ console.warn(`Supabase REST login (schema ${schema}) failed:`, e); }
     }
-    // Se todos os schemas falharam com erro de rede/permissão, cai no fallback local
+    // Se todos os schemas falharam (406, CORS ou file://) — cai no fallback local silenciosamente
     if(!loginOk){
-      console.warn('Supabase inacessível (406/CORS) — usando fallback local. Execute o SQL de permissões no Supabase.');
-      // Avisa o usuário que o banco está inacessível temporariamente
-      errEl.textContent = 'Não foi possível conectar ao banco de dados. Verifique as permissões do Supabase (GRANT USAGE ON SCHEMA suprimentos TO anon).';
-      errEl.style.display='block';
-      btn.textContent='Entrar'; btn.disabled=false;
-      return;
+      console.warn('Supabase inacessível (406/CORS/file://) — usando fallback local.');
+      // Não exibe mensagem técnica ao usuário — tenta fallback local abaixo
     }
   }
 
