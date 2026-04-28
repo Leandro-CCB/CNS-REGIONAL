@@ -8,7 +8,7 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 :root{
-  --navy:#1a3a6b;
+  --navy:#0d2757;
   --blue:#2256c7;
   --blue-light:#3a7bd5;
   --green:#1ea96a;
@@ -23,23 +23,20 @@
   --sidebar:220px;
 }
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:'Barlow',sans-serif;background:var(--bg);color:var(--text);display:flex;min-height:100vh;flex-direction:column}
+body{font-family:'Barlow',sans-serif;background:var(--bg);color:var(--text);display:flex;min-height:100vh;flex-direction:column;overflow-x:hidden}
 .app-wrap{display:flex;flex:1;min-height:0}
 
 /* ── SIDEBAR ── */
 #sidebar{width:var(--sidebar);background:var(--navy);display:flex;flex-direction:column;flex-shrink:0;position:fixed;top:0;left:0;height:100vh;z-index:100;transition:transform .25s ease}
 #sidebar.hidden{transform:translateX(-100%)}
-#sidebar-toggle{position:fixed;top:50%;left:0;transform:translateY(-50%);z-index:101;background:var(--navy);border:none;border-radius:0 8px 8px 0;width:22px;height:52px;cursor:pointer;display:none;align-items:center;justify-content:center;color:#fff;font-size:14px;font-weight:700;box-shadow:2px 0 8px rgba(0,0,0,.25);transition:background .15s}
-#sidebar-toggle:hover{background:var(--blue)}
-#sidebar.hidden ~ #sidebar-toggle{display:flex}
-#main{margin-left:var(--sidebar);flex:1;display:flex;flex-direction:column;min-height:100vh;transition:margin-left .25s ease}
+#main{margin-left:var(--sidebar);flex:1;display:flex;flex-direction:column;min-height:100vh;transition:margin-left .25s ease;overflow-y:auto;overflow-x:hidden}
 #main.expanded{margin-left:0}
 .brand{display:flex;align-items:center;gap:10px;padding:20px 16px 16px;border-bottom:1px solid rgba(255,255,255,.12)}
 .brand-icon{width:38px;height:38px;background:var(--blue);border-radius:10px;display:flex;align-items:center;justify-content:center}
 .brand-icon svg{width:22px;height:22px;fill:#fff}
 .brand-name{font-family:'Barlow Condensed',sans-serif;font-size:17px;font-weight:800;color:#fff;line-height:1.1}
 .brand-sub{font-size:9px;color:rgba(255,255,255,.5);text-transform:uppercase;letter-spacing:1px}
-nav{flex:1;padding:12px 0;overflow-y:auto}
+nav{flex:1;padding:16px 0;overflow-y:auto}
 .nav-section{font-size:10px;font-weight:700;color:rgba(255,255,255,.35);text-transform:uppercase;letter-spacing:1.2px;padding:12px 16px 4px}
 .nav-item{display:flex;align-items:center;gap:10px;padding:9px 16px;cursor:pointer;border-left:3px solid transparent;transition:.15s;color:rgba(255,255,255,.7);font-size:13px;font-weight:500}
 .nav-item:hover{background:rgba(255,255,255,.06);color:#fff}
@@ -50,7 +47,7 @@ nav{flex:1;padding:12px 0;overflow-y:auto}
 .avatar{width:32px;height:32px;border-radius:50%;background:var(--blue);display:flex;align-items:center;justify-content:center;font-weight:700;color:#fff;font-size:13px}
 .user-name{font-size:12px;color:#fff;font-weight:600}
 .user-role{font-size:10px;color:rgba(255,255,255,.45)}
-.topbar{background:#fff;border-bottom:1px solid var(--border);padding:0 28px;height:58px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50}
+.topbar{background:#0d2757;border-bottom:1px solid rgba(255,255,255,.1);padding:0 20px 0 16px;height:56px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50}
 .page-title{font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:800;color:var(--navy)}
 .topbar-right{display:flex;align-items:center;gap:14px}
 .btn{padding:7px 16px;border-radius:7px;font-size:13px;font-weight:600;border:none;cursor:pointer;display:inline-flex;align-items:center;gap:6px;transition:.15s}
@@ -62,8 +59,7 @@ nav{flex:1;padding:12px 0;overflow-y:auto}
 .btn-red{background:var(--red);color:#fff}
 .btn-sm{padding:5px 12px;font-size:12px}
 
-content{padding:24px 28px;flex:1}
-content{display:block}
+content{padding:24px 28px;flex:1;display:block;max-width:100%;overflow-x:hidden}
 
 /* ── TABS (pages) ── */
 .page{display:none}
@@ -243,6 +239,249 @@ textarea{resize:vertical;min-height:80px}
 @keyframes spin{to{transform:rotate(360deg)}}
 @media(max-width:1200px){.dash-layout{grid-template-columns:190px 1fr 1fr 240px}.stats{grid-template-columns:1fr 1fr}}
 @media(max-width:1000px){.dash-layout{grid-template-columns:1fr 1fr}}
+
+
+
+
+/* ── EXTRACTED PAGE STYLES ── */
+.pp-header{display:flex;align-items:center;gap:10px;background:#fff;border-radius:14px;padding:12px 20px;margin-bottom:22px;border:1px solid var(--border);width:fit-content;font-family:'Barlow Condensed',sans-serif;font-size:20px;font-weight:800;color:var(--navy)}
+        .pp-header svg{width:26px;height:26px;fill:var(--navy)}
+        .pp-stat-row{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:24px}
+        .pp-stat{border-radius:12px;padding:18px 22px;text-align:center;font-family:'Barlow Condensed',sans-serif}
+        .pp-stat.navy{background:var(--navy);color:#fff}
+        .pp-stat.white{background:#fff;border:2px solid var(--border);color:var(--navy)}
+        .pp-stat.green{background:var(--green);color:#fff}
+        .pp-stat-num{font-size:36px;font-weight:800;font-style:italic;line-height:1}
+        .pp-stat-label{font-size:12px;opacity:.8;margin-top:4px;font-family:'Barlow',sans-serif;font-weight:600}
+        .pp-year-row{display:flex;align-items:center;gap:12px;margin-bottom:20px}
+        .pp-year-bar{flex:1;background:#fff;border:2px solid var(--border);border-radius:30px;padding:10px 20px;font-size:14px;color:var(--muted)}
+        .pp-year-badge{background:var(--blue);color:#fff;border-radius:8px;padding:10px 24px;font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:800;letter-spacing:1px}
+        .pp-list{display:flex;flex-direction:column;gap:10px}
+        .pp-item{display:grid;grid-template-columns:40px 1fr 1fr 120px 80px auto;align-items:center;gap:10px}
+        .pp-actions{display:flex;gap:6px;flex-shrink:0}
+        .pp-btn{border:none;border-radius:8px;width:32px;height:32px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:.15s;flex-shrink:0}
+        .pp-btn-edit{background:#dce8ff;color:#1a4db3}
+        .pp-btn-edit:hover{background:#b8d0ff}
+        .pp-btn-del{background:#fde2e2;color:#9a1515}
+        .pp-btn-del:hover{background:#f9c0c0}
+        .pp-btn svg{width:15px;height:15px;fill:currentColor}
+        .pp-num{font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:800;color:var(--muted)}
+        .pp-cidade{background:#e8eef8;color:var(--navy);border-radius:30px;padding:9px 18px;font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:800;font-style:italic;text-align:center;border:1.5px solid #c5d3ea}
+        .pp-valor{background:#fff;border:2px solid var(--border);border-radius:30px;padding:9px 18px;font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:800;color:var(--navy);text-align:center}
+        .pp-perc{background:#d4f5e5;color:#0f6e3d;border-radius:30px;padding:9px 18px;font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:800;font-style:italic;text-align:center;border:1.5px solid #a3e4c4}
+        .pp-section-title{font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:800;color:var(--navy);margin-bottom:14px}
+        .pp-checklist{display:flex;flex-direction:column;gap:10px}
+        .pp-check-item{background:var(--blue-light);color:#fff;border-radius:12px;padding:12px 16px;display:flex;align-items:center;gap:14px;font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:700;letter-spacing:.5px}
+        .pp-check-label{flex:1}
+        .pp-link-btn{background:rgba(255,255,255,.22);border:1.5px solid rgba(255,255,255,.45);border-radius:7px;color:#fff;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:4px;white-space:nowrap;transition:.15s;font-family:'Barlow',sans-serif;text-decoration:none}
+        .pp-link-btn:hover{background:rgba(255,255,255,.38)}
+        .pp-link-btn svg{width:12px;height:12px;fill:#fff;flex-shrink:0}
+        .pp-check-icon{width:28px;height:28px;background:rgba(255,255,255,.25);border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:14px}
+        .pp-add-row{display:flex;justify-content:flex-end;margin-bottom:16px}
+        .pp-two-col{display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:start}
+        .pp-card{background:#fff;border:1px solid var(--border);border-radius:14px;padding:22px}
+        .pp-ano-badge{background:var(--blue);color:#fff;border-radius:30px;padding:9px 14px;font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:800;text-align:center}
+        /* Modal Pintura */
+        #modal-pp-add .modal{width:520px}
+/* ── ECONOMIA STYLES ── */
+        .ec-section-title{font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:800;color:var(--navy);text-align:center;margin-bottom:18px;letter-spacing:.5px}
+        .ec-section-title span{color:var(--blue)}
+        .ec-summary-grid{display:grid;grid-template-columns:auto 1fr 1fr 1fr;gap:10px;margin-bottom:20px;align-items:center}
+        .ec-summary-card{border-radius:10px;padding:12px 20px;text-align:center;border:2px solid var(--border)}
+        .ec-summary-card.navy{background:var(--navy);color:#fff;border-color:var(--navy)}
+        .ec-summary-card.outline{background:#fff;border:2.5px solid var(--text)}
+        .ec-summary-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;margin-bottom:6px;color:inherit;opacity:.8}
+        .ec-summary-value{font-family:'Barlow Condensed',sans-serif;font-size:28px;font-weight:800;font-style:italic;line-height:1}
+        .ec-summary-card.navy .ec-summary-value{color:#fff}
+        .ec-kpi-row{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:10px;margin-bottom:20px}
+        .ec-kpi{border-radius:10px;padding:14px 18px;text-align:center;color:#fff}
+        .ec-kpi.green{background:#1ea96a}
+        .ec-kpi.purple{background:#7c3aed}
+        .ec-kpi.red{background:#e03535}
+        .ec-kpi.g2{background:#22c55e}
+        .ec-kpi-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;opacity:.85;margin-bottom:4px}
+        .ec-kpi-value{font-family:'Barlow Condensed',sans-serif;font-size:30px;font-weight:800;font-style:italic;line-height:1}
+        .ec-upload-zone{border:2px dashed var(--blue);border-radius:12px;padding:28px;text-align:center;background:#f8fbff;cursor:pointer;transition:.2s;margin-bottom:18px}
+        .ec-upload-zone:hover{background:#eef4ff;border-color:var(--navy)}
+        .ec-upload-zone svg{width:36px;height:36px;fill:var(--blue);margin-bottom:8px}
+        .ec-upload-zone p{font-size:13px;color:var(--muted);font-weight:500}
+        .ec-upload-zone strong{color:var(--blue)}
+        .ec-table-wrap{overflow-x:auto;max-height:420px;overflow-y:auto}
+        .ec-table{width:100%;border-collapse:collapse;font-size:12px;min-width:1100px}
+        .ec-table th{background:var(--navy);color:#fff;padding:8px 10px;text-align:left;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;position:sticky;top:0;z-index:10;white-space:nowrap}
+        .ec-table td{padding:7px 10px;border-bottom:1px solid #eef2f9;vertical-align:middle;white-space:nowrap}
+        .ec-table tr:hover td{background:#fafcff}
+        .ec-table td input,.ec-table td select{border:1.5px solid var(--border);border-radius:5px;padding:3px 7px;font-size:11px;font-family:'Barlow',sans-serif;background:#fff;width:100%;min-width:80px}
+        .ec-table td input:focus,.ec-table td select:focus{border-color:var(--blue);outline:none}
+        .ec-badge-sim{background:#d4f5e5;color:#0f6e3d;padding:2px 8px;border-radius:12px;font-size:10px;font-weight:700}
+        .ec-badge-nao{background:#fde2e2;color:#9a1515;padding:2px 8px;border-radius:12px;font-size:10px;font-weight:700}
+        .ec-badge-cns{background:#dce8ff;color:#1a4db3;padding:2px 8px;border-radius:12px;font-size:10px;font-weight:700}
+        .ec-badge-srv{background:#fff3d4;color:#9a6000;padding:2px 8px;border-radius:12px;font-size:10px;font-weight:700}
+        .ec-apurada-row{display:grid;grid-template-columns:28px minmax(110px,1.2fr) 100px 70px 1fr 1fr 1fr auto auto;gap:10px;align-items:center;padding:12px 16px;border:1px solid var(--border);border-radius:10px;margin-bottom:8px;background:#fff;font-size:12px;box-shadow:0 1px 4px rgba(0,0,0,.05)}
+        .ec-apurada-city{background:var(--navy);color:#fff;border-radius:8px;padding:5px 14px;font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:800;white-space:nowrap;letter-spacing:.3px}
+        .ec-apurada-mes{background:#6b7a99;color:#fff;border-radius:8px;padding:5px 14px;font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:700;white-space:nowrap}
+        .ec-apurada-ano{background:#3a7bd5;color:#fff;border-radius:8px;padding:5px 12px;font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:700;white-space:nowrap}
+        .ec-pct-badge{border-radius:8px;padding:5px 10px;font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:800;font-style:italic;text-align:center;color:#fff;min-width:48px}
+        .ec-pct-sim{background:#1ea96a}
+        .ec-pct-conv{background:#7c3aed}
+        .ec-pct-nao{background:#e03535}
+        .ec-sub-val{font-size:10px;font-weight:600;text-align:center;margin-top:2px;color:inherit;opacity:.75}
+        .ec-btn-add{background:var(--green);color:#fff;border:none;border-radius:50%;width:28px;height:28px;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:.15s}
+        .ec-btn-add:hover{background:#159c5e}
+        .ec-btn-pdf{background:var(--red);color:#fff;border:none;border-radius:6px;width:28px;height:28px;font-size:12px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:.15s}
+        .ec-btn-pdf:hover{opacity:.85}
+        .ec-actions-bar{display:flex;gap:10px;justify-content:flex-end;margin-top:14px;flex-wrap:wrap}
+        .ec-no-data{text-align:center;padding:40px;color:var(--muted);font-size:13px}
+        .ec-col-edit{background:#fffbeb}
+        .ec-col-edit input,.ec-col-edit select{background:#fff;border:1px solid #e2c97a;border-radius:5px;padding:4px 6px;font-size:12px;font-family:'Barlow',sans-serif;color:var(--text);width:100%}
+        .ec-col-edit input:focus,.ec-col-edit select:focus{border-color:var(--gold);outline:none;box-shadow:0 0 0 2px rgba(240,165,0,.15)}
+.cns-header{font-family:'Barlow Condensed',sans-serif;font-size:24px;font-weight:800;color:#fff;background:var(--navy);text-align:center;padding:10px 24px;border-radius:10px;margin-bottom:18px;letter-spacing:.5px}
+        .cns-header span{color:#7dd3fc;font-style:normal}
+        .cns-kpi-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-bottom:20px}
+        .cns-kpi{border-radius:12px;padding:16px 20px;text-align:center}
+        .cns-kpi-label{font-size:12px;font-weight:700;color:var(--text);margin-bottom:8px;text-transform:uppercase;letter-spacing:.5px}
+        .cns-kpi-val{font-family:'Barlow Condensed',sans-serif;font-size:34px;font-weight:800;font-style:italic;line-height:1;color:#fff}
+        .cns-kpi.navy{background:var(--navy)}
+        .cns-kpi.outline{background:#fff;border:2.5px solid var(--text)}
+        .cns-kpi.outline .cns-kpi-val{color:var(--text)}
+        .cns-kpi.green{background:var(--green)}
+        .cns-status-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-bottom:20px}
+        .cns-status-chip{border-radius:12px;padding:14px 18px;text-align:center;color:#fff}
+        .cns-status-chip.green{background:var(--green)}
+        .cns-status-chip.yellow{background:#d97706}
+        .cns-status-chip.red{background:var(--red)}
+        .cns-status-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;opacity:.85;margin-bottom:4px}
+        .cns-status-num{font-family:'Barlow Condensed',sans-serif;font-size:36px;font-weight:800;line-height:1}
+        .cns-subtitle{font-family:'Barlow Condensed',sans-serif;font-size:17px;font-weight:800;color:var(--navy);text-align:center;margin-bottom:14px}
+        .cns-subtitle em{color:var(--blue)}
+        .cns-table-wrap{overflow-x:auto}
+        .cns-table{width:100%;border-collapse:collapse;font-size:13px}
+        .cns-table th{background:#f4f7fd;padding:8px 10px;font-size:10px;font-weight:700;text-transform:uppercase;color:var(--muted);letter-spacing:.6px;text-align:center;border-bottom:2px solid var(--border)}
+        .cns-table th:first-child,.cns-table th:nth-child(2){text-align:left}
+        .cns-table td{padding:9px 10px;border-bottom:1px solid #eef2f9;text-align:center;vertical-align:middle}
+        .cns-table td:first-child{text-align:left;font-weight:700;font-size:11px}
+        .cns-table tr:hover td{background:#fafcff}
+        .cns-city-badge{background:var(--navy);color:#fff;border-radius:8px;padding:5px 14px;font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:800;display:inline-block}
+        .cns-num-badge{border-radius:8px;padding:5px 12px;font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:800;display:inline-block;color:#fff;min-width:44px}
+        .cns-num-badge.gray{background:#9eaab8}
+        .cns-num-badge.green{background:var(--green)}
+        .cns-num-badge.red{background:var(--red)}
+        .cns-eco-badge{border-radius:8px;padding:5px 12px;font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;display:inline-block;border:1.5px solid var(--text);background:#fff;color:var(--text);min-width:90px}
+        .cns-pct-badge{border-radius:8px;padding:5px 12px;font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:800;display:inline-block;color:#fff;background:var(--green);min-width:54px}
+        .cns-ano-badge{border-radius:8px;padding:5px 12px;font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:800;display:inline-block;color:#fff;min-width:58px}
+        .cns-ano-badge.green{background:var(--green)}
+        .cns-ano-badge.yellow{background:#d97706}
+        .cns-ano-badge.red{background:var(--red)}
+        .cns-bell-btn{background:none;border:none;font-size:18px;cursor:pointer;padding:2px 6px;border-radius:6px;transition:.15s}
+        .cns-bell-btn:hover{background:#fef9c3}
+        .cns-add-btn{background:var(--green);color:#fff;border:none;border-radius:50%;width:28px;height:28px;font-size:18px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;transition:.15s;line-height:1}
+        .cns-add-btn:hover{background:#159c5e;transform:scale(1.1)}
+        .cns-legend{display:flex;gap:14px;align-items:center;font-size:11px;flex-wrap:wrap}
+        .cns-legend-dot{width:12px;height:12px;border-radius:50%;flex-shrink:0}
+        .cns-form-row{display:grid;grid-template-columns:1fr 80px 80px 100px 100px 80px 80px auto;gap:10px;align-items:end;margin-bottom:12px}
+        .cns-eco-history{font-size:11px;color:var(--muted);margin-top:4px}
+.ge-header{font-family:'Barlow Condensed',sans-serif;font-size:24px;font-weight:800;color:#fff;background:var(--navy);text-align:center;padding:14px 24px;border-radius:10px;margin-bottom:18px;letter-spacing:.5px}
+        .ge-header em{color:#fde68a}
+        .ge-kpi-row{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:20px}
+        .ge-kpi{border-radius:12px;padding:18px 20px;text-align:center;min-height:90px;display:flex;flex-direction:column;justify-content:center}
+        .ge-kpi-label{font-size:11px;font-weight:700;color:rgba(255,255,255,.75);margin-bottom:8px;text-transform:uppercase;letter-spacing:.5px}
+        .ge-kpi-val{font-family:'Barlow Condensed',sans-serif;font-size:34px;font-weight:800;font-style:italic;line-height:1;color:#fff}
+        .ge-kpi.navy{background:var(--navy)}
+        .ge-kpi.navy2{background:#1e3a5f}
+        .ge-kpi.outline{background:#fff;border:2.5px solid var(--border)}
+        .ge-kpi.outline .ge-kpi-label{color:var(--muted)}
+        .ge-kpi.outline .ge-kpi-val{color:var(--text)}
+        .ge-kpi.green{background:var(--green)}
+        .ge-section-header{background:var(--navy);color:#fff;font-family:'Barlow Condensed',sans-serif;font-size:17px;font-weight:800;padding:12px 18px;border-radius:10px;margin-bottom:14px;display:flex;align-items:center;gap:10px;letter-spacing:.3px;flex-wrap:wrap}
+        .ge-section-header em{color:#fde68a}
+        .ge-status-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:14px}
+        .ge-status-chip{border-radius:10px;padding:10px 14px;text-align:center;color:#fff}
+        .ge-status-chip.green{background:var(--green)}
+        .ge-status-chip.yellow{background:#d97706}
+        .ge-status-chip.red{background:var(--red)}
+        .ge-status-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;opacity:.85;margin-bottom:3px}
+        .ge-status-num{font-family:'Barlow Condensed',sans-serif;font-size:28px;font-weight:800;line-height:1}
+        .ge-form-row{display:grid;grid-template-columns:1fr 90px 80px 80px 110px 110px 90px 90px auto;gap:10px;align-items:end;margin-bottom:10px}
+        .ge-table{width:100%;border-collapse:collapse;font-size:13px}
+        .ge-table th{background:#f4f7fd;padding:8px 10px;font-size:10px;font-weight:700;text-transform:uppercase;color:var(--muted);letter-spacing:.6px;text-align:center;border-bottom:2px solid var(--border)}
+        .ge-table th:nth-child(2){text-align:left}
+        .ge-table td{padding:9px 10px;border-bottom:1px solid #eef2f9;text-align:center;vertical-align:middle}
+        .ge-table tr:hover td{background:#fafcff}
+        .ge-section-block{background:#fff;border:1px solid var(--border);border-radius:14px;padding:20px;margin-bottom:20px}
+        .ge-checklist{display:flex;flex-direction:column;gap:10px;margin-top:14px}
+        .ge-check-item{background:var(--blue-light);color:#fff;border-radius:12px;padding:11px 16px;display:flex;align-items:center;gap:14px;font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:700;letter-spacing:.5px}
+        .ge-check-label{flex:1}
+        .ge-link-btn{background:rgba(255,255,255,.22);border:1.5px solid rgba(255,255,255,.45);border-radius:7px;color:#fff;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:4px;white-space:nowrap;transition:.15s;font-family:'Barlow',sans-serif;text-decoration:none}
+        .ge-link-btn:hover{background:rgba(255,255,255,.38)}
+        .ge-link-btn svg{width:12px;height:12px;fill:#fff;flex-shrink:0}
+        .ge-check-icon{width:26px;height:26px;background:rgba(255,255,255,.25);border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:13px}
+        .ge-two-col{display:grid;grid-template-columns:1fr 300px;gap:20px;align-items:start}
+        .ge-form-inline{display:grid;grid-template-columns:1fr 80px 70px 70px 110px 90px 80px auto;gap:8px;align-items:end}
+        @media(max-width:1300px){
+          .ge-two-col{grid-template-columns:1fr}
+          .ge-form-inline{grid-template-columns:1fr 70px 60px 60px 100px 80px 70px auto;gap:6px}
+        }
+        @media(max-width:1100px){
+          .ge-form-inline{grid-template-columns:1fr 1fr 1fr 1fr;gap:8px}
+          .ge-form-inline > div:last-child{grid-column:span 4;display:flex;justify-content:flex-end}
+          .ge-kpi-row{grid-template-columns:1fr 1fr}
+        }
+        .ge-city-badge{background:var(--navy);color:#fff;border-radius:8px;padding:5px 14px;font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:800;display:inline-block}
+        .ge-num-badge{border-radius:8px;padding:5px 12px;font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:800;display:inline-block;color:#fff;min-width:44px}
+        .ge-num-badge.gray{background:#9eaab8}
+        .ge-num-badge.green{background:var(--green)}
+        .ge-num-badge.red{background:var(--red)}
+        .ge-eco-badge{border-radius:8px;padding:5px 12px;font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;display:inline-block;border:1.5px solid var(--text);background:#fff;color:var(--text);min-width:90px}
+        .ge-pct-badge{border-radius:8px;padding:5px 12px;font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:800;display:inline-block;color:#fff;background:var(--green);min-width:54px}
+        .ge-ano-badge{border-radius:8px;padding:5px 12px;font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:800;display:inline-block;color:#fff;min-width:58px}
+        .ge-ano-badge.green{background:var(--green)}
+        .ge-ano-badge.yellow{background:#d97706}
+        .ge-ano-badge.red{background:var(--red)}
+        .ge-add-btn{background:var(--green);color:#fff;border:none;border-radius:50%;width:28px;height:28px;font-size:18px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;transition:.15s;line-height:1}
+        .ge-add-btn:hover{background:#159c5e;transform:scale(1.1)}
+        .ge-bell-btn{background:none;border:none;font-size:17px;cursor:pointer;padding:2px 5px;border-radius:6px;transition:.15s}
+        .ge-bell-btn:hover{background:#fef9c3}
+.eco-gauge-wrap{background:linear-gradient(135deg,var(--navy) 0%,#1e4db5 100%);border-radius:16px;padding:28px 36px;display:flex;align-items:center;justify-content:space-between;margin-bottom:22px;position:relative;overflow:hidden}
+        .eco-gauge-wrap::after{content:'';position:absolute;right:-30px;top:-30px;width:180px;height:180px;border-radius:50%;background:rgba(255,255,255,.05)}
+        .eco-gauge-left{display:flex;align-items:center;gap:24px}
+        .eco-gauge-icon{width:80px;height:80px;flex-shrink:0}
+        .eco-gauge-text{color:#fff}
+        .eco-gauge-label{font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:1px;opacity:.8;margin-bottom:4px}
+        .eco-gauge-val{font-family:'Barlow Condensed',sans-serif;font-size:46px;font-weight:800;color:#4ade80;line-height:1}
+        .eco-gauge-right{display:flex;gap:24px;align-items:center}
+        .eco-gauge-bars{display:flex;align-items:flex-end;gap:6px;height:70px}
+        .eco-bar{background:rgba(255,255,255,.25);border-radius:4px 4px 0 0;width:16px;transition:.3s}
+        .eco-bar.active{background:#3b82f6}
+        .eco-coins-icon{font-size:48px;opacity:.85}
+        .eco-two-col{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+        .eco-panel{background:#fff;border:1px solid var(--border);border-radius:14px;padding:22px}
+        .eco-panel-header{display:flex;align-items:center;gap:10px;margin-bottom:16px;padding-bottom:12px;border-bottom:2px solid var(--green)}
+        .eco-panel-icon{width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+        .eco-panel-title{font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:800;color:var(--green);text-transform:uppercase;letter-spacing:.5px}
+        .eco-panel-header.projetos .eco-panel-title{color:var(--navy)}
+        .eco-panel-header.projetos{border-bottom-color:var(--navy)}
+        .eco-total-label{font-size:10px;font-weight:700;color:var(--green);text-transform:uppercase;letter-spacing:.8px;margin-bottom:2px}
+        .eco-total-val{font-family:'Barlow Condensed',sans-serif;font-size:28px;font-weight:800;color:var(--green);margin-bottom:14px}
+        .eco-total-label.navy{color:var(--navy)}
+        .eco-total-val.navy{color:var(--navy)}
+        .eco-sub-row{display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:1px dashed #e2e8f4}
+        .eco-sub-row:last-child{border-bottom:none}
+        .eco-sub-icon{width:26px;height:26px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
+        .eco-sub-label{flex:1;font-size:13px;color:var(--text);font-weight:500}
+        .eco-sub-val{font-size:13px;font-weight:700;color:var(--navy)}
+        .eco-note{background:#f0f4fa;border-radius:8px;padding:8px 12px;font-size:11px;color:var(--muted);display:flex;align-items:center;gap:6px;margin-top:12px}
+        .eco-period-row{display:flex;gap:10px;align-items:center;margin-bottom:22px;background:#fff;border:1px solid var(--border);border-radius:12px;padding:14px 18px;flex-wrap:wrap}
+        .eco-period-select{padding:8px 14px;border:1.5px solid var(--border);border-radius:8px;font-size:13px;font-family:'Barlow',sans-serif;color:var(--text);background:#fff;cursor:pointer;outline:none}
+        .eco-period-select:focus{border-color:var(--blue)}
+        .eco-acum-btn{padding:8px 18px;border:1.5px solid var(--border);border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;background:#fff;color:var(--navy);transition:.15s}
+        .eco-acum-btn:hover{border-color:var(--blue);color:var(--blue)}
+        .eco-info-bar{background:#dbeafe;border:1px solid #93c5fd;border-radius:8px;padding:8px 14px;font-size:11px;color:#1e3a8a;display:flex;align-items:center;gap:6px;margin-top:16px}
+        @media(max-width:900px){
+          .eco-two-col{grid-template-columns:1fr}
+          .eco-gauge-right{display:none}
+          .eco-gauge-wrap{padding:20px 22px}
+        }
+
 </style>
 </head>
 <body>
@@ -271,48 +510,44 @@ textarea{resize:vertical;min-height:80px}
 
 <!-- SIDEBAR -->
 <div id="sidebar">
-  <div class="brand" style="padding:14px 12px;gap:8px">
-    <img src="logo.jpeg" alt="Logo" style="width:44px;height:44px;object-fit:contain;border-radius:10px;flex-shrink:0;background:#fff">
-    <div><div class="brand-name" style="font-size:10px;line-height:1.2">COMISSÃO REGIONAL<br>DE SUPRIMENTOS</div><div class="brand-sub">Gestão de Fornecedores</div></div>
-  </div>
   <nav>
     <!-- 1. PRINCIPAL -->
     <div class="nav-section">Principal</div>
     <div class="nav-item active" onclick="showPage('dashboard',this)">
-      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/></svg> Dashboard
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg> Tela Inicial
+    </div>
+    <div class="nav-item" onclick="showPage('economizometro',this)">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm.31-8.86c-1.77-.45-2.34-.94-2.34-1.67 0-.84.79-1.43 2.1-1.43 1.38 0 1.9.66 1.94 1.64h1.71c-.05-1.34-.87-2.57-2.49-2.97V5H10.9v1.69c-1.51.32-2.72 1.3-2.72 2.81 0 1.79 1.49 2.69 3.66 3.21 1.95.46 2.34 1.15 2.34 1.86 0 .53-.39 1.39-2.1 1.39-1.6 0-2.23-.72-2.32-1.64H8.04c.1 1.7 1.36 2.66 2.86 2.97V19h2.34v-1.67c1.52-.29 2.72-1.16 2.73-2.77-.01-2.2-1.9-2.96-3.66-3.42z"/></svg> Economizômetro
     </div>
     <div class="nav-item" onclick="showPage('convenios',this)">
-      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 3c1.93 0 3.5 1.57 3.5 3.5S13.93 13 12 13s-3.5-1.57-3.5-3.5S10.07 6 12 6zm7 13H5v-.23c0-.62.28-1.2.76-1.58C7.47 15.82 9.64 15 12 15s4.53.82 6.24 2.19c.48.38.76.97.76 1.58V19z"/></svg> Convênios
-    </div>
-    <div class="nav-item" onclick="showPage('ranking',this)">
-      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M7.5 21H2V9h5.5v12zm7.25-18h-5.5v18h5.5V3zM22 11h-5.5v10H22V11z"/></svg> Ranking Fornecedores
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg> Convênios
     </div>
 
     <!-- 2. PRODUTOS/SERVIÇOS -->
-    <div class="nav-section">Produtos/Serviços</div>
+    <div class="nav-section">Produtos / Serviços</div>
     <div class="nav-item" onclick="showPage('fornecedores',this)">
-      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20 7H4c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V9c0-1.1-.9-2-2-2zm-9 3h2v2h-2v-2zm0 4h2v2h-2v-2zM7 10h2v2H7v-2zm0 4h2v2H7v-2zm10 4H7v-2h10v2zm0-4h-2v-2h2v2zm0-4h-2v-2h2v2z"/></svg> Fornecedores
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg> Fornecedores
     </div>
     <div class="nav-item" onclick="showPage('produtos',this)">
-      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg> Produtos
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20 6h-2.18c.07-.44.18-.88.18-1.34C18 2.54 15.91.5 13.5.5c-1.38 0-2.68.59-3.57 1.58L9 3.04 8.07 2.08C7.17 1.09 5.88.5 4.5.5 2.08.5 0 2.54 0 4.66 0 5.12.11 5.56.18 6H0v14h20V6zM13.5 2.5c1.24 0 2.5 1.01 2.5 2.16 0 .56-.43 1.1-.88 1.34H9.87c-.45-.24-.87-.78-.87-1.34C9 3.51 10.26 2.5 11.5 2.5h2zM4.5 2.5C5.74 2.5 7 3.51 7 4.66c0 .56-.43 1.1-.88 1.34H2.38C1.93 5.76 1.5 5.22 1.5 4.66 1.5 3.51 2.76 2.5 4 2.5h.5zM2 18V8h7v10H2zm9 0V8h7v10h-7z"/></svg> Produtos
     </div>
 
     <!-- 3. COMPRAS -->
     <div class="nav-section">Compras</div>
     <div class="nav-item" onclick="showPage('agenda',this)">
-      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z"/></svg> Compras Coordenadas
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96C5 16.1 6.9 18 9 18h12v-2H9.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63H19c.75 0 1.41-.41 1.75-1.03l3.58-6.49A1 1 0 0 0 23.47 5H5.21l-.94-2H1zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z"/></svg> Compras Coordenadas
     </div>
     <div class="nav-item" onclick="showPage('economia',this)">
-      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M11.8 10.9c-2.27-.59-3-1.2-3-2.15 0-1.09 1.01-1.85 2.7-1.85 1.78 0 2.44.85 2.5 2.1h2.21c-.07-1.72-1.12-3.3-3.21-3.81V3h-3v2.16c-1.94.42-3.5 1.68-3.5 3.61 0 2.31 1.91 3.46 4.7 4.13 2.5.6 3 1.48 3 2.41 0 .69-.49 1.79-2.7 1.79-2.06 0-2.87-.92-2.98-2.1h-2.2c.12 2.19 1.76 3.42 3.68 3.83V21h3v-2.15c1.95-.37 3.5-1.5 3.5-3.55 0-2.84-2.43-3.81-4.7-4.4z"/></svg> Economia de Compras
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg> Economia de Compras
     </div>
 
     <!-- 4. PROJETOS CNS -->
     <div class="nav-section nav-cns-only">Projetos CNS</div>
-    <div class="nav-item nav-cns-only" onclick="showPage('pintura',this)">
-      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 14c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3zm13.71-9.37l-1.34-1.34a1 1 0 0 0-1.41 0L9 12.25 11.75 15l8.96-8.96a1 1 0 0 0 0-1.41z"/></svg> Pintura Programada
-    </div>
     <div class="nav-item nav-cns-only" onclick="showPage('cns-limpeza',this)">
       <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19.36 2.72L20.78 4.14 16.19 8.72C17.24 10.41 17 12.55 15.59 14L9.13 7.53C10.57 6.12 12.71 5.88 14.4 6.94L19.36 2.72M5.93 17.57C3.92 15.56 2.69 13.16 2.36 10.72L7.46 8.53L15.48 16.56L13.29 21.65C10.84 21.33 8.44 20.09 6.43 18.08L5.93 17.57Z"/></svg> CNS Limpeza
+    </div>
+    <div class="nav-item nav-cns-only" onclick="showPage('pintura',this)">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18 4V3c0-.55-.45-1-1-1H5c-.55 0-1 .45-1 1v4c0 .55.45 1 1 1h12c.55 0 1-.45 1-1V6h1v4H9v11c0 .55.45 1 1 1h2c.55 0 1-.45 1-1v-9h8V4h-3z"/></svg> Pintura Programada
     </div>
     <div class="nav-item nav-cns-only" onclick="showPage('gestao-energias',this)">
       <svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 2v11h3v9l7-12h-4l4-8z"/></svg> Gestão de Energias
@@ -321,35 +556,46 @@ textarea{resize:vertical;min-height:80px}
     <!-- 5. CONFIGURAÇÕES -->
     <div class="nav-section nav-master-regional-only">Configurações</div>
     <div class="nav-item nav-master-regional-only" onclick="showPage('usuarios',this)">
-      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg> Usuários
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg> Usuários
+    </div>
+    <div class="nav-item nav-master-regional-only" onclick="showPage('suporte',this)">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M11.5 2C6.81 2 3 5.81 3 10.5S6.81 19 11.5 19h.5v3c4.86-2.34 8-7 8-11.5C20 5.81 16.19 2 11.5 2zm1 14.5h-2v-2h2v2zm0-4h-2c0-3.25 3-3 3-5 0-1.1-.9-2-2-2s-2 .9-2 2h-2c0-2.21 1.79-4 4-4s4 1.79 4 4c0 2.5-3 2.75-3 5z"/></svg> Suporte
     </div>
   </nav>
-  <!-- Botão ocultar no rodapé da sidebar -->
-  <div style="padding:10px 12px;border-top:1px solid rgba(255,255,255,.1)">
-    <div class="nav-item" onclick="toggleSidebar()" style="color:rgba(255,255,255,.55);border-left:none;padding:8px 10px;border-radius:7px">
-      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M15.41 16.59L10.83 12l4.58-4.59L14 6l-6 6 6 6z"/></svg> Ocultar Sidebar
-    </div>
-  </div>
 </div>
 
-<!-- Botão para reabrir sidebar -->
-<button id="sidebar-toggle" onclick="toggleSidebar()" title="Mostrar menu">›</button>
+
 
 <!-- MAIN -->
 <div id="main">
   <div class="topbar">
-    <div class="page-title" id="top-title">Dashboard</div>
+    <div style="display:flex;align-items:center;gap:0">
+      <!-- Hamburger -->
+      <button onclick="toggleSidebar()" style="background:none;border:none;cursor:pointer;padding:0 16px 0 0;display:flex;align-items:center">
+        <svg viewBox="0 0 24 24" width="22" height="22" fill="#fff"><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg>
+      </button>
+      <!-- Logo icon -->
+      <div style="width:30px;height:30px;background:rgba(255,255,255,.15);border-radius:7px;display:flex;align-items:center;justify-content:center;margin-right:10px">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="#fff"><path d="M12 2L9.19 8.63 2 9.24l5.46 4.73L5.82 21 12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61z"/></svg>
+      </div>
+      <!-- Title -->
+      <span style="font-size:17px;font-weight:700;color:#fff;letter-spacing:.2px">Portal CRS</span>
+      <span style="margin:0 10px;color:rgba(255,255,255,.4);font-size:18px;font-weight:300">|</span>
+      <span id="top-title" style="font-size:16px;font-weight:500;color:rgba(255,255,255,.85)">Jundiaí</span>
+    </div>
     <div class="topbar-right">
-      <div id="topbar-sync" style="display:none;align-items:center;gap:6px;font-size:12px;color:var(--muted)">
+      <div id="topbar-sync" style="display:none;align-items:center;gap:6px;font-size:12px;color:rgba(255,255,255,.7)">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" style="animation:spin .8s linear infinite"><path d="M12 4V1L8 5l4 4V6c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6H4c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z"/></svg>
         Salvando...
       </div>
-      <div id="topbar-user" style="display:flex;align-items:center;gap:10px">
-        <div style="text-align:right">
-          <div id="topbar-uname" style="font-size:13px;font-weight:700;color:var(--navy)">—</div>
-          <div id="topbar-urole" style="font-size:10px;color:var(--muted)">—</div>
+      <!-- User info -->
+      <div id="topbar-user" style="display:flex;align-items:center;gap:8px;cursor:pointer;padding:4px 10px;border-radius:8px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15)" onclick="doLogout()" title="Clique para sair">
+        <div id="topbar-avatar" style="width:30px;height:30px;border-radius:50%;background:rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;font-weight:700;color:#fff;font-size:13px;flex-shrink:0">A</div>
+        <div style="text-align:left">
+          <div id="topbar-uname" style="font-size:12px;font-weight:700;color:#fff;line-height:1.2">Comissão CRS</div>
+          <div id="topbar-urole" style="font-size:10px;color:rgba(255,255,255,.6);line-height:1.2">Regional Jundiaí</div>
         </div>
-        <div id="topbar-avatar" style="width:36px;height:36px;border-radius:50%;background:var(--blue);display:flex;align-items:center;justify-content:center;font-weight:700;color:#fff;font-size:15px;flex-shrink:0;cursor:pointer" onclick="doLogout()" title="Clique para sair">A</div>
+        <svg viewBox="0 0 24 24" width="14" height="14" fill="rgba(255,255,255,.6)"><path d="M7 10l5 5 5-5z"/></svg>
       </div>
     </div>
   </div>
@@ -736,47 +982,7 @@ textarea{resize:vertical;min-height:80px}
 
     <!-- PINTURA PROGRAMADA -->
     <div class="page" id="page-pintura">
-      <style>
-        .pp-header{display:flex;align-items:center;gap:10px;background:#fff;border-radius:14px;padding:12px 20px;margin-bottom:22px;border:1px solid var(--border);width:fit-content;font-family:'Barlow Condensed',sans-serif;font-size:20px;font-weight:800;color:var(--navy)}
-        .pp-header svg{width:26px;height:26px;fill:var(--navy)}
-        .pp-stat-row{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:24px}
-        .pp-stat{border-radius:12px;padding:18px 22px;text-align:center;font-family:'Barlow Condensed',sans-serif}
-        .pp-stat.navy{background:var(--navy);color:#fff}
-        .pp-stat.white{background:#fff;border:2px solid var(--border);color:var(--navy)}
-        .pp-stat.green{background:var(--green);color:#fff}
-        .pp-stat-num{font-size:36px;font-weight:800;font-style:italic;line-height:1}
-        .pp-stat-label{font-size:12px;opacity:.8;margin-top:4px;font-family:'Barlow',sans-serif;font-weight:600}
-        .pp-year-row{display:flex;align-items:center;gap:12px;margin-bottom:20px}
-        .pp-year-bar{flex:1;background:#fff;border:2px solid var(--border);border-radius:30px;padding:10px 20px;font-size:14px;color:var(--muted)}
-        .pp-year-badge{background:var(--blue);color:#fff;border-radius:8px;padding:10px 24px;font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:800;letter-spacing:1px}
-        .pp-list{display:flex;flex-direction:column;gap:10px}
-        .pp-item{display:grid;grid-template-columns:40px 1fr 1fr 120px 80px auto;align-items:center;gap:10px}
-        .pp-actions{display:flex;gap:6px;flex-shrink:0}
-        .pp-btn{border:none;border-radius:8px;width:32px;height:32px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:.15s;flex-shrink:0}
-        .pp-btn-edit{background:#dce8ff;color:#1a4db3}
-        .pp-btn-edit:hover{background:#b8d0ff}
-        .pp-btn-del{background:#fde2e2;color:#9a1515}
-        .pp-btn-del:hover{background:#f9c0c0}
-        .pp-btn svg{width:15px;height:15px;fill:currentColor}
-        .pp-num{font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:800;color:var(--muted)}
-        .pp-cidade{background:#e8eef8;color:var(--navy);border-radius:30px;padding:9px 18px;font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:800;font-style:italic;text-align:center;border:1.5px solid #c5d3ea}
-        .pp-valor{background:#fff;border:2px solid var(--border);border-radius:30px;padding:9px 18px;font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:800;color:var(--navy);text-align:center}
-        .pp-perc{background:#d4f5e5;color:#0f6e3d;border-radius:30px;padding:9px 18px;font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:800;font-style:italic;text-align:center;border:1.5px solid #a3e4c4}
-        .pp-section-title{font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:800;color:var(--navy);margin-bottom:14px}
-        .pp-checklist{display:flex;flex-direction:column;gap:10px}
-        .pp-check-item{background:var(--blue-light);color:#fff;border-radius:12px;padding:12px 16px;display:flex;align-items:center;gap:14px;font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:700;letter-spacing:.5px}
-        .pp-check-label{flex:1}
-        .pp-link-btn{background:rgba(255,255,255,.22);border:1.5px solid rgba(255,255,255,.45);border-radius:7px;color:#fff;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:4px;white-space:nowrap;transition:.15s;font-family:'Barlow',sans-serif;text-decoration:none}
-        .pp-link-btn:hover{background:rgba(255,255,255,.38)}
-        .pp-link-btn svg{width:12px;height:12px;fill:#fff;flex-shrink:0}
-        .pp-check-icon{width:28px;height:28px;background:rgba(255,255,255,.25);border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:14px}
-        .pp-add-row{display:flex;justify-content:flex-end;margin-bottom:16px}
-        .pp-two-col{display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:start}
-        .pp-card{background:#fff;border:1px solid var(--border);border-radius:14px;padding:22px}
-        .pp-ano-badge{background:var(--blue);color:#fff;border-radius:30px;padding:9px 14px;font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:800;text-align:center}
-        /* Modal Pintura */
-        #modal-pp-add .modal{width:520px}
-      </style>
+      
 
       <div class="pp-header">
         <svg viewBox="0 0 24 24"><path d="M7 14c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3zm13.71-9.37l-1.34-1.34a1 1 0 0 0-1.41 0L9 12.25 11.75 15l8.96-8.96a1 1 0 0 0 0-1.41z"/></svg>
@@ -881,60 +1087,7 @@ textarea{resize:vertical;min-height:80px}
 
     <!-- ECONOMIA DE COMPRAS -->
     <div class="page" id="page-economia">
-      <style>
-        /* ── ECONOMIA STYLES ── */
-        .ec-section-title{font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:800;color:var(--navy);text-align:center;margin-bottom:18px;letter-spacing:.5px}
-        .ec-section-title span{color:var(--blue)}
-        .ec-summary-grid{display:grid;grid-template-columns:auto 1fr 1fr 1fr;gap:10px;margin-bottom:20px;align-items:center}
-        .ec-summary-card{border-radius:10px;padding:12px 20px;text-align:center;border:2px solid var(--border)}
-        .ec-summary-card.navy{background:var(--navy);color:#fff;border-color:var(--navy)}
-        .ec-summary-card.outline{background:#fff;border:2.5px solid var(--text)}
-        .ec-summary-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;margin-bottom:6px;color:inherit;opacity:.8}
-        .ec-summary-value{font-family:'Barlow Condensed',sans-serif;font-size:28px;font-weight:800;font-style:italic;line-height:1}
-        .ec-summary-card.navy .ec-summary-value{color:#fff}
-        .ec-kpi-row{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:10px;margin-bottom:20px}
-        .ec-kpi{border-radius:10px;padding:14px 18px;text-align:center;color:#fff}
-        .ec-kpi.green{background:#1ea96a}
-        .ec-kpi.purple{background:#7c3aed}
-        .ec-kpi.red{background:#e03535}
-        .ec-kpi.g2{background:#22c55e}
-        .ec-kpi-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;opacity:.85;margin-bottom:4px}
-        .ec-kpi-value{font-family:'Barlow Condensed',sans-serif;font-size:30px;font-weight:800;font-style:italic;line-height:1}
-        .ec-upload-zone{border:2px dashed var(--blue);border-radius:12px;padding:28px;text-align:center;background:#f8fbff;cursor:pointer;transition:.2s;margin-bottom:18px}
-        .ec-upload-zone:hover{background:#eef4ff;border-color:var(--navy)}
-        .ec-upload-zone svg{width:36px;height:36px;fill:var(--blue);margin-bottom:8px}
-        .ec-upload-zone p{font-size:13px;color:var(--muted);font-weight:500}
-        .ec-upload-zone strong{color:var(--blue)}
-        .ec-table-wrap{overflow-x:auto;max-height:420px;overflow-y:auto}
-        .ec-table{width:100%;border-collapse:collapse;font-size:12px;min-width:1100px}
-        .ec-table th{background:var(--navy);color:#fff;padding:8px 10px;text-align:left;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;position:sticky;top:0;z-index:10;white-space:nowrap}
-        .ec-table td{padding:7px 10px;border-bottom:1px solid #eef2f9;vertical-align:middle;white-space:nowrap}
-        .ec-table tr:hover td{background:#fafcff}
-        .ec-table td input,.ec-table td select{border:1.5px solid var(--border);border-radius:5px;padding:3px 7px;font-size:11px;font-family:'Barlow',sans-serif;background:#fff;width:100%;min-width:80px}
-        .ec-table td input:focus,.ec-table td select:focus{border-color:var(--blue);outline:none}
-        .ec-badge-sim{background:#d4f5e5;color:#0f6e3d;padding:2px 8px;border-radius:12px;font-size:10px;font-weight:700}
-        .ec-badge-nao{background:#fde2e2;color:#9a1515;padding:2px 8px;border-radius:12px;font-size:10px;font-weight:700}
-        .ec-badge-cns{background:#dce8ff;color:#1a4db3;padding:2px 8px;border-radius:12px;font-size:10px;font-weight:700}
-        .ec-badge-srv{background:#fff3d4;color:#9a6000;padding:2px 8px;border-radius:12px;font-size:10px;font-weight:700}
-        .ec-apurada-row{display:grid;grid-template-columns:28px minmax(110px,1.2fr) 100px 70px 1fr 1fr 1fr auto auto;gap:10px;align-items:center;padding:12px 16px;border:1px solid var(--border);border-radius:10px;margin-bottom:8px;background:#fff;font-size:12px;box-shadow:0 1px 4px rgba(0,0,0,.05)}
-        .ec-apurada-city{background:var(--navy);color:#fff;border-radius:8px;padding:5px 14px;font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:800;white-space:nowrap;letter-spacing:.3px}
-        .ec-apurada-mes{background:#6b7a99;color:#fff;border-radius:8px;padding:5px 14px;font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:700;white-space:nowrap}
-        .ec-apurada-ano{background:#3a7bd5;color:#fff;border-radius:8px;padding:5px 12px;font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:700;white-space:nowrap}
-        .ec-pct-badge{border-radius:8px;padding:5px 10px;font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:800;font-style:italic;text-align:center;color:#fff;min-width:48px}
-        .ec-pct-sim{background:#1ea96a}
-        .ec-pct-conv{background:#7c3aed}
-        .ec-pct-nao{background:#e03535}
-        .ec-sub-val{font-size:10px;font-weight:600;text-align:center;margin-top:2px;color:inherit;opacity:.75}
-        .ec-btn-add{background:var(--green);color:#fff;border:none;border-radius:50%;width:28px;height:28px;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:.15s}
-        .ec-btn-add:hover{background:#159c5e}
-        .ec-btn-pdf{background:var(--red);color:#fff;border:none;border-radius:6px;width:28px;height:28px;font-size:12px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:.15s}
-        .ec-btn-pdf:hover{opacity:.85}
-        .ec-actions-bar{display:flex;gap:10px;justify-content:flex-end;margin-top:14px;flex-wrap:wrap}
-        .ec-no-data{text-align:center;padding:40px;color:var(--muted);font-size:13px}
-        .ec-col-edit{background:#fffbeb}
-        .ec-col-edit input,.ec-col-edit select{background:#fff;border:1px solid #e2c97a;border-radius:5px;padding:4px 6px;font-size:12px;font-family:'Barlow',sans-serif;color:var(--text);width:100%}
-        .ec-col-edit input:focus,.ec-col-edit select:focus{border-color:var(--gold);outline:none;box-shadow:0 0 0 2px rgba(240,165,0,.15)}
-      </style>
+      
 
       <!-- PAINEL SUPERIOR: Resumo geral -->
       <div class="form-section" style="margin-bottom:18px">
@@ -1027,53 +1180,7 @@ textarea{resize:vertical;min-height:80px}
 
     <!-- CNS LIMPEZA -->
     <div class="page" id="page-cns-limpeza">
-      <style>
-        .cns-header{font-family:'Barlow Condensed',sans-serif;font-size:24px;font-weight:800;color:#fff;background:var(--navy);text-align:center;padding:10px 24px;border-radius:10px;margin-bottom:18px;letter-spacing:.5px}
-        .cns-header span{color:#7dd3fc;font-style:normal}
-        .cns-kpi-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-bottom:20px}
-        .cns-kpi{border-radius:12px;padding:16px 20px;text-align:center}
-        .cns-kpi-label{font-size:12px;font-weight:700;color:var(--text);margin-bottom:8px;text-transform:uppercase;letter-spacing:.5px}
-        .cns-kpi-val{font-family:'Barlow Condensed',sans-serif;font-size:34px;font-weight:800;font-style:italic;line-height:1;color:#fff}
-        .cns-kpi.navy{background:var(--navy)}
-        .cns-kpi.outline{background:#fff;border:2.5px solid var(--text)}
-        .cns-kpi.outline .cns-kpi-val{color:var(--text)}
-        .cns-kpi.green{background:var(--green)}
-        .cns-status-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-bottom:20px}
-        .cns-status-chip{border-radius:12px;padding:14px 18px;text-align:center;color:#fff}
-        .cns-status-chip.green{background:var(--green)}
-        .cns-status-chip.yellow{background:#d97706}
-        .cns-status-chip.red{background:var(--red)}
-        .cns-status-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;opacity:.85;margin-bottom:4px}
-        .cns-status-num{font-family:'Barlow Condensed',sans-serif;font-size:36px;font-weight:800;line-height:1}
-        .cns-subtitle{font-family:'Barlow Condensed',sans-serif;font-size:17px;font-weight:800;color:var(--navy);text-align:center;margin-bottom:14px}
-        .cns-subtitle em{color:var(--blue)}
-        .cns-table-wrap{overflow-x:auto}
-        .cns-table{width:100%;border-collapse:collapse;font-size:13px}
-        .cns-table th{background:#f4f7fd;padding:8px 10px;font-size:10px;font-weight:700;text-transform:uppercase;color:var(--muted);letter-spacing:.6px;text-align:center;border-bottom:2px solid var(--border)}
-        .cns-table th:first-child,.cns-table th:nth-child(2){text-align:left}
-        .cns-table td{padding:9px 10px;border-bottom:1px solid #eef2f9;text-align:center;vertical-align:middle}
-        .cns-table td:first-child{text-align:left;font-weight:700;font-size:11px}
-        .cns-table tr:hover td{background:#fafcff}
-        .cns-city-badge{background:var(--navy);color:#fff;border-radius:8px;padding:5px 14px;font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:800;display:inline-block}
-        .cns-num-badge{border-radius:8px;padding:5px 12px;font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:800;display:inline-block;color:#fff;min-width:44px}
-        .cns-num-badge.gray{background:#9eaab8}
-        .cns-num-badge.green{background:var(--green)}
-        .cns-num-badge.red{background:var(--red)}
-        .cns-eco-badge{border-radius:8px;padding:5px 12px;font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;display:inline-block;border:1.5px solid var(--text);background:#fff;color:var(--text);min-width:90px}
-        .cns-pct-badge{border-radius:8px;padding:5px 12px;font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:800;display:inline-block;color:#fff;background:var(--green);min-width:54px}
-        .cns-ano-badge{border-radius:8px;padding:5px 12px;font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:800;display:inline-block;color:#fff;min-width:58px}
-        .cns-ano-badge.green{background:var(--green)}
-        .cns-ano-badge.yellow{background:#d97706}
-        .cns-ano-badge.red{background:var(--red)}
-        .cns-bell-btn{background:none;border:none;font-size:18px;cursor:pointer;padding:2px 6px;border-radius:6px;transition:.15s}
-        .cns-bell-btn:hover{background:#fef9c3}
-        .cns-add-btn{background:var(--green);color:#fff;border:none;border-radius:50%;width:28px;height:28px;font-size:18px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;transition:.15s;line-height:1}
-        .cns-add-btn:hover{background:#159c5e;transform:scale(1.1)}
-        .cns-legend{display:flex;gap:14px;align-items:center;font-size:11px;flex-wrap:wrap}
-        .cns-legend-dot{width:12px;height:12px;border-radius:50%;flex-shrink:0}
-        .cns-form-row{display:grid;grid-template-columns:1fr 80px 80px 100px 100px 80px 80px auto;gap:10px;align-items:end;margin-bottom:12px}
-        .cns-eco-history{font-size:11px;color:var(--muted);margin-top:4px}
-      </style>
+      
 
       <!-- Cabeçalho -->
       <div class="cns-header"><em>CNS</em> Limpeza</div>
@@ -1233,18 +1340,284 @@ textarea{resize:vertical;min-height:80px}
       </div>
     </div>
 
-    </div>
 
     <!-- GESTÃO DE ENERGIAS -->
     <div class="page" id="page-gestao-energias">
-      <div style="display:flex;align-items:center;gap:14px;background:#fff;border-radius:14px;padding:18px 24px;margin-bottom:22px;border:1px solid var(--border);width:fit-content">
-        <svg width="28" height="28" viewBox="0 0 24 24" fill="var(--navy)"><path d="M7 2v11h3v9l7-12h-4l4-8z"/></svg>
-        <span style="font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:800;color:var(--navy)">Gestão de Energias</span>
+      
+
+      <div class="ge-header">Gestão <em>Energia</em></div>
+
+      <!-- KPIs globais -->
+      <div class="ge-kpi-row">
+        <div class="ge-kpi navy">
+          <div class="ge-kpi-label">Meia Luz</div>
+          <div class="ge-kpi-val" id="ge-kpi-meialuz">00</div>
+        </div>
+        <div class="ge-kpi navy2">
+          <div class="ge-kpi-label">Fotovoltaica</div>
+          <div class="ge-kpi-val" id="ge-kpi-foto">00</div>
+        </div>
+        <div class="ge-kpi outline">
+          <div class="ge-kpi-label">Economia ($)</div>
+          <div class="ge-kpi-val" id="ge-kpi-eco">—</div>
+        </div>
+        <div class="ge-kpi green">
+          <div class="ge-kpi-label">Economia (%)</div>
+          <div class="ge-kpi-val" id="ge-kpi-pct">—</div>
+        </div>
       </div>
-      <div class="card" style="padding:40px;text-align:center">
-        <svg width="56" height="56" viewBox="0 0 24 24" fill="var(--border)" style="margin-bottom:16px"><path d="M7 2v11h3v9l7-12h-4l4-8z"/></svg>
-        <div style="font-family:'Barlow Condensed',sans-serif;font-size:20px;font-weight:800;color:var(--navy);margin-bottom:8px">Módulo em desenvolvimento</div>
-        <div style="font-size:13px;color:var(--muted)">O módulo de Gestão de Energias estará disponível em breve.</div>
+
+      <!-- MEIA LUZ -->
+      <div class="ge-section-block">
+        <div class="ge-section-header">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M9 21c0 .55.45 1 1 1h4c.55 0 1-.45 1-1v-1H9v1zm3-19C8.14 2 5 5.14 5 9c0 2.38 1.19 4.47 3 5.74V17c0 .55.45 1 1 1h6c.55 0 1-.45 1-1v-2.26c1.81-1.27 3-3.36 3-5.74 0-3.86-3.14-7-7-7z"/></svg>
+          <em>Meia</em>&nbsp;Luz
+          <div class="ge-status-row" style="margin:0 0 0 auto;gap:8px;grid-template-columns:auto auto auto">
+            <div class="ge-status-chip green" style="padding:5px 14px">
+              <div class="ge-status-label">Implantadas</div>
+              <div class="ge-status-num" id="ge-ml-impl">00</div>
+            </div>
+            <div class="ge-status-chip yellow" style="padding:5px 14px">
+              <div class="ge-status-label">Em Andamento</div>
+              <div class="ge-status-num" id="ge-ml-and">00</div>
+            </div>
+            <div class="ge-status-chip red" style="padding:5px 14px">
+              <div class="ge-status-label">Pendente</div>
+              <div class="ge-status-num" id="ge-ml-pend">00</div>
+            </div>
+          </div>
+        </div>
+        <div class="ge-two-col">
+          <div>
+            <!-- Form Meia Luz -->
+            <div style="background:#f8faff;border:1px solid var(--border);border-radius:10px;padding:14px;margin-bottom:14px">
+              <div style="font-size:12px;font-weight:700;color:var(--navy);margin-bottom:10px">➕ Adicionar / Editar Cidade</div>
+              <div class="ge-form-inline">
+                <div class="form-group" style="margin:0"><label>Cidade</label><input id="ge-ml-cidade" type="text" placeholder="Ex: Caieiras"></div>
+                <div class="form-group" style="margin:0"><label>Prédios</label><input id="ge-ml-predios" type="number" min="0" value="15"></div>
+                <div class="form-group" style="margin:0"><label>SIM</label><input id="ge-ml-sim" type="number" min="0" value="0"></div>
+                <div class="form-group" style="margin:0"><label>NÃO</label><input id="ge-ml-nao" type="number" min="0" value="0"></div>
+                <div class="form-group" style="margin:0"><label>Economia (R$)</label><input id="ge-ml-eco" type="text" placeholder="5.000,00"></div>
+                <div class="form-group" style="margin:0"><label>Eco (%)</label><input id="ge-ml-pct" type="text" placeholder="15%"></div>
+                <div class="form-group" style="margin:0"><label>Ano</label><input id="ge-ml-ano" type="number" value="2026" min="2020" max="2099"></div>
+                <div style="display:flex;gap:6px;align-items:flex-end">
+                  <button class="btn btn-outline btn-sm" onclick="clearGEForm('ml')">Limpar</button>
+                  <button class="btn btn-primary btn-sm" onclick="saveGECidade('ml')">Salvar</button>
+                </div>
+              </div>
+              <div class="form-group" style="margin-top:8px">
+                <label>Justificativa (?)</label>
+                <textarea id="ge-ml-just" rows="2" placeholder="Ex: Casa de oração 1 em reforma..."></textarea>
+              </div>
+              <input type="hidden" id="ge-ml-edit-idx" value="-1">
+            </div>
+            <!-- Tabela Meia Luz -->
+            <div style="overflow-x:auto">
+              <table class="ge-table">
+                <thead>
+                  <tr>
+                    <th style="width:28px">#</th>
+                    <th style="text-align:left">Cidade</th>
+                    <th>Prédios</th><th>SIM</th><th>NÃO</th><th>(?)</th>
+                    <th>Economia ($)</th><th>Eco (%)</th><th>Ult.</th><th>Ações</th>
+                  </tr>
+                </thead>
+                <tbody id="ge-ml-tbody"></tbody>
+              </table>
+            </div>
+          </div>
+          <!-- Componentes Meia Luz -->
+          <div>
+            <div style="font-size:13px;font-weight:700;color:var(--navy);margin-bottom:10px">Componentes do Programa</div>
+            <div class="ge-checklist" id="ge-ml-checklist"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- FOTOVOLTAICA -->
+      <div class="ge-section-block">
+        <div class="ge-section-header" style="background:#1e3a5f">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M6.76 4.84l-1.8-1.79-1.41 1.41 1.79 1.79 1.42-1.41zM4 10.5H1v2h3v-2zm9-9.95h-2V3.5h2V.55zm7.45 3.91l-1.41-1.41-1.79 1.79 1.41 1.41 1.79-1.79zm-3.21 13.7l1.79 1.8 1.41-1.41-1.8-1.79-1.4 1.4zM20 10.5v2h3v-2h-3zm-8-5c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6-2.69-6-6-6zm-1 16.95h2V19.5h-2v2.95zm-7.45-3.91l1.41 1.41 1.79-1.8-1.41-1.41-1.79 1.8z"/></svg>
+          Foto&nbsp;<em style="color:#fde68a">Voltaica</em>
+          <div class="ge-status-row" style="margin:0 0 0 auto;gap:8px;grid-template-columns:auto auto auto">
+            <div class="ge-status-chip green" style="padding:5px 14px">
+              <div class="ge-status-label">Implantadas</div>
+              <div class="ge-status-num" id="ge-fv-impl">00</div>
+            </div>
+            <div class="ge-status-chip yellow" style="padding:5px 14px">
+              <div class="ge-status-label">Em Andamento</div>
+              <div class="ge-status-num" id="ge-fv-and">00</div>
+            </div>
+            <div class="ge-status-chip red" style="padding:5px 14px">
+              <div class="ge-status-label">Pendente</div>
+              <div class="ge-status-num" id="ge-fv-pend">00</div>
+            </div>
+          </div>
+        </div>
+        <div class="ge-two-col">
+          <div>
+            <!-- Form Fotovoltaica -->
+            <div style="background:#f8faff;border:1px solid var(--border);border-radius:10px;padding:14px;margin-bottom:14px">
+              <div style="font-size:12px;font-weight:700;color:var(--navy);margin-bottom:10px">➕ Adicionar / Editar Cidade</div>
+              <div class="ge-form-inline">
+                <div class="form-group" style="margin:0"><label>Cidade</label><input id="ge-fv-cidade" type="text" placeholder="Ex: Caieiras"></div>
+                <div class="form-group" style="margin:0"><label>Prédios</label><input id="ge-fv-predios" type="number" min="0" value="15"></div>
+                <div class="form-group" style="margin:0"><label>SIM</label><input id="ge-fv-sim" type="number" min="0" value="0"></div>
+                <div class="form-group" style="margin:0"><label>NÃO</label><input id="ge-fv-nao" type="number" min="0" value="0"></div>
+                <div class="form-group" style="margin:0"><label>Economia (R$)</label><input id="ge-fv-eco" type="text" placeholder="5.000,00"></div>
+                <div class="form-group" style="margin:0"><label>Eco (%)</label><input id="ge-fv-pct" type="text" placeholder="15%"></div>
+                <div class="form-group" style="margin:0"><label>Ano</label><input id="ge-fv-ano" type="number" value="2026" min="2020" max="2099"></div>
+                <div style="display:flex;gap:6px;align-items:flex-end">
+                  <button class="btn btn-outline btn-sm" onclick="clearGEForm('fv')">Limpar</button>
+                  <button class="btn btn-primary btn-sm" onclick="saveGECidade('fv')">Salvar</button>
+                </div>
+              </div>
+              <div class="form-group" style="margin-top:8px">
+                <label>Justificativa (?)</label>
+                <textarea id="ge-fv-just" rows="2" placeholder="Ex: Instalação aguardando aprovação..."></textarea>
+              </div>
+              <input type="hidden" id="ge-fv-edit-idx" value="-1">
+            </div>
+            <!-- Tabela Fotovoltaica -->
+            <div style="overflow-x:auto">
+              <table class="ge-table">
+                <thead>
+                  <tr>
+                    <th style="width:28px">#</th>
+                    <th style="text-align:left">Cidade</th>
+                    <th>Prédios</th><th>SIM</th><th>NÃO</th><th>(?)</th>
+                    <th>Economia ($)</th><th>Eco (%)</th><th>Ult.</th><th>Ações</th>
+                  </tr>
+                </thead>
+                <tbody id="ge-fv-tbody"></tbody>
+              </table>
+            </div>
+          </div>
+          <!-- Componentes Fotovoltaica -->
+          <div>
+            <div style="font-size:13px;font-weight:700;color:var(--navy);margin-bottom:10px">Componentes do Programa</div>
+            <div class="ge-checklist" id="ge-fv-checklist"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ECONOMIZÔMETRO -->
+    <div class="page" id="page-economizometro">
+      
+
+      <!-- Period selector -->
+      <div class="eco-period-row">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="var(--navy)"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14H9V8h2v8zm4 0h-2V8h2v8z"/></svg>
+        <span style="font-family:'Barlow Condensed',sans-serif;font-size:20px;font-weight:800;color:var(--navy)">Economizômetro</span>
+        <span style="margin-left:auto;font-size:12px;color:var(--muted)">Selecione o período:</span>
+        <select class="eco-period-select" id="eco-period-year" onchange="renderEconomizometro()">
+          <option value="2024">2024</option>
+          <option value="2025">2025</option>
+          <option value="2026" selected>2026</option>
+        </select>
+        <button class="eco-acum-btn" onclick="renderEconomizometro()">📊 Acumulado</button>
+      </div>
+
+      <!-- Gauge principal -->
+      <div class="eco-gauge-wrap">
+        <div class="eco-gauge-left">
+          <!-- SVG gauge animado -->
+          <svg class="eco-gauge-icon" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="40" cy="40" r="34" stroke="rgba(255,255,255,.15)" stroke-width="8"/>
+            <path d="M14 54 A34 34 0 1 1 66 54" stroke="url(#gaugeGrad)" stroke-width="8" stroke-linecap="round" fill="none"/>
+            <defs><linearGradient id="gaugeGrad" x1="14" y1="54" x2="66" y2="54" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stop-color="#22c55e"/>
+              <stop offset="50%" stop-color="#84cc16"/>
+              <stop offset="100%" stop-color="#3b82f6"/>
+            </linearGradient></defs>
+            <!-- needle -->
+            <line id="eco-needle" x1="40" y1="40" x2="40" y2="12" stroke="#fff" stroke-width="2.5" stroke-linecap="round"/>
+            <circle cx="40" cy="40" r="4" fill="#fff"/>
+            <!-- coins icon -->
+            <text x="40" y="65" text-anchor="middle" font-size="14" fill="rgba(255,255,255,.6)">💰</text>
+          </svg>
+          <div class="eco-gauge-text">
+            <div class="eco-gauge-label">Total de Economia Gerada</div>
+            <div class="eco-gauge-val" id="eco-total-display">R$ 0,00</div>
+          </div>
+        </div>
+        <div class="eco-gauge-right">
+          <div class="eco-gauge-bars" id="eco-mini-bars">
+            <div class="eco-bar" style="height:30%"></div>
+            <div class="eco-bar active" style="height:50%"></div>
+            <div class="eco-bar" style="height:65%"></div>
+            <div class="eco-bar active" style="height:80%"></div>
+            <div class="eco-bar" style="height:90%"></div>
+            <div class="eco-bar active" style="height:100%"></div>
+            <div class="eco-bar" style="height:75%"></div>
+          </div>
+          <div style="font-size:40px;opacity:.7">📈</div>
+          <div style="font-size:40px;opacity:.7">💵</div>
+        </div>
+      </div>
+
+      <!-- Dois painéis -->
+      <div class="eco-two-col">
+        <!-- ECONOMIA DE COMPRAS -->
+        <div class="eco-panel">
+          <div class="eco-panel-header">
+            <div class="eco-panel-icon" style="background:#d4f5e5">🛒</div>
+            <div class="eco-panel-title">Economia de Compras</div>
+          </div>
+          <div class="eco-total-label">Total de Compras Coordenadas</div>
+          <div class="eco-total-val" id="eco-compras-total">R$ 0,00</div>
+          <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;padding:10px 14px;margin-bottom:14px">
+            <div class="eco-total-label">Total de Economia (Gerada)</div>
+            <div class="eco-total-val" style="font-size:22px" id="eco-compras-eco">R$ 0,00</div>
+          </div>
+          <div class="eco-sub-row">
+            <div class="eco-sub-icon" style="background:#dcfce7">🛍️</div>
+            <div class="eco-sub-label">Consumo</div>
+            <div class="eco-sub-val" id="eco-consumo">R$ 0,00</div>
+          </div>
+          <div class="eco-sub-row">
+            <div class="eco-sub-icon" style="background:#dbeafe">🏛️</div>
+            <div class="eco-sub-label">Patrimônio</div>
+            <div class="eco-sub-val" id="eco-patrimonio">R$ 0,00</div>
+          </div>
+          <div class="eco-sub-row">
+            <div class="eco-sub-icon" style="background:#fce7f3">🙏</div>
+            <div class="eco-sub-label">Piedade</div>
+            <div class="eco-sub-val" id="eco-piedade">R$ 0,00</div>
+          </div>
+          <div class="eco-note">📈 Compras coordenadas geram mais economia para todas as casas.</div>
+        </div>
+
+        <!-- PROJETOS CNS -->
+        <div class="eco-panel">
+          <div class="eco-panel-header projetos">
+            <div class="eco-panel-icon" style="background:#dbeafe">🔧</div>
+            <div class="eco-panel-title" style="color:var(--navy)">Projetos CNS</div>
+          </div>
+          <div class="eco-total-label navy">Economia Gerada dos Projetos CNS</div>
+          <div class="eco-total-val navy" id="eco-projetos-total">R$ 0,00</div>
+          <div class="eco-sub-row">
+            <div class="eco-sub-icon" style="background:#d4f5e5">🧹</div>
+            <div class="eco-sub-label">CNS Limpeza</div>
+            <div class="eco-sub-val" id="eco-proj-limpeza">R$ 0,00</div>
+          </div>
+          <div class="eco-sub-row">
+            <div class="eco-sub-icon" style="background:#fce7f3">🖌️</div>
+            <div class="eco-sub-label">Pintura Programada</div>
+            <div class="eco-sub-val" id="eco-proj-pintura">R$ 0,00</div>
+          </div>
+          <div class="eco-sub-row">
+            <div class="eco-sub-icon" style="background:#fef9c3">⚡</div>
+            <div class="eco-sub-label">Gestão de Energia</div>
+            <div class="eco-sub-val" id="eco-proj-energia">R$ 0,00</div>
+          </div>
+          <div class="eco-note">📈 Projetos que geram economia contínua para a regional.</div>
+        </div>
+      </div>
+
+      <div class="eco-info-bar">
+        ℹ️ Os valores apresentados são baseados nas compras e projetos realizados e na economia gerada para a regional.
       </div>
     </div>
 
@@ -1605,8 +1978,13 @@ function toggleSidebar(){
 document.getElementById('l-pass').addEventListener('keydown',e=>{if(e.key==='Enter')doLogin()});
 
 // ─── NAVIGATION ──────────────────────────────────────────────────────────────
-const pageTitles={dashboard:'Dashboard',fornecedores:'Fornecedores',produtos:'Gestão de Produtos',ranking:'Ranking de Fornecedores','cad-fornecedor':'Cadastrar Fornecedor',agenda:'Compras Coordenadas',usuarios:'Gestão de Usuários',convenios:'Convênios',produtos:'Gestão de Produtos',economia:'Economia de Compras','cns-limpeza':'CNS Limpeza',pintura:'Pintura Programada','gestao-energias':'Gestão de Energias'};
+const pageTitles={dashboard:'Dashboard',economizometro:'Economizômetro',fornecedores:'Fornecedores',produtos:'Gestão de Produtos',ranking:'Ranking de Fornecedores','cad-fornecedor':'Cadastrar Fornecedor',agenda:'Compras Coordenadas',usuarios:'Gestão de Usuários',convenios:'Convênios',economia:'Economia de Compras','cns-limpeza':'CNS Limpeza',pintura:'Pintura Programada','gestao-energias':'Gestão de Energias'};
 function showPage(id, el){
+  window.scrollTo({top:0,left:0,behavior:'instant'});
+  const mainEl = document.getElementById('main');
+  if(mainEl) mainEl.scrollTop = 0;
+  document.documentElement.scrollTop = 0;
+  document.body.scrollTop = 0;
   if(!canAccessPage(id)){
     toast('Você não tem permissão para acessar esta página.','error');
     return;
@@ -1627,6 +2005,8 @@ function showPage(id, el){
   if(id==='produtos') renderProdutos();
   if(id==='economia') renderEconomia();
   if(id==='cns-limpeza') renderCNS();
+  if(id==='economizometro') renderEconomizometro();
+  if(id==='gestao-energias') renderGE();
   if(id==='cad-fornecedor'){ clearFornForm(); if(!editingFornId) document.getElementById('f-score').value='3.0'; applyAdminVisibility(); }
 }
 
@@ -3868,6 +4248,205 @@ CREATE TABLE IF NOT EXISTS cns_limpeza (id int primary key, cidade text, predios
 -- ALTER TABLE suprimentos.cns_limpeza ADD COLUMN IF NOT EXISTS link_admin text DEFAULT '';
 -- Enable RLS and add policies as needed
 */
+
+// ── ECONOMIZÔMETRO ────────────────────────────────────────────────────────────
+function fmtBRL(n){
+  if(!n||isNaN(n)) return 'R$ 0,00';
+  return 'R$ ' + Number(n).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2});
+}
+
+function renderEconomizometro(){
+  // Coleta economia de compras da tela de Economia (agenda items)
+  let comprasTotal = 0, comprasEco = 0, consumo = 0, patrimonio = 0, piedade = 0;
+  // Usa dados da agenda se existir
+  if(typeof agendaItems !== 'undefined'){
+    agendaItems.forEach(a => {
+      const v = parseFloat((a.valor||'0').toString().replace('.','').replace(',','.')) || 0;
+      comprasTotal += v;
+    });
+    comprasEco = comprasTotal * 0.19; // estimativa 19%
+    consumo = comprasEco * 0.55;
+    patrimonio = comprasEco * 0.32;
+    piedade = comprasEco * 0.13;
+  }
+
+  // CNS Limpeza
+  let ecoLimpeza = 0;
+  if(typeof cnsCidades !== 'undefined'){
+    cnsCidades.forEach(c => {
+      if(c.eco_historico && c.eco_historico.length){
+        c.eco_historico.forEach(h => { ecoLimpeza += parseFloat((h.val||'0').toString().replace('.','').replace(',','.')) || 0; });
+      } else {
+        ecoLimpeza += parseFloat((c.eco_val||'0').toString().replace('.','').replace(',','.')) || 0;
+      }
+    });
+  }
+
+  // Pintura Programada
+  let ecoPintura = 0;
+  if(typeof ppItems !== 'undefined'){
+    ppItems.forEach(p => { ecoPintura += parseFloat((p.val||'0').toString().replace('.','').replace(',','.')) || 0; });
+  }
+
+  // Gestão de Energia
+  let ecoEnergia = 0;
+  if(typeof geMlCidades !== 'undefined'){
+    geMlCidades.forEach(c => { ecoEnergia += parseFloat((c.eco||'0').toString().replace('.','').replace(',','.')) || 0; });
+  }
+  if(typeof geFvCidades !== 'undefined'){
+    geFvCidades.forEach(c => { ecoEnergia += parseFloat((c.eco||'0').toString().replace('.','').replace(',','.')) || 0; });
+  }
+
+  const projetosTotal = ecoLimpeza + ecoPintura + ecoEnergia;
+  const total = comprasEco + projetosTotal;
+
+  document.getElementById('eco-total-display').textContent = fmtBRL(total);
+  document.getElementById('eco-compras-total').textContent = fmtBRL(comprasTotal);
+  document.getElementById('eco-compras-eco').textContent = fmtBRL(comprasEco);
+  document.getElementById('eco-consumo').textContent = fmtBRL(consumo);
+  document.getElementById('eco-patrimonio').textContent = fmtBRL(patrimonio);
+  document.getElementById('eco-piedade').textContent = fmtBRL(piedade);
+  document.getElementById('eco-projetos-total').textContent = fmtBRL(projetosTotal);
+  document.getElementById('eco-proj-limpeza').textContent = fmtBRL(ecoLimpeza);
+  document.getElementById('eco-proj-pintura').textContent = fmtBRL(ecoPintura);
+  document.getElementById('eco-proj-energia').textContent = fmtBRL(ecoEnergia);
+}
+
+// ── GESTÃO DE ENERGIAS ────────────────────────────────────────────────────────
+let geMlCidades = [];
+let geFvCidades = [];
+const GE_COMPONENTS = ['Implantação','POP','Materiais','Controle'];
+
+function parseValBRL(s){ return parseFloat((s||'0').toString().replace(/\./g,'').replace(',','.')) || 0; }
+
+function renderGEKPIs(){
+  // Meia Luz
+  let mlImpl=0,mlAnd=0,mlPend=0;
+  geMlCidades.forEach(c => { if(c.status==='implantada') mlImpl++; else if(c.status==='andamento') mlAnd++; else mlPend++; });
+  document.getElementById('ge-kpi-meialuz').textContent = String(mlImpl).padStart(2,'0');
+  document.getElementById('ge-ml-impl').textContent = String(mlImpl).padStart(2,'0');
+  document.getElementById('ge-ml-and').textContent = String(mlAnd).padStart(2,'0');
+  document.getElementById('ge-ml-pend').textContent = String(mlPend).padStart(2,'0');
+
+  // Fotovoltaica
+  let fvImpl=0,fvAnd=0,fvPend=0;
+  geFvCidades.forEach(c => { if(c.status==='implantada') fvImpl++; else if(c.status==='andamento') fvAnd++; else fvPend++; });
+  document.getElementById('ge-kpi-foto').textContent = String(fvImpl).padStart(2,'0');
+  document.getElementById('ge-fv-impl').textContent = String(fvImpl).padStart(2,'0');
+  document.getElementById('ge-fv-and').textContent = String(fvAnd).padStart(2,'0');
+  document.getElementById('ge-fv-pend').textContent = String(fvPend).padStart(2,'0');
+
+  // Eco global
+  let totalEco = 0;
+  [...geMlCidades,...geFvCidades].forEach(c => { totalEco += parseValBRL(c.eco); });
+  document.getElementById('ge-kpi-eco').textContent = totalEco > 0 ? (totalEco/1000).toFixed(0)+'mil' : '—';
+  document.getElementById('ge-kpi-pct').textContent = '15%';
+}
+
+function renderGETable(tipo){
+  const data = tipo==='ml' ? geMlCidades : geFvCidades;
+  const tbodyId = tipo==='ml' ? 'ge-ml-tbody' : 'ge-fv-tbody';
+  const tbody = document.getElementById(tbodyId);
+  const year = new Date().getFullYear();
+
+  tbody.innerHTML = data.map((c,i) => {
+    const anoColor = c.ano >= year ? 'green' : c.ano >= year-1 ? 'yellow' : 'red';
+    const nao = (c.predios||0) - (c.sim||0);
+    return `<tr>
+      <td style="font-weight:700;color:var(--muted)">${String(i+1).padStart(2,'0')}.</td>
+      <td><span class="ge-city-badge">${c.cidade||''}</span></td>
+      <td><span class="ge-num-badge gray">${c.predios||0}</span></td>
+      <td><span class="ge-num-badge green">${c.sim||0}</span></td>
+      <td><span class="ge-num-badge red">${nao}</span></td>
+      <td><button class="ge-bell-btn" title="${c.just||'Sem justificativa'}">🔔</button></td>
+      <td><span class="ge-eco-badge">R$ ${c.eco||'0,00'}</span></td>
+      <td><span class="ge-pct-badge">${c.pct||'0%'}</span></td>
+      <td><span class="ge-ano-badge ${anoColor}">${c.ano||year}</span></td>
+      <td style="white-space:nowrap">
+        <button class="btn btn-outline btn-sm" onclick="editGECidade('${tipo}',${i})" style="padding:4px 8px">Editar</button>
+        <button class="btn btn-red btn-sm" onclick="deleteGECidade('${tipo}',${i})" style="padding:4px 8px;margin-left:4px">✕</button>
+      </td>
+    </tr>`;
+  }).join('') || `<tr><td colspan="10" style="text-align:center;color:var(--muted);padding:24px">Nenhuma cidade cadastrada.</td></tr>`;
+}
+
+function renderGEChecklist(tipo){
+  const id = tipo==='ml' ? 'ge-ml-checklist' : 'ge-fv-checklist';
+  document.getElementById(id).innerHTML = GE_COMPONENTS.map(label =>
+    `<div class="ge-check-item">
+      <div class="ge-check-icon">✓</div>
+      <div class="ge-check-label">${label.toUpperCase()}</div>
+      <span class="ge-link-btn"><svg viewBox="0 0 24 24"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg> Link</span>
+    </div>`
+  ).join('');
+}
+
+function renderGE(){
+  renderGEKPIs();
+  renderGETable('ml');
+  renderGETable('fv');
+  renderGEChecklist('ml');
+  renderGEChecklist('fv');
+}
+
+function clearGEForm(tipo){
+  ['cidade','predios','sim','nao','eco','pct','ano','just'].forEach(f => {
+    const el = document.getElementById(`ge-${tipo}-${f}`);
+    if(el){ el.value = f==='predios'?'15':f==='sim'||f==='nao'?'0':f==='ano'?'2026':''; }
+  });
+  document.getElementById(`ge-${tipo}-edit-idx`).value = '-1';
+}
+
+function saveGECidade(tipo){
+  const get = f => document.getElementById(`ge-${tipo}-${f}`).value.trim();
+  const cidade = get('cidade');
+  if(!cidade){ toast('Informe a cidade.','error'); return; }
+  const obj = {
+    cidade, predios: parseInt(get('predios'))||15,
+    sim: parseInt(get('sim'))||0, eco: get('eco'),
+    pct: get('pct'), ano: parseInt(get('ano'))||2026,
+    status: 'implantada', just: get('just')
+  };
+  const editIdx = parseInt(document.getElementById(`ge-${tipo}-edit-idx`).value);
+  const arr = tipo==='ml' ? geMlCidades : geFvCidades;
+  if(editIdx >= 0){ arr[editIdx] = obj; } else { arr.push(obj); }
+  clearGEForm(tipo);
+  renderGE();
+  toast('Cidade salva!');
+  sbSaveGE();
+}
+
+function editGECidade(tipo, i){
+  const arr = tipo==='ml' ? geMlCidades : geFvCidades;
+  const c = arr[i];
+  ['cidade','eco','pct','just'].forEach(f => { const el=document.getElementById(`ge-${tipo}-${f}`); if(el) el.value=c[f]||''; });
+  ['predios','sim','ano'].forEach(f => { const el=document.getElementById(`ge-${tipo}-${f}`); if(el) el.value=c[f]||0; });
+  document.getElementById(`ge-${tipo}-edit-idx`).value = i;
+}
+
+function deleteGECidade(tipo, i){
+  if(!confirm('Excluir esta cidade?')) return;
+  if(tipo==='ml') geMlCidades.splice(i,1); else geFvCidades.splice(i,1);
+  renderGE();
+  toast('Cidade removida.');
+  sbSaveGE();
+}
+
+async function sbSaveGE(){
+  if(!db) return;
+  showSyncing(true);
+  try {
+    await db.schema('suprimentos').from('ge_meialuz').delete().neq('id',0);
+    if(geMlCidades.length){
+      await db.schema('suprimentos').from('ge_meialuz').insert(geMlCidades.map((c,i)=>({id:i+1,...c})));
+    }
+    await db.schema('suprimentos').from('ge_fotovoltaica').delete().neq('id',0);
+    if(geFvCidades.length){
+      await db.schema('suprimentos').from('ge_fotovoltaica').insert(geFvCidades.map((c,i)=>({id:i+1,...c})));
+    }
+  } catch(e){ console.warn('GE save error',e); }
+  showSyncing(false);
+}
 
 // ── Init ──────────────────────────────────────────────────────────────────────
 initSupabase();
