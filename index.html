@@ -636,20 +636,8 @@ textarea{resize:vertical;min-height:80px}
           </div>
         </div>
 
-        <!-- Column 3: 5 Piores + Agenda -->
+        <!-- Column 3: Agenda -->
         <div>
-          <div class="card" style="margin-bottom:14px">
-            <div class="card-header">
-              <span class="card-title">5 Piores Fornecedores</span>
-              <button class="btn btn-outline btn-sm" onclick="showPage('ranking',null)">Ver Todos</button>
-            </div>
-            <div class="card-body">
-              <table>
-                <thead><tr><th>No</th><th>Nome</th><th>Score</th></tr></thead>
-                <tbody id="worst5-body"></tbody>
-              </table>
-            </div>
-          </div>
           <div class="card">
             <div class="card-header">
               <span class="card-title">Compras Coordenadas Futuras</span>
@@ -659,7 +647,7 @@ textarea{resize:vertical;min-height:80px}
           </div>
         </div>
 
-        <!-- Column 4: Convênios + Atividades Recentes -->
+        <!-- Column 4: Convênios -->
         <div style="display:flex;flex-direction:column;gap:14px">
           <div class="conv-panel">
             <div class="conv-tabs">
@@ -690,11 +678,6 @@ textarea{resize:vertical;min-height:80px}
                 Acessar Convênios
               </button>
             </div>
-          </div>
-          <!-- Atividades Recentes moved here -->
-          <div class="card">
-            <div class="card-header"><span class="card-title">Atividades Recentes</span></div>
-            <div class="card-body" id="atividades-body"></div>
           </div>
         </div>
       </div>
@@ -739,41 +722,452 @@ textarea{resize:vertical;min-height:80px}
 
     <!-- AGENDA -->
     <div class="page" id="page-agenda">
-      <!-- Filters Row -->
-      <div class="form-section" style="margin-bottom:16px;padding:16px 20px">
-        <div style="font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:800;color:var(--navy);margin-bottom:12px">Filtros</div>
-        <div style="display:grid;grid-template-columns:repeat(6,1fr);gap:10px;align-items:end">
-          <div class="form-group" style="margin:0"><label>Fornecedor</label><select id="ag-filter-forn" onchange="renderAgenda()"><option value="">Todos</option></select></div>
-          <div class="form-group" style="margin:0"><label>Produto</label><input id="ag-filter-prod" type="text" placeholder="Buscar..." oninput="renderAgenda()"></div>
-          <div class="form-group" style="margin:0"><label>Data</label><input id="ag-filter-data" type="date" onchange="renderAgenda()"></div>
-          <div class="form-group" style="margin:0"><label>Administração</label><input id="ag-filter-admin" type="text" placeholder="Administração..." oninput="renderAgenda()"></div>
-          <div class="form-group" style="margin:0"><label>Comprador</label><input id="ag-filter-comprador" type="text" placeholder="Comprador..." oninput="renderAgenda()"></div>
-          <div class="form-group" style="margin:0"><label>Contato</label><input id="ag-filter-contato" type="text" placeholder="Contato..." oninput="renderAgenda()"></div>
+
+      <!-- Header row -->
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:10px">
+        <div>
+          <div style="font-family:'Barlow Condensed',sans-serif;font-size:26px;font-weight:800;color:var(--navy)">Compras Coordenadas</div>
+          <div style="font-size:12px;color:var(--muted);margin-top:2px">Agende compras futuras e realize aquisições em conjunto para gerar mais economia para as administrações.</div>
+        </div>
+        <div style="display:flex;gap:10px;flex-shrink:0">
+          <button class="btn btn-outline" onclick="exportarRelatorioAgenda()">
+            <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
+            Exportar Relatório
+          </button>
+          <button class="btn btn-primary" onclick="abrirModalNovaCompra()">
+            <svg viewBox="0 0 24 24" width="14" height="14" fill="#fff"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
+            Nova Demanda de Compra
+          </button>
         </div>
       </div>
-      <div style="display:flex;gap:16px;margin-bottom:18px;align-items:flex-start">
-        <div class="form-section" style="flex:1;margin-bottom:0">
-          <div class="form-section-title">Novo Pedido</div>
-          <div class="form-grid">
-            <div class="form-group"><label>Produto Convênio</label>
-              <select id="ag-prod-conv">
-                <option value="">-- Selecione --</option>
+
+      <!-- KPI cards — layout idêntico à imagem 1 -->
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:22px">
+
+        <!-- Card 1: Demandas Agendadas (ícone calendário, círculo azul) -->
+        <div class="card" style="padding:18px 20px">
+          <div style="display:flex;align-items:center;gap:16px">
+            <div style="width:56px;height:56px;border-radius:50%;background:#2256c7;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+              <svg viewBox="0 0 24 24" width="28" height="28" fill="#fff"><path d="M19 4h-1V2h-2v2H8V2H6v2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2zm0 16H5V9h14v11zM5 7V6h14v1H5z"/></svg>
+            </div>
+            <div>
+              <div style="font-size:11px;color:var(--muted);font-weight:600;margin-bottom:2px">Demandas Agendadas</div>
+              <div style="font-family:'Barlow Condensed',sans-serif;font-size:34px;font-weight:800;color:var(--navy);line-height:1" id="kpi-agendadas">0</div>
+              <a style="font-size:11px;color:var(--blue);font-weight:600;cursor:pointer;display:block;margin-top:4px" onclick="agSetTab('Agendado')">Ver detalhes</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 2: Administrações Envolvidas (ícone grupo, círculo verde) -->
+        <div class="card" style="padding:18px 20px">
+          <div style="display:flex;align-items:center;gap:16px">
+            <div style="width:56px;height:56px;border-radius:50%;background:#1ea96a;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+              <svg viewBox="0 0 24 24" width="28" height="28" fill="#fff"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
+            </div>
+            <div>
+              <div style="font-size:11px;color:var(--muted);font-weight:600;margin-bottom:2px">Administrações Envolvidas</div>
+              <div style="font-family:'Barlow Condensed',sans-serif;font-size:34px;font-weight:800;color:var(--navy);line-height:1" id="kpi-admins">0</div>
+              <a style="font-size:11px;color:var(--blue);font-weight:600;cursor:pointer;display:block;margin-top:4px">Ver detalhes</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 3: Compras Realizadas (ícone carrinho, círculo laranja) -->
+        <div class="card" style="padding:18px 20px">
+          <div style="display:flex;align-items:center;gap:16px">
+            <div style="width:56px;height:56px;border-radius:50%;background:#e87c1a;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+              <svg viewBox="0 0 24 24" width="28" height="28" fill="#fff"><path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96C5 16.1 6.9 18 9 18h12v-2H9.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63H19c.75 0 1.41-.41 1.75-1.03l3.58-6.49A1 1 0 0 0 23.47 5H5.21l-.94-2H1zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z"/></svg>
+            </div>
+            <div>
+              <div style="font-size:11px;color:var(--muted);font-weight:600;margin-bottom:2px">Compras Realizadas</div>
+              <div style="font-family:'Barlow Condensed',sans-serif;font-size:34px;font-weight:800;color:var(--navy);line-height:1" id="kpi-realizadas">0</div>
+              <a style="font-size:11px;color:var(--blue);font-weight:600;cursor:pointer;display:block;margin-top:4px" onclick="agSetTab('Concluído')">Ver detalhes</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 4: Economia Gerada (ícone $, círculo roxo) -->
+        <div class="card" style="padding:18px 20px">
+          <div style="display:flex;align-items:center;gap:16px">
+            <div style="width:56px;height:56px;border-radius:50%;background:#7c3aed;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+              <svg viewBox="0 0 24 24" width="28" height="28" fill="#fff"><path d="M11.8 10.9c-2.27-.59-3-1.2-3-2.15 0-1.09 1.01-1.85 2.7-1.85 1.78 0 2.44.85 2.5 2.1h2.21c-.07-1.72-1.12-3.3-3.21-3.81V3h-3v2.16c-1.94.42-3.5 1.68-3.5 3.61 0 2.31 1.91 3.46 4.7 4.13 2.5.6 3 1.48 3 2.41 0 .69-.49 1.79-2.7 1.79-2.06 0-2.87-.92-2.98-2.1h-2.2c.12 2.19 1.76 3.42 3.68 3.83V21h3v-2.15c1.95-.37 3.5-1.5 3.5-3.55 0-2.84-2.43-3.81-4.7-4.4z"/></svg>
+            </div>
+            <div>
+              <div style="font-size:11px;color:var(--muted);font-weight:600;margin-bottom:2px">Economia Gerada</div>
+              <div style="font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:800;color:var(--green);line-height:1.1" id="kpi-economia">R$ 0,00</div>
+              <a style="font-size:11px;color:var(--blue);font-weight:600;cursor:pointer;display:block;margin-top:4px">Ver detalhes</a>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Main 2-col layout -->
+      <div style="display:grid;grid-template-columns:1fr 340px;gap:16px;align-items:start">
+
+        <!-- LEFT: tabs + table -->
+        <div>
+          <!-- Tabs -->
+          <div style="display:flex;gap:0;border-bottom:2px solid var(--border);margin-bottom:16px">
+            <button class="ag-tab active" onclick="agSetTab('Agendado',this)" style="padding:9px 18px;font-size:13px;font-weight:700;border:none;background:none;cursor:pointer;color:var(--blue);border-bottom:2px solid var(--blue);margin-bottom:-2px;transition:.15s">Agendadas</button>
+            <button class="ag-tab" onclick="agSetTab('Em Andamento',this)" style="padding:9px 18px;font-size:13px;font-weight:700;border:none;background:none;cursor:pointer;color:var(--muted);border-bottom:2px solid transparent;margin-bottom:-2px;transition:.15s">Em Andamento</button>
+            <button class="ag-tab" onclick="agSetTab('Concluído',this)" style="padding:9px 18px;font-size:13px;font-weight:700;border:none;background:none;cursor:pointer;color:var(--muted);border-bottom:2px solid transparent;margin-bottom:-2px;transition:.15s">Realizadas</button>
+            <button class="ag-tab" onclick="agSetTab('Cancelado',this)" style="padding:9px 18px;font-size:13px;font-weight:700;border:none;background:none;cursor:pointer;color:var(--muted);border-bottom:2px solid transparent;margin-bottom:-2px;transition:.15s">Canceladas</button>
+          </div>
+
+          <!-- Próximas Compras Agendadas title + filters -->
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;flex-wrap:wrap;gap:8px">
+            <div style="font-weight:800;font-size:14px;color:var(--navy)" id="ag-section-title">Próximas Compras Agendadas</div>
+            <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+              <select id="ag-filter-ano" onchange="renderAgenda()" style="padding:6px 10px;border:1.5px solid var(--border);border-radius:8px;font-size:12px;font-family:'Barlow',sans-serif;color:var(--text);background:#fff;cursor:pointer">
+                <option value="">Todos os anos</option>
+                <option value="2024">2024</option><option value="2025">2025</option><option value="2026" selected>2026</option><option value="2027">2027</option>
+              </select>
+              <select id="ag-filter-status-col" onchange="renderAgenda()" style="padding:6px 10px;border:1.5px solid var(--border);border-radius:8px;font-size:12px;font-family:'Barlow',sans-serif;color:var(--text);background:#fff;cursor:pointer">
+                <option value="">Todos os status</option>
+                <option value="Agendado">Agendado</option><option value="Em Andamento">Em Andamento</option><option value="Concluído">Concluído</option><option value="Cancelado">Cancelado</option>
+              </select>
+              <div style="position:relative">
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="var(--muted)" style="position:absolute;left:9px;top:50%;transform:translateY(-50%)"><path d="M21 21l-4.35-4.35M17 11A6 6 0 1 1 5 11a6 6 0 0 1 12 0z" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/></svg>
+                <input id="ag-filter-prod" type="text" placeholder="Buscar demanda..." oninput="renderAgenda()" style="padding:6px 10px 6px 28px;border:1.5px solid var(--border);border-radius:8px;font-size:12px;font-family:'Barlow',sans-serif;width:180px">
+              </div>
+            </div>
+          </div>
+
+          <!-- Table -->
+          <div class="card" style="overflow:hidden">
+            <div style="overflow-x:auto">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Data Prevista</th>
+                    <th>Produto / Serviço</th>
+                    <th>Categoria</th>
+                    <th style="text-align:center">Administrações Envolvidas</th>
+                    <th>Valor Estimado</th>
+                    <th>Status</th>
+                    <th>Ações</th>
+                  </tr>
+                </thead>
+                <tbody id="agenda-body"></tbody>
+              </table>
+            </div>
+            <div style="padding:10px 16px;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px">
+              <div style="font-size:12px;color:var(--muted)" id="ag-count-label">Mostrando 0 demandas</div>
+              <div style="display:flex;gap:4px" id="ag-pagination"></div>
+            </div>
+          </div>
+
+          <!-- Info bar -->
+          <div style="background:#eff6ff;border:1px solid #bfdbfe;border-radius:10px;padding:12px 16px;display:flex;align-items:center;gap:10px;margin-top:14px">
+            <div style="width:28px;height:28px;border-radius:50%;background:#2256c7;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+              <svg viewBox="0 0 24 24" width="14" height="14" fill="#fff"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+            </div>
+            <div style="font-size:12px;color:#1e40af">Ao realizar compras de forma coordenada, as administrações unem demandas, negociam melhores condições e geram mais economia para todos.</div>
+          </div>
+        </div>
+
+        <!-- RIGHT: economia panel -->
+        <div style="display:flex;flex-direction:column;gap:14px">
+
+          <!-- Economia das Compras Realizadas -->
+          <div class="card" style="padding:18px">
+            <div style="display:flex;align-items:center;gap:6px;margin-bottom:14px">
+              <span style="font-weight:800;font-size:13px;color:var(--navy)">Economia das Compras Realizadas</span>
+              <div title="Economia calculada com base no valor de referência" style="width:18px;height:18px;border-radius:50%;background:#e2e8f4;display:flex;align-items:center;justify-content:center;cursor:default;font-size:10px;font-weight:700;color:var(--muted)">i</div>
+            </div>
+            <!-- 3 colunas: Valor Total Comprado | Valor de Referência | Economia Gerada -->
+            <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:8px">
+              <div style="background:#f4f7fd;border-radius:8px;padding:10px 12px">
+                <div style="font-size:9px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.4px;margin-bottom:4px">Valor Total Comprado</div>
+                <div style="font-size:13px;font-weight:800;color:var(--navy)" id="eco-total-comprado">R$ 0,00</div>
+              </div>
+              <div style="background:#f4f7fd;border-radius:8px;padding:10px 12px">
+                <div style="font-size:9px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.4px;margin-bottom:4px">Valor de Referência (Sem Compra Coordenada)</div>
+                <div style="font-size:13px;font-weight:800;color:var(--navy)" id="eco-valor-ref">R$ 0,00</div>
+              </div>
+              <div style="background:#f4f7fd;border-radius:8px;padding:10px 12px">
+                <div style="font-size:9px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.4px;margin-bottom:4px">Economia Gerada</div>
+                <div style="font-size:13px;font-weight:800;color:var(--green)" id="eco-gerada-val">R$ 0,00</div>
+                <div style="font-size:10px;color:var(--green);font-weight:700" id="eco-gerada-pct">0%</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Economia por Mês -->
+          <div class="card" style="padding:18px">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+              <span style="font-weight:800;font-size:13px;color:var(--navy)">Economia por Mês (R$)</span>
+              <select id="ag-grafico-ano" onchange="renderGraficoEcoMes()" style="padding:4px 8px;border:1.5px solid var(--border);border-radius:6px;font-size:11px;font-family:'Barlow',sans-serif">
+                <option value="2026">Este ano</option><option value="2025">2025</option><option value="2024">2024</option>
               </select>
             </div>
-            <div class="form-group"><label>Fornecedor</label><select id="ag-forn"></select></div>
-            <div class="form-group"><label>Data</label><input id="ag-data" type="date"></div>
-            <div class="form-group"><label>Igrejas</label><input id="ag-igr" type="number" min="1" value="1"></div>
-            <div class="form-group"><label>Administração</label><input id="ag-admin" type="text" placeholder="Administração responsável"></div>
-            <div class="form-group"><label>Comprador</label><input id="ag-comprador" type="text" placeholder="Nome do comprador"></div>
-            <div class="form-group full"><label>Contato</label><input id="ag-contato" type="text" placeholder="Telefone ou e-mail de contato"></div>
-            <div class="form-group full"><label>Observações</label><textarea id="ag-obs" rows="2" placeholder="Detalhes do pedido"></textarea></div>
+            <div id="ag-grafico-mes" style="height:110px;display:flex;align-items:flex-end;gap:4px;padding-bottom:18px;position:relative;border-bottom:1px solid var(--border)"></div>
+            <div style="display:flex;justify-content:space-between;margin-top:4px">
+              <span style="font-size:9px;color:var(--muted)" id="ag-meses-labels"></span>
+            </div>
           </div>
-          <div class="form-actions"><button class="btn btn-primary" onclick="addAgenda()">+ Adicionar Pedido</button></div>
+
+          <!-- Compras Realizadas Recentemente -->
+          <div class="card" style="padding:18px">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+              <span style="font-weight:800;font-size:13px;color:var(--navy)">Compras Realizadas Recentemente</span>
+              <a style="font-size:11px;color:var(--blue);font-weight:600;cursor:pointer" onclick="agSetTab('Concluído',null)">Ver todas</a>
+            </div>
+            <div id="ag-recentes-list"></div>
+          </div>
+
         </div>
       </div>
-      <div class="card">
-        <div class="card-header"><span class="card-title">Compras Coordenadas</span></div>
-        <div class="card-body" style="overflow-x:auto"><table><thead><tr><th>#</th><th>Produto</th><th>Fornecedor</th><th>Data</th><th>Igrejas</th><th>Administração</th><th>Comprador</th><th>Contato</th><th>Status</th><th>Ações</th></tr></thead><tbody id="agenda-body"></tbody></table></div>
+    </div>
+
+    <!-- NOVA DEMANDA DE COMPRA — page separada (abre ao clicar no botão azul) -->
+    <div class="page" id="page-nova-demanda">
+      <!-- breadcrumb -->
+      <div style="display:flex;align-items:center;gap:6px;margin-bottom:18px;font-size:12px;color:var(--muted)">
+        <a style="cursor:pointer;color:var(--blue);font-weight:600" onclick="showPage('agenda',null)">Compras Coordenadas</a>
+        <svg viewBox="0 0 24 24" width="12" height="12" fill="currentColor"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg>
+        <span style="color:var(--text);font-weight:600">Nova Demanda de Compra</span>
+      </div>
+
+      <div style="display:flex;align-items:flex-start;gap:8px;margin-bottom:6px">
+        <div>
+          <div style="font-family:'Barlow Condensed',sans-serif;font-size:26px;font-weight:800;color:var(--navy)">Nova Demanda de Compra</div>
+          <div style="font-size:12px;color:var(--muted);margin-top:2px">Preencha as informações da demanda para que possamos coordenar a compra com outras administrações.</div>
+        </div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 300px;gap:20px;align-items:start;margin-top:20px">
+
+        <!-- FORMULÁRIO ESQUERDO -->
+        <div>
+          <!-- Seção 1: Informações Gerais -->
+          <div class="form-section" style="margin-bottom:16px">
+            <div class="form-section-title">1. Informações Gerais</div>
+            <div class="form-grid">
+              <div class="form-group">
+                <label>Produto / Serviço *</label>
+                <select id="nd-produto" onchange="ndAtualizarResumo()">
+                  <option value="">Digite o nome do produto ou serviço</option>
+                  <option>Material Elétrico</option>
+                  <option>Material de Limpeza</option>
+                  <option>Materiais de Escritório</option>
+                  <option>Tintas e Acessórios</option>
+                  <option>Equipamentos de TI</option>
+                  <option>Material Hidráulico</option>
+                  <option>Uniformes Profissionais</option>
+                  <option>Outro</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Categoria *</label>
+                <select id="nd-categoria" onchange="ndAtualizarResumo()">
+                  <option value="">Selecione a categoria</option>
+                  <option>Elétrica</option>
+                  <option>Limpeza</option>
+                  <option>Escritório</option>
+                  <option>Pintura</option>
+                  <option>TI</option>
+                  <option>Hidráulica</option>
+                  <option>Uniformes</option>
+                  <option>Outros</option>
+                </select>
+              </div>
+              <div class="form-group full">
+                <label>Descrição detalhada</label>
+                <textarea id="nd-descricao" rows="3" placeholder="Descreva o produto ou serviço, especificações, modelo, marca, etc." oninput="ndAtualizarResumo()"></textarea>
+              </div>
+              <div class="form-group">
+                <label>Data prevista para a compra *</label>
+                <input type="date" id="nd-data" onchange="ndAtualizarResumo()">
+              </div>
+              <div class="form-group">
+                <label>Prioridade *</label>
+                <select id="nd-prioridade" onchange="ndAtualizarResumo()">
+                  <option value="">Selecione a prioridade</option>
+                  <option>Alta</option>
+                  <option>Média</option>
+                  <option>Baixa</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <!-- Seção 2: Participação e Quantidade -->
+          <div class="form-section" style="margin-bottom:16px">
+            <div class="form-section-title">2. Participação e Quantidade</div>
+            <div class="form-grid">
+              <div class="form-group">
+                <label>Quantidade estimada *</label>
+                <input type="number" id="nd-qtd" min="1" placeholder="Informe a quantidade total estimada" oninput="ndCalcTotal()">
+              </div>
+              <div class="form-group">
+                <label>Unidade de medida *</label>
+                <select id="nd-unidade" onchange="ndAtualizarResumo()">
+                  <option value="">Selecione a unidade</option>
+                  <option>Unidade</option>
+                  <option>Caixa</option>
+                  <option>Kg</option>
+                  <option>Litro</option>
+                  <option>Metro</option>
+                  <option>Par</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Administração solicitante *</label>
+                <select id="nd-admin" onchange="ndAtualizarResumo()">
+                  <option value="">Selecione sua administração</option>
+                  <option>Campinas</option>
+                  <option>Jundiaí</option>
+                  <option>Sorocaba</option>
+                  <option>Americana</option>
+                  <option>Limeira</option>
+                  <option>Piracicaba</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Outras administrações interessadas (opcional)</label>
+                <select id="nd-outras-admins" onchange="ndAtualizarResumo()">
+                  <option value="">Selecione as administrações</option>
+                  <option>Campinas</option>
+                  <option>Jundiaí</option>
+                  <option>Sorocaba</option>
+                  <option>Americana</option>
+                  <option>Limeira</option>
+                  <option>Piracicaba</option>
+                </select>
+                <span style="font-size:10px;color:var(--muted);margin-top:3px">Selecione uma ou mais administrações que já demonstraram interesse.</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Seção 3: Informações Financeiras -->
+          <div class="form-section" style="margin-bottom:16px">
+            <div class="form-section-title">3. Informações Financeiras</div>
+            <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px">
+              <div class="form-group">
+                <label>Valor unitário estimado (R$) *</label>
+                <input type="number" id="nd-valor-unit" min="0" step="0.01" placeholder="0,00" oninput="ndCalcTotal()">
+              </div>
+              <div class="form-group">
+                <label>Valor total estimado (R$) *</label>
+                <input type="number" id="nd-valor-total" min="0" step="0.01" placeholder="0,00" readonly style="background:#f4f7fd">
+              </div>
+              <div class="form-group">
+                <label>Orçamento disponível</label>
+                <input type="number" id="nd-orcamento" min="0" step="0.01" placeholder="0,00">
+              </div>
+            </div>
+            <div class="form-group" style="margin-top:14px">
+              <label>Observações (opcional)</label>
+              <textarea id="nd-obs" rows="3" placeholder="Informações adicionais relevantes para esta demanda de compra."></textarea>
+            </div>
+          </div>
+
+          <!-- Botões -->
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-top:8px">
+            <button class="btn btn-outline" onclick="showPage('agenda',null)">Cancelar</button>
+            <div style="display:flex;gap:10px">
+              <button class="btn btn-outline" onclick="ndSalvarRascunho()">
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M17 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V7l-4-4zm-5 16c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3zm3-10H5V5h10v4z"/></svg>
+                Salvar Rascunho
+              </button>
+              <button class="btn btn-primary" onclick="ndEnviarDemanda()">
+                Enviar Demanda
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="#fff"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- PAINEL DIREITO -->
+        <div style="display:flex;flex-direction:column;gap:14px;position:sticky;top:20px">
+
+          <!-- Resumo da Demanda -->
+          <div class="card" style="padding:18px">
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:14px">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="var(--blue)"><path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm4 18H6V4h7v5h5v11z"/></svg>
+              <span style="font-weight:800;font-size:13px;color:var(--navy)">Resumo da Demanda</span>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:8px;font-size:12px">
+              <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #eef2f9">
+                <span style="color:var(--muted);font-weight:600">Produto / Serviço:</span>
+                <span style="color:var(--text);font-weight:600;text-align:right;max-width:130px;word-break:break-word" id="nd-res-produto">-</span>
+              </div>
+              <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #eef2f9">
+                <span style="color:var(--muted);font-weight:600">Categoria:</span>
+                <span style="color:var(--text);font-weight:600" id="nd-res-categoria">-</span>
+              </div>
+              <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #eef2f9">
+                <span style="color:var(--muted);font-weight:600">Data prevista:</span>
+                <span style="color:var(--text);font-weight:600" id="nd-res-data">-</span>
+              </div>
+              <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #eef2f9">
+                <span style="color:var(--muted);font-weight:600">Quantidade estimada:</span>
+                <span style="color:var(--text);font-weight:600" id="nd-res-qtd">-</span>
+              </div>
+              <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #eef2f9">
+                <span style="color:var(--muted);font-weight:600">Valor total estimado:</span>
+                <span style="color:var(--navy);font-weight:800;font-size:13px" id="nd-res-total">R$ 0,00</span>
+              </div>
+              <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #eef2f9">
+                <span style="color:var(--muted);font-weight:600">Administração solicitante:</span>
+                <span style="color:var(--text);font-weight:600" id="nd-res-admin">-</span>
+              </div>
+              <div style="display:flex;justify-content:space-between;padding:6px 0">
+                <span style="color:var(--muted);font-weight:600">Prioridade:</span>
+                <span style="color:var(--text);font-weight:600" id="nd-res-prioridade">-</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Benefícios da Compra Coordenada -->
+          <div class="card" style="padding:18px">
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:14px">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="var(--green)"><path d="M16 6l2.29 2.29-4.88 4.88-4-4L2 16.59 3.41 18l6-6 4 4 6.3-6.29L22 12V6z"/></svg>
+              <span style="font-weight:800;font-size:13px;color:var(--navy)">Benefícios da Compra Coordenada</span>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:12px">
+              <div style="display:flex;align-items:flex-start;gap:10px">
+                <div style="width:32px;height:32px;border-radius:8px;background:#dbeafe;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+                  <svg viewBox="0 0 24 24" width="16" height="16" fill="#2256c7"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>
+                </div>
+                <div>
+                  <div style="font-size:12px;font-weight:700;color:var(--navy)">Maior poder de negociação</div>
+                  <div style="font-size:11px;color:var(--muted);margin-top:2px">Compras em maior volume garantem melhores condições.</div>
+                </div>
+              </div>
+              <div style="display:flex;align-items:flex-start;gap:10px">
+                <div style="width:32px;height:32px;border-radius:8px;background:#d4f5e5;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+                  <svg viewBox="0 0 24 24" width="16" height="16" fill="#1ea96a"><path d="M16 6l2.29 2.29-4.88 4.88-4-4L2 16.59 3.41 18l6-6 4 4 6.3-6.29L22 12V6z"/></svg>
+                </div>
+                <div>
+                  <div style="font-size:12px;font-weight:700;color:var(--navy)">Redução de custos</div>
+                  <div style="font-size:11px;color:var(--muted);margin-top:2px">Economia média de até 20% em compras coordenadas.</div>
+                </div>
+              </div>
+              <div style="display:flex;align-items:flex-start;gap:10px">
+                <div style="width:32px;height:32px;border-radius:8px;background:#fff3d4;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+                  <svg viewBox="0 0 24 24" width="16" height="16" fill="#e87c1a"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+                </div>
+                <div>
+                  <div style="font-size:12px;font-weight:700;color:var(--navy)">Padronização</div>
+                  <div style="font-size:11px;color:var(--muted);margin-top:2px">Padronização de produtos e serviços entre as administrações.</div>
+                </div>
+              </div>
+              <div style="display:flex;align-items:flex-start;gap:10px">
+                <div style="width:32px;height:32px;border-radius:8px;background:#ede9fe;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+                  <svg viewBox="0 0 24 24" width="16" height="16" fill="#7c3aed"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+                </div>
+                <div>
+                  <div style="font-size:12px;font-weight:700;color:var(--navy)">Transparência e eficiência</div>
+                  <div style="font-size:11px;color:var(--muted);margin-top:2px">Processo transparente e acompanhamento em tempo real.</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
       </div>
     </div>
 
@@ -2176,7 +2570,7 @@ function toggleSidebar(){
 document.getElementById('l-pass').addEventListener('keydown',e=>{if(e.key==='Enter')doLogin()});
 
 // ─── NAVIGATION ──────────────────────────────────────────────────────────────
-const pageTitles={dashboard:'Dashboard',economizometro:'Economizômetro',fornecedores:'Fornecedores',produtos:'Gestão de Produtos',ranking:'Ranking de Fornecedores','cad-fornecedor':'Cadastrar Fornecedor',agenda:'Compras Coordenadas',usuarios:'Gestão de Usuários',convenios:'Convênios',economia:'Economia de Compras','cns-limpeza':'CNS Limpeza',pintura:'Pintura Programada','gestao-energias':'Gestão de Energias',suporte:'Suporte',aplicativos:'Aplicativos'};
+const pageTitles={dashboard:'Dashboard',economizometro:'Economizômetro',fornecedores:'Fornecedores',produtos:'Gestão de Produtos',ranking:'Ranking de Fornecedores','cad-fornecedor':'Cadastrar Fornecedor',agenda:'Compras Coordenadas','nova-demanda':'Nova Demanda de Compra',usuarios:'Gestão de Usuários',convenios:'Convênios',economia:'Economia de Compras','cns-limpeza':'CNS Limpeza',pintura:'Pintura Programada','gestao-energias':'Gestão de Energias',suporte:'Suporte',aplicativos:'Aplicativos'};
 function showPage(id, el){
   window.scrollTo({top:0,left:0,behavior:'instant'});
   const mainEl = document.getElementById('main');
@@ -2566,7 +2960,13 @@ function renderAgenda(){
   const fComprador = (document.getElementById('ag-filter-comprador')?.value||'').toLowerCase();
   const fContato = (document.getElementById('ag-filter-contato')?.value||'').toLowerCase();
 
+  // Current tab filter
+  const currentTab = document.querySelector('.ag-tab.active')?.textContent?.trim()||'Agendadas';
+  const tabMap={'Agendadas':'Agendado','Em Andamento':'Em Andamento','Realizadas':'Concluído','Canceladas':'Cancelado'};
+  const currentStatus = tabMap[currentTab]||'Agendado';
+
   let list = agenda.filter(a=>{
+    if(a.status !== currentStatus) return false;
     if(fForn && String(a.fornId)!==fForn) return false;
     if(fProd && !(a.prod||'').toLowerCase().includes(fProd)) return false;
     if(fData && a.data!==fData) return false;
@@ -2576,20 +2976,84 @@ function renderAgenda(){
     return true;
   });
 
+  // KPI totals
+  const agendadas = agenda.filter(a=>a.status==='Agendado').length;
+  const realizadas = agenda.filter(a=>a.status==='Concluído').length;
+  const adminsSet = new Set(agenda.filter(a=>a.admin).map(a=>a.admin));
+  const economiaTotal = agenda.filter(a=>a.status==='Concluído').reduce((s,a)=>s+(a.valorEstimado||0)*0.19,0);
+  const el=id=>document.getElementById(id);
+  if(el('kpi-agendadas')) el('kpi-agendadas').textContent=agendadas;
+  if(el('kpi-admins')) el('kpi-admins').textContent=adminsSet.size||agenda.reduce((s,a)=>s+(a.igrejas||0),0)||0;
+  if(el('kpi-realizadas')) el('kpi-realizadas').textContent=realizadas;
+  if(el('kpi-economia')) el('kpi-economia').textContent='R$ '+economiaTotal.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2});
+
+  // Eco panel
+  const totalComprado = agenda.filter(a=>a.status==='Concluído').reduce((s,a)=>s+(a.valorEstimado||0),0);
+  const totalRef = totalComprado>0 ? totalComprado/0.81 : 0;
+  const ecoGerada = totalRef - totalComprado;
+  const ecoPct = totalRef>0 ? ((ecoGerada/totalRef)*100).toFixed(0)+'%' : '0%';
+  if(el('eco-total-comprado')) el('eco-total-comprado').textContent='R$ '+totalComprado.toLocaleString('pt-BR',{minimumFractionDigits:2});
+  if(el('eco-valor-ref')) el('eco-valor-ref').textContent='R$ '+totalRef.toLocaleString('pt-BR',{minimumFractionDigits:2});
+  if(el('eco-gerada-val')) el('eco-gerada-val').textContent='R$ '+ecoGerada.toLocaleString('pt-BR',{minimumFractionDigits:2});
+  if(el('eco-gerada-pct')) el('eco-gerada-pct').textContent=ecoPct;
+
+  // Table
+  const catColors={'Elétrica':'#dbeafe|#2256c7','Limpeza':'#d4f5e5|#1ea96a','Escritório':'#ede9fe|#7c3aed','Pintura':'#fde8d4|#e87c1a','TI':'#d4f5e5|#0891b2','Hidráulica':'#dbeafe|#2256c7','Uniformes':'#fce7f3|#db2777','Outros':'#eef2f9|#6b7a99'};
   document.getElementById('agenda-body').innerHTML=list.map(a=>{
-    const f=fornecedores.find(x=>x.id===a.fornId);
-    return `<tr><td><b>${String(a.id).padStart(2,'0')}</b></td>
-      <td>${a.prod}</td><td>${f?f.nome:'-'}</td>
-      <td>${fmtDate(a.data)}</td><td>${a.igrejas}</td>
-      <td style="font-size:12px">${a.admin||'-'}</td>
-      <td style="font-size:12px">${a.comprador||'-'}</td>
-      <td style="font-size:12px">${a.contato||'-'}</td>
+    const catC=(catColors[a.cat]||'#eef2f9|#6b7a99').split('|');
+    const valor = a.valorEstimado ? 'R$ '+a.valorEstimado.toLocaleString('pt-BR',{minimumFractionDigits:2}) : '-';
+    const admCount = a.igrejas||1;
+    return `<tr>
+      <td>${fmtDate(a.data)||'-'}</td>
+      <td style="font-weight:600">${a.prod}</td>
+      <td><span style="background:${catC[0]};color:${catC[1]};padding:2px 8px;border-radius:12px;font-size:11px;font-weight:600">${a.cat||'-'}</span></td>
+      <td style="text-align:center"><b>${admCount}</b></td>
+      <td style="font-weight:600">${valor}</td>
       <td>${statusBadge(a.status)}</td>
       <td style="white-space:nowrap">
-        <button class="btn btn-outline btn-sm" style="color:var(--green)" onclick="setAgStatus(${a.id},'Concluído')">✓</button>
-        <button class="btn btn-outline btn-sm" style="color:var(--red)" onclick="delAgenda(${a.id})">✕</button>
+        <button class="btn btn-outline btn-sm" style="padding:4px 8px" onclick="ndEditarCompra(${a.id})">···</button>
       </td></tr>`;
   }).join('');
+
+  const countEl=document.getElementById('ag-count-label');
+  if(countEl) countEl.textContent=`Mostrando 1 a ${list.length} de ${list.length} demandas`;
+
+  // Recentes — últimas 3 concluídas com ícone de carrinho
+  const recentes = agenda.filter(a=>a.status==='Concluído').slice(-3).reverse();
+  const recentesEl=document.getElementById('ag-recentes-list');
+  if(recentesEl){
+    if(recentes.length===0){
+      recentesEl.innerHTML='<div style="font-size:12px;color:var(--muted);padding:12px 0;text-align:center">Nenhuma compra realizada ainda.</div>';
+    } else {
+      recentesEl.innerHTML=recentes.map(a=>{
+        const valor = a.valorEstimado ? 'R$ '+a.valorEstimado.toLocaleString('pt-BR',{minimumFractionDigits:2}) : '-';
+        const admCount = a.igrejas||1;
+        return `<div style="display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid #eef2f9">
+          <div style="width:36px;height:36px;border-radius:50%;background:#e87c1a;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="#fff"><path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96C5 16.1 6.9 18 9 18h12v-2H9.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63H19c.75 0 1.41-.41 1.75-1.03l3.58-6.49A1 1 0 0 0 23.47 5H5.21l-.94-2H1zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z"/></svg>
+          </div>
+          <div style="flex:1;min-width:0">
+            <div style="font-size:12px;font-weight:700;color:var(--navy)">${a.prod}</div>
+            <div style="font-size:10px;color:var(--muted)">Realizada em ${fmtDate(a.data)||'-'}</div>
+          </div>
+          <div style="text-align:right;flex-shrink:0">
+            <div style="font-size:12px;font-weight:700;color:var(--navy)">${valor}</div>
+            <div style="font-size:10px;color:var(--muted)">${admCount} administrações</div>
+          </div>
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="var(--muted)"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg>
+        </div>`;
+      }).join('');
+    }
+  }
+
+  renderGraficoEcoMes();
+}
+
+function ndEditarCompra(id){
+  const a=agenda.find(x=>x.id===id);
+  if(!a) return;
+  // Future: open edit modal
+  toast('Clique em Ações para gerenciar esta demanda.');
 }
 function addAgenda(){
   const prod=document.getElementById('ag-prod-conv').value.trim();
@@ -2612,6 +3076,87 @@ function addAgenda(){
 }
 function setAgStatus(id,st){ const a=agenda.find(x=>x.id===id); if(a){a.status=st;renderAgenda();toast('Status atualizado!');} }
 function delAgenda(id){ if(confirm('Remover pedido?')){agenda=agenda.filter(x=>x.id!==id);renderAgenda();toast('Pedido removido!');} }
+
+function agSetTab(status, btn){
+  // Activate tab button
+  document.querySelectorAll('.ag-tab').forEach(t=>{
+    t.style.color='var(--muted)';
+    t.style.borderBottomColor='transparent';
+    t.classList.remove('active');
+  });
+  if(btn){
+    btn.style.color='var(--blue)';
+    btn.style.borderBottomColor='var(--blue)';
+    btn.classList.add('active');
+  } else {
+    // Find by text
+    const tabMap={'Agendado':'Agendadas','Em Andamento':'Em Andamento','Concluído':'Realizadas','Cancelado':'Canceladas'};
+    const label = tabMap[status]||'Agendadas';
+    document.querySelectorAll('.ag-tab').forEach(t=>{
+      if(t.textContent.trim()===label){
+        t.style.color='var(--blue)';
+        t.style.borderBottomColor='var(--blue)';
+        t.classList.add('active');
+      }
+    });
+  }
+  // Update section title
+  const titles={'Agendado':'Próximas Compras Agendadas','Em Andamento':'Compras em Andamento','Concluído':'Compras Realizadas','Cancelado':'Compras Canceladas'};
+  const titleEl=document.getElementById('ag-section-title');
+  if(titleEl) titleEl.textContent=titles[status]||'Próximas Compras Agendadas';
+  renderAgenda();
+}
+
+// ─── NOVA DEMANDA DE COMPRA ───────────────────────────────────────────────────
+function abrirModalNovaCompra(){
+  ['nd-produto','nd-categoria','nd-unidade','nd-admin','nd-outras-admins','nd-prioridade'].forEach(function(id){
+    var el=document.getElementById(id); if(el) el.value='';
+  });
+  ['nd-descricao','nd-obs'].forEach(function(id){ var el=document.getElementById(id); if(el) el.value=''; });
+  ['nd-qtd','nd-valor-unit','nd-valor-total','nd-orcamento'].forEach(function(id){ var el=document.getElementById(id); if(el) el.value=''; });
+  var dataEl=document.getElementById('nd-data'); if(dataEl) dataEl.value='';
+  ndAtualizarResumo();
+  showPage('nova-demanda', null);
+}
+
+function ndAtualizarResumo(){
+  function get(id){ return (document.getElementById(id)||{}).value||''; }
+  var pp=document.getElementById('nd-res-produto'); if(pp) pp.textContent=get('nd-produto')||'-';
+  var pc=document.getElementById('nd-res-categoria'); if(pc) pc.textContent=get('nd-categoria')||'-';
+  var data=get('nd-data');
+  var pd=document.getElementById('nd-res-data'); if(pd) pd.textContent=data?fmtDate(data):'-';
+  var qtd=get('nd-qtd');
+  var pq=document.getElementById('nd-res-qtd'); if(pq) pq.textContent=qtd?qtd+' '+(get('nd-unidade')||''):'-';
+  var pa=document.getElementById('nd-res-admin'); if(pa) pa.textContent=get('nd-admin')||'-';
+  var ppr=document.getElementById('nd-res-prioridade'); if(ppr) ppr.textContent=get('nd-prioridade')||'-';
+  ndCalcTotal();
+}
+
+function ndCalcTotal(){
+  var qtd=parseFloat((document.getElementById('nd-qtd')||{}).value)||0;
+  var unit=parseFloat((document.getElementById('nd-valor-unit')||{}).value)||0;
+  var total=qtd*unit;
+  var totalEl=document.getElementById('nd-valor-total'); if(totalEl) totalEl.value=total.toFixed(2);
+  var resTotal=document.getElementById('nd-res-total');
+  if(resTotal) resTotal.textContent='R$ '+total.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2});
+}
+
+function ndSalvarRascunho(){ toast('Rascunho salvo com sucesso!','success'); }
+
+function ndEnviarDemanda(){
+  var prod=(document.getElementById('nd-produto')||{}).value;
+  var cat=(document.getElementById('nd-categoria')||{}).value;
+  var admin=(document.getElementById('nd-admin')||{}).value;
+  if(!prod||!cat||!admin){ toast('Preencha os campos obrigatórios (*)','error'); return; }
+  var data=(document.getElementById('nd-data')||{}).value;
+  var qtd=parseInt((document.getElementById('nd-qtd')||{}).value)||0;
+  var valorTotal=parseFloat((document.getElementById('nd-valor-total')||{}).value)||0;
+  var prioridade=(document.getElementById('nd-prioridade')||{}).value;
+  agenda.push({id:nextAgId++,prod:prod,cat:cat,data:data,igrejas:1,admin:admin,status:'Agendado',valorEstimado:valorTotal,prioridade:prioridade});
+  toast('Demanda enviada com sucesso! 🎉','success');
+  showPage('agenda',null);
+  renderAgenda();
+}
 
 // ─── SAVE FORNECEDOR ─────────────────────────────────────────────────────────
 function saveFornecedor(){
