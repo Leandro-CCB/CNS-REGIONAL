@@ -67,16 +67,17 @@ content{padding:24px 28px;flex:1;display:block;max-width:100%;overflow-x:hidden}
 
 /* ── STAT CARDS - matching image layout ── */
 .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:20px}
-.stat-card{border-radius:10px;padding:16px 18px;display:flex;align-items:center;gap:14px;color:#fff;position:relative;overflow:hidden;min-height:80px}
-.stat-card::after{content:'';position:absolute;right:-12px;top:-12px;width:70px;height:70px;border-radius:50%;background:rgba(255,255,255,.1)}
-.stat-card.blue{background:linear-gradient(135deg,#2256c7,#3a7bd5)}
-.stat-card.green{background:linear-gradient(135deg,#159c5e,#1ea96a)}
-.stat-card.red{background:linear-gradient(135deg,#c42a2a,#e03535)}
-.stat-card.orange{background:linear-gradient(135deg,#c96a0d,#e87c1a)}
-.stat-icon{width:42px;height:42px;border-radius:10px;background:rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;flex-shrink:0}
-.stat-icon svg{width:22px;height:22px;fill:#fff}
-.stat-number{font-family:'Barlow Condensed',sans-serif;font-size:30px;font-weight:800;line-height:1}
-.stat-label{font-size:11px;opacity:.85;margin-top:2px}
+.stat-card{border-radius:12px;padding:18px 20px;display:flex;align-items:center;gap:16px;background:#fff;border:1px solid var(--border);min-height:90px}
+.stat-icon{width:56px;height:56px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.stat-icon svg{width:28px;height:28px;fill:#fff}
+.stat-icon.blue{background:#2256c7}
+.stat-icon.green{background:#1ea96a}
+.stat-icon.orange{background:#e87c1a}
+.stat-icon.purple{background:#7c3aed}
+.stat-number{font-family:'Barlow Condensed',sans-serif;font-size:34px;font-weight:800;line-height:1;color:var(--navy)}
+.stat-label{font-size:12px;color:var(--muted);margin-top:3px;font-weight:500}
+.stat-link{font-size:12px;color:var(--blue);font-weight:600;margin-top:6px;cursor:pointer;text-decoration:none;display:inline-block}
+.stat-link:hover{text-decoration:underline}
 
 /* ── DASHBOARD GRID - 4 columns like image ── */
 .dash-main{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:0}
@@ -99,7 +100,7 @@ content{padding:24px 28px;flex:1;display:block;max-width:100%;overflow-x:hidden}
 .dash-center{display:grid;grid-template-columns:1fr 1fr;gap:16px}
 
 /* Main dashboard layout */
-.dash-layout{display:grid;grid-template-columns:220px 1fr 1fr 270px;gap:16px;align-items:start}
+.dash-layout{display:grid;grid-template-columns:1fr 1fr 270px;gap:16px;align-items:start}
 .left-menu-panel{display:flex;flex-direction:column;gap:9px}
 
 /* ── CARD ── */
@@ -237,7 +238,7 @@ textarea{resize:vertical;min-height:80px}
 
 /* ── RESPONSIVE ── */
 @keyframes spin{to{transform:rotate(360deg)}}
-@media(max-width:1200px){.dash-layout{grid-template-columns:190px 1fr 1fr 240px}.stats{grid-template-columns:1fr 1fr}}
+@media(max-width:1200px){.dash-layout{grid-template-columns:1fr 1fr 240px}.stats{grid-template-columns:1fr 1fr}}
 @media(max-width:1000px){.dash-layout{grid-template-columns:1fr 1fr}}
 
 
@@ -603,63 +604,17 @@ textarea{resize:vertical;min-height:80px}
 
     <!-- DASHBOARD -->
     <div class="page active" id="page-dashboard">
+      <!-- Welcome Message -->
+      <div style="margin-bottom:18px">
+        <div style="font-family:'Barlow Condensed',sans-serif;font-size:26px;font-weight:800;color:var(--navy);line-height:1.2">Bem-vindo ao Portal CRS | Jundiaí!</div>
+        <div style="font-size:13px;color:var(--muted);margin-top:4px">Aqui você encontra informações, gestão e economia para nossa regional.</div>
+      </div>
       <!-- Stats Row -->
       <div class="stats" id="stats-row"></div>
 
       <!-- 4-column layout matching image -->
       <div class="dash-layout">
-        <!-- Column 1: Menu Buttons -->
-        <div class="left-menu-panel">
-          <button class="menu-btn blue" onclick="showPage('cad-fornecedor',null)">
-            <div class="menu-btn-icon">
-              <!-- Person add / indicar fornecedor -->
-              <svg viewBox="0 0 24 24"><path d="M15 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm-9-2V7H4v3H1v2h3v3h2v-3h3v-2H6zm9 4c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
-            </div>
-            <div>Indicar Fornecedor</div>
-          </button>
-          <button class="menu-btn green" onclick="showPage('fornecedores',null)">
-            <div class="menu-btn-icon">
-              <!-- Verified / aprovados -->
-              <svg viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/></svg>
-            </div>
-            <div>Fornecedores Aprovados</div>
-          </button>
-          <button class="menu-btn cyan" onclick="showPage('cns-limpeza',null)">
-            <div class="menu-btn-icon">
-              <!-- Cleaning / limpeza -->
-              <svg viewBox="0 0 24 24"><path d="M19.36 2.72L20.78 4.14 16.19 8.72C17.24 10.41 17 12.55 15.59 14L9.13 7.53C10.57 6.12 12.71 5.88 14.4 6.94L19.36 2.72M5.93 17.57C3.92 15.56 2.69 13.16 2.36 10.72L7.46 8.53L15.48 16.56L13.29 21.65C10.84 21.33 8.44 20.09 6.43 18.08L5.93 17.57Z"/></svg>
-            </div>
-            <div>CNS Limpeza</div>
-          </button>
-          <button class="menu-btn purple" onclick="showPage('agenda',null)">
-            <div class="menu-btn-icon">
-              <!-- Lightbulb / meia luz -->
-              <svg viewBox="0 0 24 24"><path d="M9 21c0 .55.45 1 1 1h4c.55 0 1-.45 1-1v-1H9v1zm3-19C8.14 2 5 5.14 5 9c0 2.38 1.19 4.47 3 5.74V17c0 .55.45 1 1 1h6c.55 0 1-.45 1-1v-2.26c1.81-1.27 3-3.36 3-5.74 0-3.86-3.14-7-7-7z"/></svg>
-            </div>
-            <div>Projeto Meia Luz</div>
-          </button>
-          <button class="menu-btn coral" onclick="showPage('pintura',null)">
-            <div class="menu-btn-icon">
-              <!-- Paint roller / pintura -->
-              <svg viewBox="0 0 24 24"><path d="M18 4V3c0-.55-.45-1-1-1H5c-.55 0-1 .45-1 1v4c0 .55.45 1 1 1h12c.55 0 1-.45 1-1V6h1v4H9v11c0 .55.45 1 1 1h2c.55 0 1-.45 1-1v-9h8V4h-3z"/></svg>
-            </div>
-            <div>Pintura Programada</div>
-          </button>
-          <button class="menu-btn" style="background:linear-gradient(135deg,#d97706,#f59e0b)" onclick="showPage('economia',null)">
-            <div class="menu-btn-icon">
-              <svg viewBox="0 0 24 24"><path d="M11.8 10.9c-2.27-.59-3-1.2-3-2.15 0-1.09 1.01-1.85 2.7-1.85 1.78 0 2.44.85 2.5 2.1h2.21c-.07-1.72-1.12-3.3-3.21-3.81V3h-3v2.16c-1.94.42-3.5 1.68-3.5 3.61 0 2.31 1.91 3.46 4.7 4.13 2.5.6 3 1.48 3 2.41 0 .69-.49 1.79-2.7 1.79-2.06 0-2.87-.92-2.98-2.1h-2.2c.12 2.19 1.76 3.42 3.68 3.83V21h3v-2.15c1.95-.37 3.5-1.5 3.5-3.55 0-2.84-2.43-3.81-4.7-4.4z"/></svg>
-            </div>
-            <div>Economia de Compras</div>
-          </button>
-          <button class="menu-btn" style="background:linear-gradient(135deg,#1e40af,#3b82f6)" onclick="showPage('agenda',null)">
-            <div class="menu-btn-icon">
-              <svg viewBox="0 0 24 24"><path d="M17 12h-5v5h5v-5zM16 1v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2h-1V1h-2zm3 18H5V8h14v11z"/></svg>
-            </div>
-            <div>Compras Coordenadas</div>
-          </button>
-        </div>
-
-        <!-- Column 2: Top 10 -->
+        <!-- Column 1: Top 10 -->
         <div>
           <div class="card" style="margin-bottom:14px">
             <div class="card-header">
@@ -2048,11 +2003,25 @@ function renderDashboard(){
   const aprov=fornecedores.filter(f=>f.status==='Aprovado').length;
   const pend=fornecedores.filter(f=>f.status==='Pendente').length;
   const docs=8;
+  const agendaAtivas = agenda.filter(a=>a.status!=='cancelado').length;
+  const convAtivos = convenios.length;
   document.getElementById('stats-row').innerHTML=`
-    <div class="stat-card blue"><div class="stat-icon"><svg viewBox="0 0 24 24"><path d="M20 7H4c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V9c0-1.1-.9-2-2-2z"/></svg></div><div><div class="stat-number">${total}</div><div class="stat-label">Fornecedores Cadastrados</div></div></div>
-    <div class="stat-card green"><div class="stat-icon"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg></div><div><div class="stat-number">${aprov}</div><div class="stat-label">Aprovados</div></div></div>
-    <div class="stat-card red"><div class="stat-icon"><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg></div><div><div class="stat-number">${pend}</div><div class="stat-label">Pendentes de Avaliação</div></div></div>
-    <div class="stat-card orange"><div class="stat-icon"><svg viewBox="0 0 24 24"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67V7z"/></svg></div><div><div class="stat-number">${docs}</div><div class="stat-label">Documentos a Vencer</div></div></div>
+    <div class="stat-card">
+      <div class="stat-icon blue"><svg viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg></div>
+      <div><div class="stat-number">${total}</div><div class="stat-label">Fornecedores Cadastrados</div><a class="stat-link" onclick="showPage('fornecedores',null)">Ver todos</a></div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon green"><svg viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/></svg></div>
+      <div><div class="stat-number">${aprov}</div><div class="stat-label">Fornecedores Aprovados</div><a class="stat-link" onclick="showPage('fornecedores',null)">Ver todos</a></div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon orange"><svg viewBox="0 0 24 24"><path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96C5 16.1 6.1 17 7.27 17H19v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63H15.5c.75 0 1.41-.41 1.75-1.03l3.58-6.49c.08-.14.12-.31.12-.48 0-.55-.45-1-1-1H5.21l-.94-2H1zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z"/></svg></div>
+      <div><div class="stat-number">${agendaAtivas}</div><div class="stat-label">Compras Coordenadas Ativas</div><a class="stat-link" onclick="showPage('agenda',null)">Ver todas</a></div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon purple"><svg viewBox="0 0 24 24"><path d="M2 20h20v-4H2v4zm2-3h2v2H4v-2zM2 4v4h20V4H2zm4 3H4V5h2v2zm-4 7h20v-4H2v4zm2-3h2v2H4v-2z"/><path d="M21 11.5c-.28 0-.5.22-.5.5s.22.5.5.5.5-.22.5-.5-.22-.5-.5-.5zM12 6c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6-2.69-6-6-6zm0 10c-2.21 0-4-1.79-4-4s1.79-4 4-4 4 1.79 4 4-1.79 4-4 4zm0-6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/></svg></div>
+      <div><div class="stat-number">${convAtivos}</div><div class="stat-label">Convênios Ativos</div><a class="stat-link" onclick="showPage('convenios',null)">Ver todos</a></div>
+    </div>
   `;
 
   // top 10
