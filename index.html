@@ -2230,7 +2230,13 @@ textarea{resize:vertical;min-height:80px}
       </div>
 
       <!-- Precisa de ajuda? -->
-      <div style="background:#eff6ff;border:1px solid #bfdbfe;border-radius:12px;padding:14px 22px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap">
+      <div style="background:#eff6ff;border:1px solid #bfdbfe;border-radius:12px;padding:14px 22px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;position:relative">
+        <!-- Botão editar Central de Ajuda (Master only) -->
+        <button id="suporte-edit-central-btn" onclick="abrirEditCentralAjuda()" title="Editar link da Central de Ajuda"
+          style="position:absolute;top:8px;right:8px;background:none;border:none;cursor:pointer;color:var(--muted);padding:4px;border-radius:6px;transition:.15s;display:none"
+          onmouseover="this.style.color='var(--blue)'" onmouseout="this.style.color='var(--muted)'">
+          <svg viewBox="0 0 24 24" width="15" height="15" fill="currentColor"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a1 1 0 0 0 0-1.41l-2.34-2.34a1 1 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>
+        </button>
         <div style="display:flex;align-items:center;gap:12px">
           <div style="width:34px;height:34px;border-radius:50%;background:#2256c7;display:flex;align-items:center;justify-content:center;flex-shrink:0">
             <svg viewBox="0 0 24 24" width="17" height="17" fill="#fff"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
@@ -2240,10 +2246,14 @@ textarea{resize:vertical;min-height:80px}
             <div style="font-size:12px;color:#3b82f6">Consulte nossa <span style="text-decoration:underline;cursor:pointer" onclick="abrirCentralAjuda()">Central de Ajuda</span> para acessar tutoriais, manuais e perguntas frequentes.</div>
           </div>
         </div>
-        <button class="btn" style="background:#2256c7;color:#fff;white-space:nowrap;gap:7px" onclick="abrirCentralAjuda()">
-          Acessar Central de Ajuda
-          <svg viewBox="0 0 24 24" width="13" height="13" fill="#fff"><path d="M19 19H5V5h7V3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z"/></svg>
-        </button>
+        <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+          <button class="btn" style="background:#2256c7;color:#fff;white-space:nowrap;gap:7px" onclick="abrirCentralAjuda()">
+            Acessar Central de Ajuda
+            <svg viewBox="0 0 24 24" width="13" height="13" fill="#fff"><path d="M19 19H5V5h7V3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z"/></svg>
+          </button>
+          <!-- Badge de status do link (Master only) -->
+          <span id="suporte-central-status" style="display:none;font-size:11px;font-weight:600;padding:3px 9px;border-radius:20px;white-space:nowrap"></span>
+        </div>
       </div>
     </div>
 
@@ -2270,6 +2280,28 @@ textarea{resize:vertical;min-height:80px}
   </div>
 </div>
 
+
+<!-- MODAL: Editar Link da Central de Ajuda (Master only) -->
+<div class="modal-bg" id="modal-central-ajuda-edit">
+  <div class="modal" style="width:480px">
+    <div class="modal-header">
+      <span class="modal-title">🔗 Editar Link da Central de Ajuda</span>
+      <button class="modal-close" onclick="closeModal('modal-central-ajuda-edit')">×</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group" style="margin-bottom:14px">
+        <label>URL da Central de Ajuda</label>
+        <input id="se-central-ajuda-input" type="url" placeholder="https://sites.google.com/..." style="width:100%">
+        <p style="font-size:11px;color:var(--muted);margin-top:6px">Cole o link completo (incluindo https://). Este link será aberto ao clicar em "Acessar Central de Ajuda".</p>
+      </div>
+      <div id="se-central-preview" style="display:none;background:#f0f7ff;border:1px solid #bfdbfe;border-radius:8px;padding:9px 12px;font-size:12px;color:#1e40af;word-break:break-all;margin-top:4px"></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('modal-central-ajuda-edit')">Cancelar</button>
+      <button class="btn btn-primary" onclick="salvarCentralAjuda()">💾 Salvar Link</button>
+    </div>
+  </div>
+</div>
 <!-- MODAL: Editar Suporte (Master only) -->
 <div class="modal-bg" id="modal-suporte-edit">
   <div class="modal" style="width:500px">
@@ -5285,10 +5317,28 @@ function renderSuporte(){
   if(el('suporte-email-display')) el('suporte-email-display').textContent = suporteData.email || 'Não configurado';
   if(el('suporte-whats-display')) el('suporte-whats-display').textContent = suporteData.whatsappDisplay || suporteData.whatsapp || 'Não configurado';
   // show edit buttons only for Master
-  const isMaster = currentUser && currentUser.perfil === 'Master';
-  ['suporte-edit-email-btn','suporte-edit-whats-btn','suporte-edit-grupo-btn'].forEach(id=>{
-    const btn = el(id); if(btn) btn.style.display = isMaster ? 'block' : 'none';
+  const isMasterUser = currentUser && currentUser.perfil === 'Master';
+  ['suporte-edit-email-btn','suporte-edit-whats-btn','suporte-edit-grupo-btn','suporte-edit-central-btn'].forEach(id=>{
+    const btn = el(id); if(btn) btn.style.display = isMasterUser ? 'block' : 'none';
   });
+  // Badge de status do link da Central de Ajuda (visível apenas para Master)
+  const statusBadge = el('suporte-central-status');
+  if(statusBadge){
+    if(isMasterUser){
+      statusBadge.style.display = 'inline-block';
+      if(suporteData.centralAjuda){
+        statusBadge.textContent = '✅ Link configurado';
+        statusBadge.style.background = '#d4f5e5';
+        statusBadge.style.color = '#0f7a46';
+      } else {
+        statusBadge.textContent = '⚠️ Link não configurado';
+        statusBadge.style.background = '#fff3d4';
+        statusBadge.style.color = '#9a6000';
+      }
+    } else {
+      statusBadge.style.display = 'none';
+    }
+  }
 }
 
 function abrirEditSuporte(tipo){
@@ -5350,6 +5400,42 @@ function entrarGrupoGeral(){
 function entrarGrupoAdmin(){
   if(!suporteData.grupoAdmin){ toast('Link do grupo de administradores não configurado.','error'); return; }
   window.open(suporteData.grupoAdmin, '_blank');
+}
+
+function abrirEditCentralAjuda(){
+  if(!(currentUser && currentUser.perfil === 'Master')){ toast('Apenas usuários Master podem editar este link.','error'); return; }
+  const input = document.getElementById('se-central-ajuda-input');
+  const preview = document.getElementById('se-central-preview');
+  if(input) input.value = suporteData.centralAjuda || '';
+  if(preview){
+    if(suporteData.centralAjuda){
+      preview.style.display = 'block';
+      preview.innerHTML = '🔗 Link atual: <strong>' + suporteData.centralAjuda + '</strong>';
+    } else {
+      preview.style.display = 'none';
+    }
+  }
+  // Atualizar preview ao digitar
+  if(input){
+    input.oninput = function(){
+      const val = this.value.trim();
+      if(preview){
+        if(val){ preview.style.display='block'; preview.innerHTML='🔗 Pré-visualização: <strong>' + val + '</strong>'; }
+        else { preview.style.display='none'; }
+      }
+    };
+  }
+  document.getElementById('modal-central-ajuda-edit').classList.add('open');
+}
+
+function salvarCentralAjuda(){
+  const val = (document.getElementById('se-central-ajuda-input').value || '').trim();
+  if(val && !val.startsWith('http')){ toast('O link deve começar com https://', 'error'); return; }
+  suporteData.centralAjuda = val;
+  localStorage.setItem('crs-suporte-data', JSON.stringify(suporteData));
+  closeModal('modal-central-ajuda-edit');
+  renderSuporte();
+  toast(val ? '✅ Link da Central de Ajuda salvo!' : '⚠️ Link da Central de Ajuda removido.', val ? 'success' : 'info');
 }
 
 function abrirCentralAjuda(){
