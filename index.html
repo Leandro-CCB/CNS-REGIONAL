@@ -3072,8 +3072,15 @@ function renderAgenda(){
       <td style="text-align:center"><b>${admCount}</b></td>
       <td style="font-weight:600">${valor}</td>
       <td>${statusBadge(a.status)}</td>
-      <td style="white-space:nowrap">
-        <button class="btn btn-outline btn-sm" style="padding:4px 8px" onclick="ndEditarCompra(${a.id})">···</button>
+      <td style="white-space:nowrap;display:flex;gap:5px;align-items:center">
+        <button class="btn btn-sm" style="padding:5px 10px;background:#eff6ff;border:1.5px solid #bfdbfe;color:#2256c7;border-radius:7px;font-size:12px;font-weight:600;display:inline-flex;align-items:center;gap:4px" onclick="abrirEditarAgenda(${a.id})" title="Editar demanda">
+          <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="#2256c7" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+          Editar
+        </button>
+        <button class="btn btn-sm" style="padding:5px 10px;background:#fef2f2;border:1.5px solid #fecaca;color:#e03535;border-radius:7px;font-size:12px;font-weight:600;display:inline-flex;align-items:center;gap:4px" onclick="delAgenda(${a.id})" title="Excluir demanda">
+          <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="#e03535" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
+          Excluir
+        </button>
       </td></tr>`;
   }).join('');
 
@@ -3111,12 +3118,37 @@ function renderAgenda(){
   renderGraficoEcoMes();
 }
 
-function ndEditarCompra(id){
+function abrirEditarAgenda(id){
   const a=agenda.find(x=>x.id===id);
   if(!a) return;
-  // Future: open edit modal
-  toast('Clique em Ações para gerenciar esta demanda.');
+  window._editAgendaId = id;
+  document.getElementById('ea-prod').value = a.prod||'';
+  document.getElementById('ea-cat').value = a.cat||'';
+  document.getElementById('ea-data').value = a.data||'';
+  document.getElementById('ea-igrejas').value = a.igrejas||1;
+  document.getElementById('ea-valor').value = a.valorEstimado||'';
+  document.getElementById('ea-status').value = a.status||'Agendado';
+  document.getElementById('ea-obs').value = a.obs||'';
+  document.getElementById('modal-editar-agenda').classList.add('open');
 }
+function salvarEdicaoAgenda(){
+  const id = window._editAgendaId;
+  const a = agenda.find(x=>x.id===id);
+  if(!a) return;
+  const prod = document.getElementById('ea-prod').value.trim();
+  if(!prod){ toast('Informe o produto/serviço','error'); return; }
+  a.prod = prod;
+  a.cat = document.getElementById('ea-cat').value;
+  a.data = document.getElementById('ea-data').value;
+  a.igrejas = parseInt(document.getElementById('ea-igrejas').value)||1;
+  a.valorEstimado = parseFloat(document.getElementById('ea-valor').value)||0;
+  a.status = document.getElementById('ea-status').value;
+  a.obs = document.getElementById('ea-obs').value;
+  closeModal('modal-editar-agenda');
+  renderAgenda();
+  toast('Demanda atualizada com sucesso!','success');
+}
+function ndEditarCompra(id){ abrirEditarAgenda(id); }
 function addAgenda(){
   const prod=document.getElementById('ag-prod-conv').value.trim();
   const fornId=parseInt(document.getElementById('ag-forn').value);
@@ -5543,6 +5575,71 @@ initSupabase();
 <!-- ══════════════════════════════════════════════════════════════
      MODAL: Nova Notificação (só Master / Regional)
 ═══════════════════════════════════════════════════════════════ -->
+
+<!-- Modal: Editar Demanda de Compra -->
+<div class="modal-bg" id="modal-editar-agenda">
+  <div class="modal" style="width:560px">
+    <div class="modal-header">
+      <span class="modal-title">✏️ Editar Demanda de Compra</span>
+      <button class="modal-close" onclick="closeModal('modal-editar-agenda')">×</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-grid">
+        <div class="form-group full">
+          <label>Produto / Serviço *</label>
+          <input id="ea-prod" type="text" placeholder="Nome do produto ou serviço">
+        </div>
+        <div class="form-group">
+          <label>Categoria</label>
+          <select id="ea-cat">
+            <option value="">Selecione...</option>
+            <option>Elétrica</option>
+            <option>Limpeza</option>
+            <option>Escritório</option>
+            <option>Pintura</option>
+            <option>TI</option>
+            <option>Hidráulica</option>
+            <option>Uniformes</option>
+            <option>Outros</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Data Prevista</label>
+          <input id="ea-data" type="date">
+        </div>
+        <div class="form-group">
+          <label>Administrações Envolvidas</label>
+          <input id="ea-igrejas" type="number" min="1" placeholder="Qtd. de administrações">
+        </div>
+        <div class="form-group">
+          <label>Valor Estimado (R$)</label>
+          <input id="ea-valor" type="number" min="0" step="0.01" placeholder="0,00">
+        </div>
+        <div class="form-group">
+          <label>Status</label>
+          <select id="ea-status">
+            <option value="Agendado">Agendado</option>
+            <option value="Em Andamento">Em Andamento</option>
+            <option value="Concluído">Concluído</option>
+            <option value="Cancelado">Cancelado</option>
+          </select>
+        </div>
+        <div class="form-group full">
+          <label>Observações</label>
+          <textarea id="ea-obs" rows="3" placeholder="Informações adicionais..."></textarea>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('modal-editar-agenda')">Cancelar</button>
+      <button class="btn btn-primary" onclick="salvarEdicaoAgenda()">
+        <svg viewBox="0 0 24 24" width="14" height="14" fill="#fff"><path d="M17 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V7l-4-4zm-5 16a3 3 0 1 1 0-6 3 3 0 0 1 0 6zm3-10H5V5h10v4z"/></svg>
+        Salvar Alterações
+      </button>
+    </div>
+  </div>
+</div>
+
 <div class="modal-bg" id="modal-notif-form">
   <div class="modal" style="width:520px">
     <div class="modal-header">
