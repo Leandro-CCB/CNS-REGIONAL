@@ -770,60 +770,46 @@ textarea{resize:vertical;min-height:80px}
       </div>
 
       <!-- KPI cards — layout idêntico à imagem 1 -->
-      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:22px">
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:22px">
 
-        <!-- Card 1: Demandas Agendadas (ícone calendário, círculo azul) -->
+        <!-- Card 1: Convênio Local -->
         <div class="card" style="padding:18px 20px">
           <div style="display:flex;align-items:center;gap:16px">
             <div style="width:56px;height:56px;border-radius:50%;background:#2256c7;display:flex;align-items:center;justify-content:center;flex-shrink:0">
-              <svg viewBox="0 0 24 24" width="28" height="28" fill="#fff"><path d="M19 4h-1V2h-2v2H8V2H6v2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2zm0 16H5V9h14v11zM5 7V6h14v1H5z"/></svg>
+              <svg viewBox="0 0 24 24" width="28" height="28" fill="#fff"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
             </div>
             <div>
-              <div style="font-size:11px;color:var(--muted);font-weight:600;margin-bottom:2px">Demandas Agendadas</div>
-              <div style="font-family:'Barlow Condensed',sans-serif;font-size:34px;font-weight:800;color:var(--navy);line-height:1" id="kpi-agendadas">0</div>
-              <a style="font-size:11px;color:var(--blue);font-weight:600;cursor:pointer;display:block;margin-top:4px" onclick="agSetTab('Agendado')">Ver detalhes</a>
+              <div style="font-size:11px;color:var(--muted);font-weight:600;margin-bottom:2px">Convênio Local</div>
+              <div style="font-family:'Barlow Condensed',sans-serif;font-size:34px;font-weight:800;color:var(--navy);line-height:1" id="kpi-conv-local">—</div>
+              <a style="font-size:11px;color:var(--blue);font-weight:600;cursor:pointer;display:block;margin-top:4px" onclick="showPage('convenios',document.querySelector('.nav-item[onclick*=convenios]'));setTimeout(()=>openMapaConvenio('local'),200)">Ver detalhes</a>
             </div>
           </div>
         </div>
 
-        <!-- Card 2: Administrações Envolvidas (ícone grupo, círculo verde) -->
+        <!-- Card 2: Convênio Regional -->
         <div class="card" style="padding:18px 20px">
           <div style="display:flex;align-items:center;gap:16px">
             <div style="width:56px;height:56px;border-radius:50%;background:#1ea96a;display:flex;align-items:center;justify-content:center;flex-shrink:0">
-              <svg viewBox="0 0 24 24" width="28" height="28" fill="#fff"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
+              <svg viewBox="0 0 24 24" width="28" height="28" fill="#fff"><path d="M20.5 3l-.16.03L15 5.1 9 3 3.36 4.9c-.21.07-.36.25-.36.48V20.5c0 .28.22.5.5.5l.16-.03L9 18.9l6 2.1 5.64-1.9c.21-.07.36-.25.36-.48V3.5c0-.28-.22-.5-.5-.5zM15 19l-6-2.11V5l6 2.11V19z"/></svg>
             </div>
             <div>
-              <div style="font-size:11px;color:var(--muted);font-weight:600;margin-bottom:2px">Administrações Envolvidas</div>
-              <div style="font-family:'Barlow Condensed',sans-serif;font-size:34px;font-weight:800;color:var(--navy);line-height:1" id="kpi-admins">0</div>
-              <a style="font-size:11px;color:var(--blue);font-weight:600;cursor:pointer;display:block;margin-top:4px">Ver detalhes</a>
+              <div style="font-size:11px;color:var(--muted);font-weight:600;margin-bottom:2px">Convênio Regional</div>
+              <div style="font-family:'Barlow Condensed',sans-serif;font-size:34px;font-weight:800;color:var(--navy);line-height:1" id="kpi-conv-regional">—</div>
+              <a style="font-size:11px;color:var(--blue);font-weight:600;cursor:pointer;display:block;margin-top:4px" onclick="showPage('convenios',document.querySelector('.nav-item[onclick*=convenios]'));setTimeout(()=>openMapaConvenio('regional'),200)">Ver detalhes</a>
             </div>
           </div>
         </div>
 
-        <!-- Card 3: Compras Realizadas (ícone carrinho, círculo laranja) -->
+        <!-- Card 3: Convênio Nacional -->
         <div class="card" style="padding:18px 20px">
           <div style="display:flex;align-items:center;gap:16px">
             <div style="width:56px;height:56px;border-radius:50%;background:#e87c1a;display:flex;align-items:center;justify-content:center;flex-shrink:0">
-              <svg viewBox="0 0 24 24" width="28" height="28" fill="#fff"><path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96C5 16.1 6.9 18 9 18h12v-2H9.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63H19c.75 0 1.41-.41 1.75-1.03l3.58-6.49A1 1 0 0 0 23.47 5H5.21l-.94-2H1zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z"/></svg>
+              <svg viewBox="0 0 24 24" width="28" height="28" fill="#fff"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
             </div>
             <div>
-              <div style="font-size:11px;color:var(--muted);font-weight:600;margin-bottom:2px">Compras Realizadas</div>
-              <div style="font-family:'Barlow Condensed',sans-serif;font-size:34px;font-weight:800;color:var(--navy);line-height:1" id="kpi-realizadas">0</div>
-              <a style="font-size:11px;color:var(--blue);font-weight:600;cursor:pointer;display:block;margin-top:4px" onclick="agSetTab('Concluído')">Ver detalhes</a>
-            </div>
-          </div>
-        </div>
-
-        <!-- Card 4: Economia Gerada (ícone $, círculo roxo) -->
-        <div class="card" style="padding:18px 20px">
-          <div style="display:flex;align-items:center;gap:16px">
-            <div style="width:56px;height:56px;border-radius:50%;background:#7c3aed;display:flex;align-items:center;justify-content:center;flex-shrink:0">
-              <svg viewBox="0 0 24 24" width="28" height="28" fill="#fff"><path d="M11.8 10.9c-2.27-.59-3-1.2-3-2.15 0-1.09 1.01-1.85 2.7-1.85 1.78 0 2.44.85 2.5 2.1h2.21c-.07-1.72-1.12-3.3-3.21-3.81V3h-3v2.16c-1.94.42-3.5 1.68-3.5 3.61 0 2.31 1.91 3.46 4.7 4.13 2.5.6 3 1.48 3 2.41 0 .69-.49 1.79-2.7 1.79-2.06 0-2.87-.92-2.98-2.1h-2.2c.12 2.19 1.76 3.42 3.68 3.83V21h3v-2.15c1.95-.37 3.5-1.5 3.5-3.55 0-2.84-2.43-3.81-4.7-4.4z"/></svg>
-            </div>
-            <div>
-              <div style="font-size:11px;color:var(--muted);font-weight:600;margin-bottom:2px">Economia Gerada</div>
-              <div style="font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:800;color:var(--green);line-height:1.1" id="kpi-economia">R$ 0,00</div>
-              <a style="font-size:11px;color:var(--blue);font-weight:600;cursor:pointer;display:block;margin-top:4px">Ver detalhes</a>
+              <div style="font-size:11px;color:var(--muted);font-weight:600;margin-bottom:2px">Convênio Nacional</div>
+              <div style="font-family:'Barlow Condensed',sans-serif;font-size:34px;font-weight:800;color:var(--navy);line-height:1" id="kpi-conv-nacional">—</div>
+              <a style="font-size:11px;color:var(--blue);font-weight:600;cursor:pointer;display:block;margin-top:4px" onclick="showPage('convenios',document.querySelector('.nav-item[onclick*=convenios]'));setTimeout(()=>openMapaConvenio('nacional'),200)">Ver detalhes</a>
             </div>
           </div>
         </div>
@@ -1328,7 +1314,12 @@ textarea{resize:vertical;min-height:80px}
     <!-- CONVÊNIOS (página completa) -->
     <div class="page" id="page-convenios">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
-        <div></div>
+        <div>
+          <button class="btn btn-outline" onclick="openMapaConvenio('regional')" style="gap:7px">
+            <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M20.5 3l-.16.03L15 5.1 9 3 3.36 4.9c-.21.07-.36.25-.36.48V20.5c0 .28.22.5.5.5l.16-.03L9 18.9l6 2.1 5.64-1.9c.21-.07.36-.25.36-.48V3.5c0-.28-.22-.5-.5-.5zM15 19l-6-2.11V5l6 2.11V19z"/></svg>
+            Mapa da Regional CNS
+          </button>
+        </div>
         <button class="btn btn-primary" onclick="openConvModal()">+ Novo Convênio/Boletim</button>
       </div>
 
@@ -2554,7 +2545,7 @@ async function doLogin(){
         if(schema !== 'public') headers['Accept-Profile'] = schema;
 
         const res = await fetch(
-          `${SUPA_URL}/rest/v1/usuarios?select=*&login=eq.${encodeURIComponent(u)}&ativo=eq.true`,
+          `${SUPA_URL}/rest/v1/usuarios?select=*&login=eq.${encodeURIComponent(u)}`,
           { headers }
         );
 
@@ -2564,7 +2555,8 @@ async function doLogin(){
           loginOk = true;
           const data = await res.json();
           if(data && data.length > 0){
-            const r = data.find(x => x.senha === p);
+            // Filtra por senha; trata ativo=null como ativo (retrocompatibilidade)
+            const r = data.find(x => x.senha === p && x.ativo !== false);
             if(r){
               const found = {id:r.id, nome:r.nome||'', login:r.login||'', email:r.email||'', perfil:r.perfil||'Comprador', cargo:r.cargo||'', senha:r.senha||'', ativo:r.ativo!==false, modulos:r.modulos||[], cidadesCoord:r.cidades_coord||''};
               _loginSuccess(found);
@@ -4651,7 +4643,9 @@ let db = null;
 
 function initSupabase(){
   try {
-    db = supabase.createClient(SUPA_URL, SUPA_KEY);
+    db = supabase.createClient(SUPA_URL, SUPA_KEY, {
+      db: { schema: 'suprimentos' }
+    });
   } catch(e){ console.warn('Supabase init failed:', e); }
 }
 
@@ -5884,6 +5878,100 @@ function afterLoginHook(){
     carregarNotificacoes();
   }, 300);
 }
+</script>
+
+
+<!-- ══ MODAL MAPA DA REGIONAL CNS ══════════════════════════════════════ -->
+<div class="modal-bg" id="modal-mapa-convenio">
+  <div class="modal" style="width:97vw;max-width:1400px;max-height:92vh">
+    <div class="modal-header" style="background:var(--navy);border-radius:14px 14px 0 0">
+      <div>
+        <div class="modal-title" style="color:#fff;font-family:'Barlow Condensed',sans-serif;font-size:20px;font-weight:800">COMISSÃO NACIONAL DE SUPRIMENTOS — MAPA DA REGIONAL JUNDIAÍ</div>
+        <div style="font-size:11px;color:rgba(255,255,255,.6);margin-top:2px">Verificação dos convênios por cidade · preencha os campos manualmente</div>
+      </div>
+      <button class="modal-close" onclick="document.getElementById('modal-mapa-convenio').classList.remove('open')" style="color:#fff;font-size:24px">&times;</button>
+    </div>
+    <div class="modal-body" style="padding:0;overflow-x:auto">
+      <table id="tbl-mapa-cns" style="width:100%;border-collapse:collapse;font-size:11px;min-width:1100px">
+        <thead>
+          <tr>
+            <th rowspan="2" style="background:#0d2757;color:#fff;padding:8px 10px;text-align:left;position:sticky;left:0;z-index:5;min-width:130px;border-right:2px solid rgba(255,255,255,.2)">CIDADES</th>
+            <th colspan="2" style="background:#1a3a6b;color:#fff;padding:6px 8px;text-align:center;border-left:1px solid rgba(255,255,255,.2)">ECONOMIA DE COMPRAS</th>
+            <th colspan="1" style="background:#1a3a6b;color:#fff;padding:6px 8px;text-align:center;border-left:1px solid rgba(255,255,255,.2)">CNS LIMPEZA</th>
+            <th colspan="3" style="background:#1a3a6b;color:#fff;padding:6px 8px;text-align:center;border-left:1px solid rgba(255,255,255,.2)">PROJETOS DE ECONOMIA</th>
+            <th colspan="2" style="background:#1a3a6b;color:#fff;padding:6px 8px;text-align:center;border-left:1px solid rgba(255,255,255,.2)">EQUIPE CONVENIADA</th>
+            <th colspan="2" style="background:#1a3a6b;color:#fff;padding:6px 8px;text-align:center;border-left:1px solid rgba(255,255,255,.2)">CONVÊNIOS BANCÁRIOS</th>
+            <th colspan="2" style="background:#1a3a6b;color:#fff;padding:6px 8px;text-align:center;border-left:1px solid rgba(255,255,255,.2)">SEGUROS CONVENIADOS</th>
+            <th colspan="1" style="background:#1a3a6b;color:#fff;padding:6px 8px;text-align:center;border-left:1px solid rgba(255,255,255,.2)">PIEDADE</th>
+            <th rowspan="2" style="background:#0d2757;color:#fff;padding:8px 6px;text-align:center;border-left:2px solid rgba(255,255,255,.3);min-width:60px">TOTAL</th>
+          </tr>
+          <tr>
+            <th style="background:#1e4a8a;color:#dce8ff;padding:5px 7px;text-align:center;font-size:10px;border-left:1px solid rgba(255,255,255,.15)">1. Usa módulo Compras</th>
+            <th style="background:#1e4a8a;color:#dce8ff;padding:5px 7px;text-align:center;font-size:10px;border-left:1px solid rgba(255,255,255,.15)">2. Realiza Compras do Convênio</th>
+            <th style="background:#1e4a8a;color:#dce8ff;padding:5px 7px;text-align:center;font-size:10px;border-left:1px solid rgba(255,255,255,.15)">2. Realiza Visitas às Casas de Oração</th>
+            <th style="background:#1e4a8a;color:#dce8ff;padding:5px 7px;text-align:center;font-size:10px;border-left:1px solid rgba(255,255,255,.15)">3. Realiza compra dos Convênios</th>
+            <th style="background:#1e4a8a;color:#dce8ff;padding:5px 7px;text-align:center;font-size:10px;border-left:1px solid rgba(255,255,255,.15)">4. Meia Luz / Fotovoltaico</th>
+            <th style="background:#1e4a8a;color:#dce8ff;padding:5px 7px;text-align:center;font-size:10px;border-left:1px solid rgba(255,255,255,.15)">5. Pintura Programada</th>
+            <th style="background:#1e4a8a;color:#dce8ff;padding:5px 7px;text-align:center;font-size:10px;border-left:1px solid rgba(255,255,255,.15)">6. Técnico de Órgão Voluntário</th>
+            <th style="background:#1e4a8a;color:#dce8ff;padding:5px 7px;text-align:center;font-size:10px;border-left:1px solid rgba(255,255,255,.15)">7. CNS Climatização Téc. Voluntário</th>
+            <th style="background:#1e4a8a;color:#dce8ff;padding:5px 7px;text-align:center;font-size:10px;border-left:1px solid rgba(255,255,255,.15)">8. Banco Bradesco Convênio</th>
+            <th style="background:#1e4a8a;color:#dce8ff;padding:5px 7px;text-align:center;font-size:10px;border-left:1px solid rgba(255,255,255,.15)">9. PagBan Convênio</th>
+            <th style="background:#1e4a8a;color:#dce8ff;padding:5px 7px;text-align:center;font-size:10px;border-left:1px solid rgba(255,255,255,.15)">10. Seguro Voluntário (Porto)</th>
+            <th style="background:#1e4a8a;color:#dce8ff;padding:5px 7px;text-align:center;font-size:10px;border-left:1px solid rgba(255,255,255,.15)">11. Seguro Patrimonial (Chubby)</th>
+            <th style="background:#1e4a8a;color:#dce8ff;padding:5px 7px;text-align:center;font-size:10px;border-left:1px solid rgba(255,255,255,.15)">12. Compras Consumo e Ativo Convênio</th>
+          </tr>
+        </thead>
+        <tbody id="tbody-mapa-cns"></tbody>
+        <tfoot>
+          <tr id="tr-mapa-totals" style="background:#f0f4fa;font-weight:700">
+            <td style="padding:8px 10px;position:sticky;left:0;background:#f0f4fa;border-top:2px solid var(--border);font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:800;color:var(--navy)">TOTAL GERAL</td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+    <div class="modal-footer" style="justify-content:space-between;align-items:center">
+      <div style="font-size:11px;color:var(--muted)">
+        <span style="color:var(--green);font-weight:700">&#9632;</span> Sim &nbsp;
+        <span style="color:var(--red);font-weight:700">&#9632;</span> Não &nbsp;
+        <span style="color:var(--muted);font-weight:700">&#9632;</span> —
+      </div>
+      <div style="display:flex;gap:10px">
+        <button class="btn btn-outline btn-sm" onclick="mapaReset()">Limpar Tudo</button>
+        <button class="btn btn-primary btn-sm" onclick="mapaSalvar()">Salvar Mapa</button>
+        <button class="btn btn-outline btn-sm" onclick="document.getElementById('modal-mapa-convenio').classList.remove('open')">Fechar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+#tbl-mapa-cns td{padding:6px 4px;text-align:center;border-bottom:1px solid #eef2f9;vertical-align:middle}
+#tbl-mapa-cns td:first-child{text-align:left;padding-left:10px;position:sticky;left:0;background:#fff;font-weight:700;font-size:12px;color:var(--navy);border-right:2px solid var(--border);z-index:2}
+#tbl-mapa-cns tr:hover td{background:#f8fbff}
+#tbl-mapa-cns tr:hover td:first-child{background:#f0f5ff}
+.mapa-select{appearance:none;-webkit-appearance:none;border:1.5px solid var(--border);border-radius:6px;padding:3px 6px;font-size:12px;font-weight:700;cursor:pointer;text-align:center;background:#fff;color:var(--text);width:48px;transition:.15s}
+.mapa-select:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 3px rgba(34,86,199,.1)}
+.mapa-select.val-sim{background:#d4f5e5;color:#0f7a46;border-color:#a3e4c4}
+.mapa-select.val-nao{background:#fde2e2;color:#9a1515;border-color:#f9c0c0}
+.mapa-total-cell{font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:800;padding:8px 6px!important;border-top:2px solid var(--border)!important}
+.mapa-total-pct{font-size:11px;color:var(--muted);font-weight:500;display:block}
+</style>
+
+<script>
+(function(){
+  var CIDADES=['Cajamar','Jundiai','Itupeva','Cabreúva','Itatiba','Franco da Rocha','Caieiras','Campo Limpo Pta','Várzea Paulista','Francisco Morato'];
+  var N_COLS=13;
+  var STORAGE_KEY='mapa_cns_data_v1';
+  function loadData(){try{var d=JSON.parse(localStorage.getItem(STORAGE_KEY));if(d&&d.length===CIDADES.length)return d;}catch(e){}return CIDADES.map(function(){return Array(N_COLS).fill('');});}
+  function saveData(data){try{localStorage.setItem(STORAGE_KEY,JSON.stringify(data));}catch(e){}}
+  function updateSelClass(sel){sel.className='mapa-select';if(sel.value==='1')sel.classList.add('val-sim');else if(sel.value==='0')sel.classList.add('val-nao');}
+  function setRowTotText(td,row){var sim=row.filter(function(v){return v==='1';}).length;var pct=Math.round(sim/N_COLS*100);td.innerHTML=sim+'/'+N_COLS+'<span class="mapa-total-pct">'+pct+'%</span>';td.style.color=pct>=70?'var(--green)':pct>=40?'var(--orange)':'var(--red)';}
+  function updateColTotals(data){var tfoot=document.getElementById('tr-mapa-totals');if(!tfoot)return;tfoot.innerHTML='<td style="padding:8px 10px;position:sticky;left:0;background:#f0f4fa;border-top:2px solid var(--border);font-family:Barlow Condensed,sans-serif;font-size:13px;font-weight:800;color:var(--navy)">TOTAL GERAL</td>';var allSim=0;for(var c=0;c<N_COLS;c++){var sim=data.filter(function(r){return r[c]==='1';}).length;allSim+=sim;var td=document.createElement('td');td.className='mapa-total-cell';var pct=Math.round(sim/CIDADES.length*100);td.innerHTML=sim+'/'+CIDADES.length+'<span class="mapa-total-pct">'+pct+'%</span>';td.style.color=pct>=70?'var(--green)':pct>=40?'var(--orange)':'var(--red)';tfoot.appendChild(td);}var grandPct=Math.round(allSim/(CIDADES.length*N_COLS)*100);var tdG=document.createElement('td');tdG.className='mapa-total-cell';tdG.innerHTML=allSim+'/'+(CIDADES.length*N_COLS)+'<span class="mapa-total-pct">'+grandPct+'%</span>';tdG.style.color=grandPct>=70?'var(--green)':grandPct>=40?'var(--orange)':'var(--red)';tfoot.appendChild(tdG);}
+  function buildTable(){var data=loadData();var tbody=document.getElementById('tbody-mapa-cns');if(!tbody)return;tbody.innerHTML='';CIDADES.forEach(function(cidade,r){var tr=document.createElement('tr');var td0=document.createElement('td');td0.textContent=cidade;tr.appendChild(td0);for(var c=0;c<N_COLS;c++){var td=document.createElement('td');var sel=document.createElement('select');sel.className='mapa-select';sel.innerHTML='<option value="">—</option><option value="1">Sim</option><option value="0">Não</option>';sel.value=data[r][c];updateSelClass(sel);(function(rr,cc,s,d){s.addEventListener('change',function(){d[rr][cc]=s.value;updateSelClass(s);var totCell=tr.querySelector('.mapa-total-cell');if(totCell)setRowTotText(totCell,d[rr]);updateColTotals(d);});})(r,c,sel,data);td.appendChild(sel);tr.appendChild(td);}var tdTot=document.createElement('td');tdTot.className='mapa-total-cell';setRowTotText(tdTot,data[r]);tr.appendChild(tdTot);tbody.appendChild(tr);});updateColTotals(data);}
+  window.openMapaConvenio=function(){buildTable();var m=document.getElementById('modal-mapa-convenio');if(m)m.classList.add('open');};
+  window.mapaSalvar=function(){var data=loadData();var tbody=document.getElementById('tbody-mapa-cns');if(!tbody)return;var rows=tbody.querySelectorAll('tr');rows.forEach(function(tr,r){var sels=tr.querySelectorAll('select');sels.forEach(function(s,c){if(r<data.length&&c<N_COLS)data[r][c]=s.value;});});saveData(data);if(window.showToast)showToast('Mapa salvo com sucesso!','success');else alert('Mapa salvo!');};
+  window.mapaReset=function(){if(!confirm('Limpar todos os dados do mapa?'))return;localStorage.removeItem(STORAGE_KEY);buildTable();};
+})();
 </script>
 
 </body>
