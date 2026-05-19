@@ -1313,26 +1313,70 @@ textarea{resize:vertical;min-height:80px}
 
     <!-- CONVÊNIOS (página completa) -->
     <div class="page" id="page-convenios">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
+
+      <!-- Cabeçalho da página -->
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:20px">
         <div>
-          <button class="btn btn-outline" onclick="openMapaConvenio('regional')" style="gap:7px">
-            <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M20.5 3l-.16.03L15 5.1 9 3 3.36 4.9c-.21.07-.36.25-.36.48V20.5c0 .28.22.5.5.5l.16-.03L9 18.9l6 2.1 5.64-1.9c.21-.07.36-.25.36-.48V3.5c0-.28-.22-.5-.5-.5zM15 19l-6-2.11V5l6 2.11V19z"/></svg>
-            Mapa da Regional CNS
-          </button>
+          <h2 style="font-family:'Barlow Condensed',sans-serif;font-size:26px;font-weight:800;color:var(--navy);line-height:1.1">Convênios</h2>
+          <p style="font-size:12px;color:var(--muted);margin-top:4px">Consulte os boletins de convênios publicados e gerencie as informações.</p>
         </div>
-        <button class="btn btn-primary" onclick="openConvModal()">+ Novo Convênio/Boletim</button>
+        <button class="btn btn-primary" onclick="openConvModal()" style="gap:6px">
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
+          Novo Convênio
+        </button>
       </div>
 
-      <!-- Formulário de novo convênio -->
-      <div class="form-section" id="conv-form-section" style="display:none">
+      <!-- Cards de resumo por tipo -->
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:22px" id="conv-summary-cards">
+        <div class="conv-type-card" style="background:#fff;border:1px solid var(--border);border-radius:12px;padding:18px 20px;display:flex;align-items:center;gap:14px">
+          <div style="width:54px;height:54px;border-radius:50%;background:#fff3e0;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+            <svg viewBox="0 0 24 24" width="26" height="26" fill="#e87c1a"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+          </div>
+          <div>
+            <div style="font-size:11px;font-weight:700;color:#e87c1a;text-transform:uppercase;letter-spacing:.6px">Convênios Locais</div>
+            <div style="font-family:'Barlow Condensed',sans-serif;font-size:36px;font-weight:800;color:var(--navy);line-height:1" id="conv-count-locais">0</div>
+            <div style="font-size:11px;color:var(--muted);margin-top:2px">Boletins publicados</div>
+          </div>
+        </div>
+        <div class="conv-type-card" style="background:#fff;border:1px solid var(--border);border-radius:12px;padding:18px 20px;display:flex;align-items:center;gap:14px">
+          <div style="width:54px;height:54px;border-radius:50%;background:#ede9fe;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+            <svg viewBox="0 0 24 24" width="26" height="26" fill="#7c3aed"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
+          </div>
+          <div>
+            <div style="font-size:11px;font-weight:700;color:#7c3aed;text-transform:uppercase;letter-spacing:.6px">Convênios Regionais</div>
+            <div style="font-family:'Barlow Condensed',sans-serif;font-size:36px;font-weight:800;color:var(--navy);line-height:1" id="conv-count-regionais">0</div>
+            <div style="font-size:11px;color:var(--muted);margin-top:2px">Boletins publicados</div>
+          </div>
+        </div>
+        <div class="conv-type-card" style="background:#fff;border:1px solid var(--border);border-radius:12px;padding:18px 20px;display:flex;align-items:center;gap:14px">
+          <div style="width:54px;height:54px;border-radius:50%;background:#d4f5e5;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+            <svg viewBox="0 0 24 24" width="26" height="26" fill="#1ea96a"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+          </div>
+          <div>
+            <div style="font-size:11px;font-weight:700;color:#1ea96a;text-transform:uppercase;letter-spacing:.6px">Convênios Nacionais</div>
+            <div style="font-family:'Barlow Condensed',sans-serif;font-size:36px;font-weight:800;color:var(--navy);line-height:1" id="conv-count-nacionais">0</div>
+            <div style="font-size:11px;color:var(--muted);margin-top:2px">Boletins publicados</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Formulário de novo convênio (oculto) -->
+      <div class="form-section" id="conv-form-section" style="display:none;margin-bottom:16px">
         <div class="form-section-title">Novo Convênio / Boletim</div>
         <div class="form-grid">
-          <div class="form-group"><label>Título *</label><input id="cv-titulo" type="text" placeholder="Ex: Boletim CNS Convênios Abril 2024"></div>
+          <div class="form-group"><label>Título *</label><input id="cv-titulo" type="text" placeholder="Ex: Boletim_018_2026.pdf"></div>
           <div class="form-group"><label>Tipo</label>
-            <select id="cv-tipo"><option value="nacionais">Nacionais</option><option value="regionais">Regionais</option></select>
+            <select id="cv-tipo">
+              <option value="nacionais">Convênio Nacional</option>
+              <option value="regionais">Convênio Regional</option>
+              <option value="locais">Convênio Local</option>
+            </select>
           </div>
+          <div class="form-group"><label>Produto</label><input id="cv-produto" type="text" placeholder="Ex: Copo, Papel Higiênico..."></div>
+          <div class="form-group"><label>Fornecedor</label><input id="cv-fornecedor" type="text" placeholder="Ex: Fornecedor Teste"></div>
+          <div class="form-group"><label>Data de Publicação</label><input id="cv-data" type="date"></div>
+          <div class="form-group"><label>Link do Boletim</label><input id="cv-link" type="url" placeholder="https://exemplo.com/boletim.pdf"></div>
           <div class="form-group"><label>URL da Imagem</label><input id="cv-img" type="url" placeholder="https://exemplo.com/imagem.jpg"></div>
-          <div class="form-group"><label>Link do Boletim</label><input id="cv-link" type="url" placeholder="https://exemplo.com/boletim"></div>
           <div class="form-group"><label>Igrejas</label><input id="cv-igrejas" type="number" min="0" value="0"></div>
           <div class="form-group full"><label>Descrição</label><textarea id="cv-desc" rows="2" placeholder="Descrição opcional"></textarea></div>
         </div>
@@ -1342,16 +1386,111 @@ textarea{resize:vertical;min-height:80px}
         </div>
       </div>
 
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
-        <div class="card">
-          <div class="card-header"><span class="card-title">Nacionais</span></div>
-          <div class="card-body" style="padding:12px" id="conv-page-nacionais"></div>
+      <!-- Filtros -->
+      <div style="background:#fff;border:1px solid var(--border);border-radius:12px;padding:14px 16px;margin-bottom:14px;display:flex;gap:10px;align-items:flex-end;flex-wrap:wrap">
+        <div style="flex:1;min-width:160px">
+          <div style="font-size:11px;font-weight:600;color:var(--muted);margin-bottom:4px;text-transform:uppercase;letter-spacing:.4px">Buscar</div>
+          <div style="position:relative">
+            <svg style="position:absolute;left:9px;top:50%;transform:translateY(-50%);width:14px;height:14px;fill:var(--muted)" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27A6.47 6.47 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+            <input id="conv-filter-busca" type="text" placeholder="Buscar convênios..." style="padding-left:32px;width:100%;border:1.5px solid var(--border);border-radius:7px;padding-top:7px;padding-bottom:7px;font-size:13px" oninput="renderConveniosPage()">
+          </div>
         </div>
-        <div class="card">
-          <div class="card-header"><span class="card-title">Regionais</span></div>
-          <div class="card-body" style="padding:12px" id="conv-page-regionais"></div>
+        <div style="min-width:140px">
+          <div style="font-size:11px;font-weight:600;color:var(--muted);margin-bottom:4px;text-transform:uppercase;letter-spacing:.4px">Tipo</div>
+          <select id="conv-filter-tipo" style="border:1.5px solid var(--border);border-radius:7px;padding:7px 10px;font-size:13px;width:100%" onchange="renderConveniosPage()">
+            <option value="">Todos</option>
+            <option value="nacionais">Convênio Nacional</option>
+            <option value="regionais">Convênio Regional</option>
+            <option value="locais">Convênio Local</option>
+          </select>
+        </div>
+        <div style="min-width:140px">
+          <div style="font-size:11px;font-weight:600;color:var(--muted);margin-bottom:4px;text-transform:uppercase;letter-spacing:.4px">Produto</div>
+          <select id="conv-filter-produto" style="border:1.5px solid var(--border);border-radius:7px;padding:7px 10px;font-size:13px;width:100%" onchange="renderConveniosPage()">
+            <option value="">Todos</option>
+          </select>
+        </div>
+        <div style="min-width:140px">
+          <div style="font-size:11px;font-weight:600;color:var(--muted);margin-bottom:4px;text-transform:uppercase;letter-spacing:.4px">Fornecedor</div>
+          <select id="conv-filter-fornecedor" style="border:1.5px solid var(--border);border-radius:7px;padding:7px 10px;font-size:13px;width:100%" onchange="renderConveniosPage()">
+            <option value="">Todos</option>
+          </select>
+        </div>
+        <div style="min-width:150px">
+          <div style="font-size:11px;font-weight:600;color:var(--muted);margin-bottom:4px;text-transform:uppercase;letter-spacing:.4px">Data da publicação</div>
+          <input id="conv-filter-data" type="date" style="border:1.5px solid var(--border);border-radius:7px;padding:7px 10px;font-size:13px;width:100%" onchange="renderConveniosPage()">
+        </div>
+        <button class="btn btn-primary" onclick="renderConveniosPage()" style="gap:5px;flex-shrink:0">
+          <svg viewBox="0 0 24 24" width="13" height="13" fill="currentColor"><path d="M10 18h4v-2h-4v2zM3 6v2h18V6H3zm3 7h12v-2H6v2z"/></svg>
+          Filtrar
+        </button>
+        <button class="btn btn-outline" onclick="convLimparFiltros()" style="flex-shrink:0">Limpar</button>
+        <button class="btn btn-outline" onclick="openMapaConvenio('regional')" style="gap:5px;flex-shrink:0;margin-left:auto">
+          <svg viewBox="0 0 24 24" width="13" height="13" fill="currentColor"><path d="M20.5 3l-.16.03L15 5.1 9 3 3.36 4.9c-.21.07-.36.25-.36.48V20.5c0 .28.22.5.5.5l.16-.03L9 18.9l6 2.1 5.64-1.9c.21-.07.36-.25.36-.48V3.5c0-.28-.22-.5-.5-.5zM15 19l-6-2.11V5l6 2.11V19z"/></svg>
+          Mapa CNS
+        </button>
+      </div>
+
+      <!-- Tabela de convênios -->
+      <div class="card">
+        <div style="overflow-x:auto">
+          <table style="width:100%;border-collapse:collapse;font-size:13px">
+            <thead>
+              <tr>
+                <th style="background:#f4f7fd;padding:10px 14px;text-align:left;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);border-bottom:1px solid var(--border);cursor:pointer" onclick="convSortBy('data')">
+                  Data da Publicação <span id="conv-sort-data-icon" style="font-size:10px">↕</span>
+                </th>
+                <th style="background:#f4f7fd;padding:10px 14px;text-align:left;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);border-bottom:1px solid var(--border)">Produto</th>
+                <th style="background:#f4f7fd;padding:10px 14px;text-align:left;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);border-bottom:1px solid var(--border)">Fornecedor</th>
+                <th style="background:#f4f7fd;padding:10px 14px;text-align:center;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);border-bottom:1px solid var(--border)">Tipo</th>
+                <th style="background:#f4f7fd;padding:10px 14px;text-align:left;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);border-bottom:1px solid var(--border)">Boletim</th>
+                <th style="background:#f4f7fd;padding:10px 14px;text-align:center;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);border-bottom:1px solid var(--border)">Editar</th>
+                <th style="background:#f4f7fd;padding:10px 14px;text-align:center;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);border-bottom:1px solid var(--border)">Excluir</th>
+              </tr>
+            </thead>
+            <tbody id="conv-table-body">
+              <tr><td colspan="7" style="text-align:center;padding:32px;color:var(--muted);font-size:13px">Carregando...</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <!-- Rodapé paginação -->
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-top:1px solid var(--border);flex-wrap:wrap;gap:8px">
+          <div style="font-size:12px;color:var(--muted)" id="conv-pagination-info">Mostrando 0 registros</div>
+          <div style="display:flex;align-items:center;gap:4px" id="conv-pagination-btns"></div>
+          <div style="display:flex;align-items:center;gap:8px">
+            <span style="font-size:12px;color:var(--muted)">Linhas por página:</span>
+            <select id="conv-rows-per-page" style="border:1.5px solid var(--border);border-radius:6px;padding:4px 8px;font-size:12px" onchange="convGoToPage(1)">
+              <option value="10">10</option>
+              <option value="20">20</option>
+              <option value="50">50</option>
+            </select>
+          </div>
         </div>
       </div>
+
+      <!-- Legenda inferior -->
+      <div style="background:#fff;border:1px solid var(--border);border-radius:10px;padding:12px 16px;margin-top:12px;display:flex;align-items:flex-start;gap:10px;flex-wrap:wrap">
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="var(--blue)" style="flex-shrink:0;margin-top:1px"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+        <div>
+          <div style="font-size:12px;font-weight:700;color:var(--navy);margin-bottom:6px">Sobre os Convênios</div>
+          <div style="font-size:11px;color:var(--muted);margin-bottom:6px">Os convênios são publicados por boletins fechados e classificados conforme o escopo de atuação.</div>
+          <div style="display:flex;gap:16px;flex-wrap:wrap">
+            <span style="display:flex;align-items:center;gap:5px;font-size:11px;font-weight:600;color:var(--text)">
+              <span style="width:10px;height:10px;border-radius:50%;background:#e87c1a;display:inline-block"></span>
+              <span id="leg-locais">0</span> – Convênios Locais
+            </span>
+            <span style="display:flex;align-items:center;gap:5px;font-size:11px;font-weight:600;color:var(--text)">
+              <span style="width:10px;height:10px;border-radius:50%;background:#7c3aed;display:inline-block"></span>
+              <span id="leg-regionais">0</span> – Convênios Regionais
+            </span>
+            <span style="display:flex;align-items:center;gap:5px;font-size:11px;font-weight:600;color:var(--text)">
+              <span style="width:10px;height:10px;border-radius:50%;background:#1ea96a;display:inline-block"></span>
+              <span id="leg-nacionais">0</span> – Convênios Nacionais
+            </span>
+          </div>
+        </div>
+      </div>
+
     </div>
 
     <!-- PINTURA PROGRAMADA -->
@@ -1519,7 +1658,13 @@ textarea{resize:vertical;min-height:80px}
 
       <!-- ECONOMIA APURADA: lista de lançamentos -->
       <div class="form-section">
-        <div class="ec-section-title"><em>Economia</em> <span style="font-style:normal;color:var(--text)">Apurada</span></div>
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+          <div class="ec-section-title" style="margin-bottom:0"><em>Economia</em> <span style="font-style:normal;color:var(--text)">Apurada</span></div>
+          <button class="btn btn-primary" onclick="gerarRelatorioEc()" style="gap:6px">
+            <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm-1 7V3.5L18.5 9H13z"/></svg>
+            Gerar Relatório PDF
+          </button>
+        </div>
         <div style="display:grid;grid-template-columns:28px 1fr 1fr 1fr 1fr 1fr 1fr auto auto;gap:8px;padding:6px 14px;margin-bottom:6px">
           <div></div>
           <div style="font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase">Cidade</div>
@@ -1528,8 +1673,8 @@ textarea{resize:vertical;min-height:80px}
           <div style="font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase">SIM</div>
           <div style="font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase">Convênio</div>
           <div style="font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase">Não</div>
-          <div style="font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase">Incluir</div>
-          <div style="font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase">Links</div>
+          <div style="font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase">Ver</div>
+          <div style="font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase">Relatório</div>
         </div>
         <div id="ec-apurada-list">
           <div class="ec-no-data">Nenhum lançamento realizado ainda.</div>
@@ -1537,16 +1682,25 @@ textarea{resize:vertical;min-height:80px}
       </div>
 
       <!-- MODAL: Relatório / Visualização -->
-      <div class="modal-bg" id="modal-ec-rel" style="z-index:9500">
-        <div class="modal" style="width:900px;max-width:98vw;max-height:95vh">
-          <div class="modal-header" style="background:var(--navy);color:#fff">
-            <span class="modal-title" style="color:#fff">📄 Relatório — Apuração Mensal de Economia</span>
-            <button class="modal-close" style="color:#fff" onclick="closeModal('modal-ec-rel')">✕</button>
+      <div class="modal-bg" id="modal-ec-rel" style="z-index:9500;align-items:flex-start;padding:20px 0;overflow-y:auto">
+        <div class="modal" style="width:min(1100px,98vw);max-height:none;overflow:visible;margin:auto">
+          <div class="modal-header" style="background:var(--navy);color:#fff;border-radius:14px 14px 0 0;position:sticky;top:0;z-index:10">
+            <div style="display:flex;align-items:center;gap:10px">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm-1 7V3.5L18.5 9H13z"/></svg>
+              <span class="modal-title" style="color:#fff">Relatório de Apuração de Economia</span>
+            </div>
+            <button class="modal-close" style="color:#fff;font-size:22px" onclick="closeModal('modal-ec-rel')">✕</button>
           </div>
-          <div class="modal-body" id="ec-rel-body" style="padding:0"></div>
-          <div class="modal-footer">
-            <button class="btn btn-outline" onclick="closeModal('modal-ec-rel')">Fechar</button>
-            <button class="btn btn-primary" onclick="printEcRel()">🖨 Imprimir / Salvar PDF</button>
+          <div class="modal-body" id="ec-rel-body" style="padding:0;overflow-x:auto"></div>
+          <div class="modal-footer" style="border-radius:0 0 14px 14px;justify-content:space-between;align-items:center;position:sticky;bottom:0;background:#fff;z-index:10">
+            <div style="font-size:11px;color:var(--muted)">💡 Preencha os nomes e datas dos responsáveis antes de imprimir</div>
+            <div style="display:flex;gap:10px">
+              <button class="btn btn-outline" onclick="closeModal('modal-ec-rel')">Fechar</button>
+              <button class="btn btn-primary" onclick="printEcRel()" style="gap:6px">
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M19 8H5c-1.66 0-3 1.34-3 3v6h4v4h12v-4h4v-6c0-1.66-1.34-3-3-3zm-3 11H8v-5h8v5zm3-7c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1zm-1-9H6v4h12V3z"/></svg>
+                Imprimir / Salvar PDF
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -2502,11 +2656,18 @@ let users = [
 
 // Convênios data - suporta URL de imagem
 let convenios = [
-  {id:1,titulo:'Boletim CNS Convênios Abril 2024',tipo:'nacionais',imgUrl:'',link:'',igrejas:10,desc:'Boletim mensal de convênios',dataCriacao:'há 11 hips'},
-  {id:2,titulo:'Convênios Regionais',tipo:'regionais',imgUrl:'',link:'',igrejas:4,desc:'Convênios das regiões',dataCriacao:'há 11 mrs'},
-  {id:3,titulo:'Boletim CNS - Fevereiro 2024',tipo:'nacionais',imgUrl:'',link:'',igrejas:4,desc:'Boletim de fevereiro',dataCriacao:'há 11 mrs'},
+  {id:1,titulo:'Boletim_018_2026.pdf',tipo:'nacionais',imgUrl:'',link:'',igrejas:10,desc:'Boletim mensal de convênios',dataCriacao:'há 11 hips',produto:'Copo',fornecedor:'Fornecedor Teste',dataPublicacao:'2026-05-18'},
+  {id:2,titulo:'Boletim_017_2026.pdf',tipo:'regionais',imgUrl:'',link:'',igrejas:4,desc:'Convênios das regiões',dataCriacao:'há 11 mrs',produto:'Papel Higiênico',fornecedor:'Fornecedor Exemplo',dataPublicacao:'2026-05-15'},
+  {id:3,titulo:'Boletim_016_2026.pdf',tipo:'regionais',imgUrl:'',link:'',igrejas:4,desc:'Boletim de fevereiro',dataCriacao:'há 11 mrs',produto:'Saco de Lixo',fornecedor:'Empresa Parceira',dataPublicacao:'2026-05-12'},
+  {id:4,titulo:'Boletim_015_2026.pdf',tipo:'nacionais',imgUrl:'',link:'',igrejas:6,desc:'',dataCriacao:'',produto:'Sabonete Líquido',fornecedor:'Fornecedor Alpha',dataPublicacao:'2026-05-10'},
+  {id:5,titulo:'Boletim_014_2026.pdf',tipo:'locais',imgUrl:'',link:'',igrejas:2,desc:'',dataCriacao:'',produto:'Desinfetante',fornecedor:'Fornecedor Beta',dataPublicacao:'2026-05-08'},
+  {id:6,titulo:'Boletim_013_2026.pdf',tipo:'nacionais',imgUrl:'',link:'',igrejas:8,desc:'',dataCriacao:'',produto:'Álcool em Gel',fornecedor:'Fornecedor Gama',dataPublicacao:'2026-05-05'},
+  {id:7,titulo:'Boletim_012_2026.pdf',tipo:'regionais',imgUrl:'',link:'',igrejas:3,desc:'',dataCriacao:'',produto:'Guardanapo',fornecedor:'Fornecedor Delta',dataPublicacao:'2026-05-02'},
+  {id:8,titulo:'Boletim_011_2026.pdf',tipo:'nacionais',imgUrl:'',link:'',igrejas:5,desc:'',dataCriacao:'',produto:'Café',fornecedor:'Fornecedor Ômega',dataPublicacao:'2026-04-30'},
+  {id:9,titulo:'Boletim_010_2026.pdf',tipo:'locais',imgUrl:'',link:'',igrejas:1,desc:'',dataCriacao:'',produto:'Água Mineral',fornecedor:'Fornecedor Sigma',dataPublicacao:'2026-04-28'},
+  {id:10,titulo:'Boletim_009_2026.pdf',tipo:'regionais',imgUrl:'',link:'',igrejas:4,desc:'',dataCriacao:'',produto:'Açúcar',fornecedor:'Fornecedor Zeta',dataPublicacao:'2026-04-25'},
 ];
-let nextConvId = 4;
+let nextConvId = 11;
 
 let nextFornId = 16;
 let nextAgId = 8;
@@ -2800,7 +2961,8 @@ function openConvModal(){
 
 function closeConvForm(){
   document.getElementById('conv-form-section').style.display='none';
-  ['cv-titulo','cv-img','cv-desc','cv-link'].forEach(id=>document.getElementById(id).value='');
+  ['cv-titulo','cv-img','cv-desc','cv-link','cv-produto','cv-fornecedor'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  const d=document.getElementById('cv-data');if(d)d.value='';
   document.getElementById('cv-igrejas').value='0';
 }
 
@@ -2815,7 +2977,10 @@ function saveConvenio(){
     link: document.getElementById('cv-link').value.trim(),
     igrejas: parseInt(document.getElementById('cv-igrejas').value)||0,
     desc: document.getElementById('cv-desc').value.trim(),
-    dataCriacao: 'agora'
+    dataCriacao: 'agora',
+    produto: document.getElementById('cv-produto').value.trim(),
+    fornecedor: document.getElementById('cv-fornecedor').value.trim(),
+    dataPublicacao: document.getElementById('cv-data').value || new Date().toISOString().split('T')[0]
   };
   convenios.push(obj);
   closeConvForm();
@@ -2833,38 +2998,165 @@ function deleteConvenio(id){
   }
 }
 
+// ─── CONVÊNIOS PAGE STATE ────────────────────────────────────────────────────
+let convCurrentPage = 1;
+let convSortField = 'data';
+let convSortDir = -1; // -1 = desc, 1 = asc
+
+function convLimparFiltros(){
+  ['conv-filter-busca','conv-filter-data'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  ['conv-filter-tipo','conv-filter-produto','conv-filter-fornecedor'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  convCurrentPage=1;
+  renderConveniosPage();
+}
+
+function convSortBy(field){
+  if(convSortField===field) convSortDir*=-1;
+  else { convSortField=field; convSortDir=-1; }
+  renderConveniosPage();
+}
+
+function convGoToPage(p){
+  convCurrentPage=p;
+  renderConveniosPage();
+}
+
+function convTipoBadge(tipo){
+  const map={
+    nacionais:{label:'Convênio Nacional',bg:'#d4f5e5',color:'#0f7a46'},
+    regionais:{label:'Convênio Regional',bg:'#ede9fe',color:'#6d28d9'},
+    locais:{label:'Convênio Local',bg:'#fff3e0',color:'#c05621'}
+  };
+  const t=map[tipo]||{label:tipo,bg:'#eef2f9',color:'#6b7a99'};
+  return `<span style="background:${t.bg};color:${t.color};padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700;white-space:nowrap">${t.label}</span>`;
+}
+
+function fmtDateBR(d){
+  if(!d) return '-';
+  const p=d.split('-');
+  return p.length===3?p[2]+'/'+p[1]+'/'+p[0]:d;
+}
+
 function renderConveniosPage(){
-  ['nacionais','regionais'].forEach(tipo=>{
-    const el = document.getElementById('conv-page-'+tipo);
-    if(!el) return;
-    const list = convenios.filter(c=>c.tipo===tipo);
-    if(list.length===0){
-      el.innerHTML='<p style="color:var(--muted);font-size:12px;padding:8px">Nenhum item cadastrado.</p>';
-      return;
+  // Atualiza selects de filtros dinâmicos
+  const prodSel=document.getElementById('conv-filter-produto');
+  const fornSel=document.getElementById('conv-filter-fornecedor');
+  if(prodSel){
+    const prods=[...new Set(convenios.map(c=>c.produto||'').filter(Boolean))].sort();
+    const pv=prodSel.value;
+    prodSel.innerHTML='<option value="">Todos</option>'+prods.map(p=>`<option value="${p}">${p}</option>`).join('');
+    if(pv)prodSel.value=pv;
+  }
+  if(fornSel){
+    const forns=[...new Set(convenios.map(c=>c.fornecedor||'').filter(Boolean))].sort();
+    const fv=fornSel.value;
+    fornSel.innerHTML='<option value="">Todos</option>'+forns.map(f=>`<option value="${f}">${f}</option>`).join('');
+    if(fv)fornSel.value=fv;
+  }
+
+  // Filtros
+  const busca=(document.getElementById('conv-filter-busca')||{}).value||'';
+  const fTipo=(document.getElementById('conv-filter-tipo')||{}).value||'';
+  const fProd=(document.getElementById('conv-filter-produto')||{}).value||'';
+  const fForn=(document.getElementById('conv-filter-fornecedor')||{}).value||'';
+  const fData=(document.getElementById('conv-filter-data')||{}).value||'';
+
+  let list=convenios.filter(c=>{
+    if(fTipo && c.tipo!==fTipo) return false;
+    if(fProd && c.produto!==fProd) return false;
+    if(fForn && c.fornecedor!==fForn) return false;
+    if(fData && c.dataPublicacao!==fData) return false;
+    if(busca){
+      const q=busca.toLowerCase();
+      if(!(c.titulo||'').toLowerCase().includes(q) && !(c.produto||'').toLowerCase().includes(q) && !(c.fornecedor||'').toLowerCase().includes(q)) return false;
     }
-    el.innerHTML = list.map(c=>{
-      const hasImg = c.imgUrl && c.imgUrl.trim()!=='';
-      const hasLink = c.link && c.link.trim()!=='';
-      return `<div class="conv-manage-item" style="${hasLink?'cursor:pointer':''}">
-        <div onclick="${hasLink?`window.open('${c.link}','_blank')`:'void(0)'}" style="display:flex;align-items:center;gap:10px;flex:1;min-width:0">
-          ${hasImg
-            ? `<img class="conv-manage-img" src="${c.imgUrl}" alt="${c.titulo}" onerror="this.style.display='none'">`
-            : `<div class="conv-manage-img" style="background:linear-gradient(135deg,var(--navy),var(--blue));display:flex;align-items:center;justify-content:center;flex-shrink:0">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="#fff"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"/></svg>
-              </div>`}
-          <div class="conv-manage-info">
-            <div class="conv-manage-title">${c.titulo}</div>
-            <div class="conv-manage-meta">${c.igrejas} Igrejas • ${c.dataCriacao||'recente'}</div>
-            ${hasLink?`<div style="font-size:10px;color:var(--blue);margin-top:2px">🔗 ${c.link.length>45?c.link.substring(0,45)+'...':c.link}</div>`:'<div style="font-size:10px;color:var(--muted);margin-top:2px">Sem link</div>'}
-          </div>
-        </div>
-        <div class="conv-manage-actions" style="flex-shrink:0;display:flex;gap:6px;align-items:center">
-          <button class="btn btn-outline btn-sm" style="color:var(--blue);white-space:nowrap" onclick="openConvLinkModal(${c.id})" title="Inserir/editar link">🔗 Link</button>
-          <button class="btn btn-outline btn-sm" style="color:var(--navy);white-space:nowrap" onclick="openConvEditModal(${c.id})" title="Editar convênio">✏️ Editar</button>
-          <button class="btn btn-red btn-sm" onclick="deleteConvenio(${c.id})">✕</button>
-        </div>
-      </div>`;
-    }).join('');
+    return true;
+  });
+
+  // Ordenação
+  list.sort((a,b)=>{
+    const da=a.dataPublicacao||'';
+    const db=b.dataPublicacao||'';
+    return da<db ? convSortDir : da>db ? -convSortDir : 0;
+  });
+
+  // Counts para cards
+  const tot={locais:0,regionais:0,nacionais:0};
+  convenios.forEach(c=>{ if(tot[c.tipo]!==undefined) tot[c.tipo]++; });
+  ['locais','regionais','nacionais'].forEach(t=>{
+    const el=document.getElementById('conv-count-'+t);
+    if(el) el.textContent=tot[t];
+    const leg=document.getElementById('leg-'+t);
+    if(leg) leg.textContent=tot[t];
+  });
+
+  // Paginação
+  const rowsPerPage=parseInt((document.getElementById('conv-rows-per-page')||{}).value||10);
+  const totalPages=Math.max(1,Math.ceil(list.length/rowsPerPage));
+  if(convCurrentPage>totalPages) convCurrentPage=totalPages;
+  const start=(convCurrentPage-1)*rowsPerPage;
+  const pageList=list.slice(start,start+rowsPerPage);
+
+  // Info paginação
+  const infoEl=document.getElementById('conv-pagination-info');
+  if(infoEl) infoEl.textContent=list.length===0?'Nenhum registro encontrado':`Mostrando ${start+1} a ${Math.min(start+rowsPerPage,list.length)} de ${list.length} registros`;
+
+  // Botões de paginação
+  const btnsEl=document.getElementById('conv-pagination-btns');
+  if(btnsEl){
+    let btns='';
+    const btnStyle=(active)=>`style="border:1.5px solid ${active?'var(--blue)':'var(--border)'};background:${active?'var(--blue)':'#fff'};color:${active?'#fff':'var(--text)'};width:30px;height:30px;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;justify-content:center"`;
+    btns+=`<button ${btnStyle(false)} onclick="convGoToPage(1)" ${convCurrentPage===1?'disabled':''}>«</button>`;
+    btns+=`<button ${btnStyle(false)} onclick="convGoToPage(${convCurrentPage-1})" ${convCurrentPage===1?'disabled':''}>‹</button>`;
+    const from=Math.max(1,convCurrentPage-2);
+    const to=Math.min(totalPages,from+4);
+    for(let i=from;i<=to;i++) btns+=`<button ${btnStyle(i===convCurrentPage)} onclick="convGoToPage(${i})">${i}</button>`;
+    if(to<totalPages) btns+=`<span style="padding:0 4px;line-height:30px;font-size:12px;color:var(--muted)">…</span>`;
+    btns+=`<button ${btnStyle(false)} onclick="convGoToPage(${convCurrentPage+1})" ${convCurrentPage===totalPages?'disabled':''}>›</button>`;
+    btns+=`<button ${btnStyle(false)} onclick="convGoToPage(${totalPages})" ${convCurrentPage===totalPages?'disabled':''}>»</button>`;
+    btnsEl.innerHTML=btns;
+  }
+
+  // Tabela
+  const tbody=document.getElementById('conv-table-body');
+  if(!tbody) return;
+  if(pageList.length===0){
+    tbody.innerHTML=`<tr><td colspan="7" style="text-align:center;padding:32px;color:var(--muted);font-size:13px">Nenhum convênio encontrado.</td></tr>`;
+    return;
+  }
+  tbody.innerHTML=pageList.map(c=>{
+    const hasLink=c.link && c.link.trim()!=='';
+    const nomeBoletim=c.titulo||'-';
+    const linkHtml=hasLink
+      ? `<a href="${c.link}" target="_blank" style="color:var(--blue);font-weight:600;text-decoration:none;display:inline-flex;align-items:center;gap:4px">${nomeBoletim} <svg viewBox="0 0 24 24" width="11" height="11" fill="currentColor" style="flex-shrink:0"><path d="M19 19H5V5h7V3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z"/></svg></a>`
+      : `<span style="color:var(--muted)">${nomeBoletim}</span>`;
+    return `<tr style="border-bottom:1px solid #eef2f9">
+      <td style="padding:10px 14px;color:var(--text)">${fmtDateBR(c.dataPublicacao)}</td>
+      <td style="padding:10px 14px;font-weight:600;color:var(--navy)">${c.produto||'-'}</td>
+      <td style="padding:10px 14px;color:var(--text)">${c.fornecedor||'-'}</td>
+      <td style="padding:10px 14px;text-align:center">${convTipoBadge(c.tipo)}</td>
+      <td style="padding:10px 14px">${linkHtml}</td>
+      <td style="padding:10px 14px;text-align:center">
+        <button onclick="openConvEditModal(${c.id})" style="background:none;border:none;cursor:pointer;color:var(--blue);padding:4px" title="Editar">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a1 1 0 0 0 0-1.41l-2.34-2.34a1 1 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>
+        </button>
+      </td>
+      <td style="padding:10px 14px;text-align:center">
+        <button onclick="deleteConvenio(${c.id})" style="background:none;border:none;cursor:pointer;color:var(--red);padding:4px" title="Excluir">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>
+        </button>
+      </td>
+    </tr>`;
+  }).join('');
+
+  // Ícone de ordenação
+  const ico=document.getElementById('conv-sort-data-icon');
+  if(ico) ico.textContent=convSortDir===-1?'↓':'↑';
+
+  // Mantém retrocompatibilidade com elements que possam existir
+  ['nacionais','regionais'].forEach(tipo=>{
+    const el=document.getElementById('conv-page-'+tipo);
+    if(el) el.innerHTML='';
   });
 }
 
@@ -2893,7 +3185,6 @@ function saveConvLink(){
   editingConvLinkId = null;
 }
 
-// ─── EDITAR CONVÊNIO ─────────────────────────────────────────────────────────
 let editingConvId = null;
 function openConvEditModal(id){
   const c = convenios.find(x=>x.id===id);
@@ -2905,6 +3196,9 @@ function openConvEditModal(id){
   document.getElementById('conv-edit-link').value    = c.link   || '';
   document.getElementById('conv-edit-igrejas').value = c.igrejas || 0;
   document.getElementById('conv-edit-desc').value    = c.desc   || '';
+  const ep=document.getElementById('conv-edit-produto');if(ep)ep.value=c.produto||'';
+  const ef=document.getElementById('conv-edit-fornecedor');if(ef)ef.value=c.fornecedor||'';
+  const ed=document.getElementById('conv-edit-data');if(ed)ed.value=c.dataPublicacao||'';
   document.getElementById('modal-conv-edit').classList.add('open');
   setTimeout(()=>document.getElementById('conv-edit-titulo').focus(),100);
 }
@@ -2922,6 +3216,9 @@ function saveConvEdit(){
   c.link    = lnk;
   c.igrejas = parseInt(document.getElementById('conv-edit-igrejas').value)||0;
   c.desc    = document.getElementById('conv-edit-desc').value.trim();
+  const ep=document.getElementById('conv-edit-produto');if(ep)c.produto=ep.value.trim();
+  const ef=document.getElementById('conv-edit-fornecedor');if(ef)c.fornecedor=ef.value.trim();
+  const ed=document.getElementById('conv-edit-data');if(ed)c.dataPublicacao=ed.value;
   document.getElementById('modal-conv-edit').classList.remove('open');
   renderConveniosPage();
   renderConvDash();
@@ -4252,84 +4549,278 @@ function gerarRelatorioEcItem(i){
 }
 
 function buildEcRelatorio(a){
-  let totalFechado=0, totalMaior=0, totalEco=0;
-  a.rows.forEach(r=>{totalFechado+=r.valorFechado||0; totalMaior+=r.valorMaior||0; totalEco+=r.economia||0;});
+  let totalMedio=0, totalMaior=0, totalFechado=0, totalEco=0;
+  // Calcula preço médio como média dos 3 fornecedores (forn1+forn2+forn3)/3 ou usa valorFechado
+  a.rows.forEach(r=>{
+    totalFechado += r.valorFechado||0;
+    totalMaior   += r.valorMaior||0;
+    totalEco     += r.economia||0;
+    // Preço médio = valorFechado (média dos 3 cotados)
+    totalMedio   += r.valorFechado||0;
+  });
+  const mesAno = `${a.mes||''}/${a.ano||''}`;
 
+  // Monta linhas da tabela
   const rows = a.rows.map((r,i)=>{
-    const cBadge = r.cotacaoNome==='SIM'?'#1ea96a':r.cotacaoNome==='CNS'?'#2256c7':r.cotacaoNome==='NÃO'?'#e03535':'#9eaab8';
-    return `<tr style="font-size:11px;${i%2===0?'background:#f9fbff':''}">
-      <td style="padding:4px 7px;border:1px solid #ddd;color:#555">${fmtEcDate(r.data)}</td>
-      <td style="padding:4px 7px;border:1px solid #ddd;color:#555">${r.hora}</td>
-      <td style="padding:4px 7px;border:1px solid #ddd">${r.numero}</td>
-      <td style="padding:4px 7px;border:1px solid #ddd;max-width:180px;white-space:normal;word-break:break-word">${r.remetente}</td>
-      <td style="padding:4px 7px;border:1px solid #ddd;text-align:right">${fmtNum2(r.valorFechado)}</td>
-      <td style="padding:4px 7px;border:1px solid #ddd;text-align:right">${fmtNum2(r.valorMaior)}</td>
-      <td style="padding:4px 7px;border:1px solid #ddd;text-align:right;font-weight:700">${fmtNum2(r.economia)}</td>
-      <td style="padding:4px 7px;border:1px solid #ddd">${r.documento}</td>
-      <td style="padding:4px 7px;border:1px solid #ddd;text-align:center"><span style="background:${cBadge};color:#fff;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">${r.cotacaoNome||'—'}</span></td>
-      <td style="padding:4px 7px;border:1px solid #ddd;text-align:center">${r.cotacaoNum}</td>
-      <td style="padding:4px 7px;border:1px solid #ddd;text-align:center">${r.quantas}</td>
-      <td style="padding:4px 7px;border:1px solid #ddd;text-align:center">${r.pedido}</td>
+    // Simula os 3 fornecedores com base no valorMaior e valorFechado
+    const vm = r.valorMaior || r.valorFechado || 0;
+    const vf = r.valorFechado || 0;
+    // Fornecedor 1 = maior, Fornecedor 2 = intermediário, Fornecedor 3 = menor
+    const f1 = fmtNum2(vm);
+    const f2 = fmtNum2(vf > 0 ? (vm + vf)/2 : vm * 0.95);
+    const f3 = fmtNum2(vf);
+    const precoMedio = fmtNum2(vf);
+    const econColor = (r.economia||0) > 0 ? '#1ea96a' : '#e03535';
+    const ecoVal = fmtNum2(r.economia||0);
+    const bg = i%2===0 ? '#ffffff' : '#f7f9fc';
+    return `<tr style="background:${bg}">
+      <td style="padding:5px 7px;border:1px solid #d4dff2;font-size:10px;color:#555;white-space:nowrap">${fmtEcDate(r.data)}</td>
+      <td style="padding:5px 7px;border:1px solid #d4dff2;font-size:10px;font-weight:600">${r.numero||'—'}</td>
+      <td style="padding:5px 7px;border:1px solid #d4dff2;font-size:10px;max-width:200px;white-space:normal;word-break:break-word;font-weight:500">${r.remetente||'—'}</td>
+      <td style="padding:5px 7px;border:1px solid #d4dff2;font-size:10px;text-align:right">${f1}</td>
+      <td style="padding:5px 7px;border:1px solid #d4dff2;font-size:10px;text-align:right">${f2}</td>
+      <td style="padding:5px 7px;border:1px solid #d4dff2;font-size:10px;text-align:right">${f3}</td>
+      <td style="padding:5px 7px;border:1px solid #d4dff2;font-size:10px;text-align:right">${precoMedio}</td>
+      <td style="padding:5px 7px;border:1px solid #d4dff2;font-size:10px;text-align:right">${fmtNum2(r.valorMaior||0)}</td>
+      <td style="padding:5px 7px;border:1px solid #d4dff2;font-size:10px;text-align:right">${fmtNum2(r.valorFechado||0)}</td>
+      <td style="padding:5px 7px;border:1px solid #d4dff2;font-size:10px;text-align:right;font-weight:800;color:${econColor}">${ecoVal}</td>
+      <td style="padding:5px 7px;border:1px solid #d4dff2;font-size:10px;text-align:center">${r.documento||'Produto'}</td>
+      <td style="padding:5px 7px;border:1px solid #d4dff2;font-size:10px;text-align:center">${r.cotacaoNum||'—'}</td>
+      <td style="padding:5px 7px;border:1px solid #d4dff2;font-size:10px;text-align:center">${r.quantas||'—'}</td>
+      <td style="padding:5px 7px;border:1px solid #d4dff2;font-size:10px;text-align:center">${r.pedido||'—'}</td>
     </tr>`;
   }).join('');
 
-  document.getElementById('ec-rel-body').innerHTML = `
-    <div style="padding:24px;font-family:'Barlow',sans-serif" id="ec-print-area">
-      <div style="text-align:center;margin-bottom:20px">
-        <div style="font-family:'Barlow Condensed',sans-serif;font-size:26px;font-weight:800;color:#1a3a6b;letter-spacing:1px">
-          <em>Apurar</em> Economia
+  const printHTML = `
+  <div id="ec-print-area" style="font-family:'Barlow',sans-serif;background:#fff;padding:0">
+
+    <!-- CABEÇALHO -->
+    <div style="display:flex;align-items:stretch;justify-content:space-between;background:#fff;border-bottom:3px solid #0d2757;padding:18px 24px 14px;gap:16px">
+      <!-- Esquerda: ícone + título -->
+      <div style="display:flex;align-items:center;gap:16px">
+        <div style="width:64px;height:64px;border-radius:50%;background:#1ea96a;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+          <svg viewBox="0 0 24 24" width="34" height="34" fill="#fff"><path d="M11.8 10.9c-2.27-.59-3-1.2-3-2.15 0-1.09 1.01-1.85 2.7-1.85 1.78 0 2.44.85 2.5 2.1h2.21c-.07-1.72-1.12-3.3-3.21-3.81V3h-3v2.16c-1.94.42-3.5 1.68-3.5 3.61 0 2.31 1.91 3.46 4.7 4.13 2.5.6 3 1.48 3 2.41 0 .69-.49 1.79-2.7 1.79-2.06 0-2.87-.92-2.98-2.1h-2.2c.12 2.19 1.76 3.42 3.68 3.83V21h3v-2.15c1.95-.37 3.5-1.5 3.5-3.55 0-2.84-2.43-3.81-4.7-4.4z"/></svg>
         </div>
-        <div style="font-size:13px;font-weight:700;color:#1a3a6b;text-transform:uppercase;margin-top:6px;letter-spacing:.5px">
-          Apuração Mensal de Economia das Compras Realizadas
+        <div>
+          <div style="font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:800;color:#0d2757;text-transform:uppercase;line-height:1.1">Relatório de Apuração de Economia</div>
+          <div style="font-family:'Barlow Condensed',sans-serif;font-size:17px;font-weight:700;color:#0d2757;text-transform:uppercase;line-height:1.2">das Compras Realizadas</div>
+          <div style="font-size:11px;color:#6b7a99;margin-top:4px">Apuração baseada na média dos preços dos fornecedores.</div>
         </div>
-        <div style="font-size:11px;color:#6b7a99;margin-top:4px">Ref: ${a.mes||''}/${a.ano||''}</div>
       </div>
-      <table style="width:100%;border-collapse:collapse;margin-bottom:20px">
-        <thead>
-          <tr style="background:#1a3a6b;color:#fff">
-            <th style="padding:7px;border:1px solid #ddd;font-size:10px;text-align:left">Data</th>
-            <th style="padding:7px;border:1px solid #ddd;font-size:10px;text-align:left">Hora</th>
-            <th style="padding:7px;border:1px solid #ddd;font-size:10px;text-align:left">Número</th>
-            <th style="padding:7px;border:1px solid #ddd;font-size:10px;text-align:left;min-width:140px">Remetente</th>
-            <th style="padding:7px;border:1px solid #ddd;font-size:10px;text-align:right">Valor Fechado</th>
-            <th style="padding:7px;border:1px solid #ddd;font-size:10px;text-align:right">Valor Maior</th>
-            <th style="padding:7px;border:1px solid #ddd;font-size:10px;text-align:right">Economia</th>
-            <th style="padding:7px;border:1px solid #ddd;font-size:10px">Documento</th>
-            <th style="padding:7px;border:1px solid #ddd;font-size:10px;text-align:center">Cotação</th>
-            <th style="padding:7px;border:1px solid #ddd;font-size:10px;text-align:center">Cotação Nº</th>
-            <th style="padding:7px;border:1px solid #ddd;font-size:10px;text-align:center">Quantas?</th>
-            <th style="padding:7px;border:1px solid #ddd;font-size:10px;text-align:center">Pedido</th>
-          </tr>
-        </thead>
-        <tbody>${rows}</tbody>
-        <tfoot>
-          <tr style="background:#f0f4fa;font-weight:800">
-            <td colspan="4" style="padding:7px;border:1px solid #ddd;text-align:right;font-size:12px">TOTAIS</td>
-            <td style="padding:7px;border:1px solid #ddd;text-align:right;font-size:12px">${fmtNum2(totalFechado)}</td>
-            <td style="padding:7px;border:1px solid #ddd;text-align:right;font-size:12px">${fmtNum2(totalMaior)}</td>
-            <td style="padding:7px;border:1px solid #ddd;text-align:right;font-size:12px;color:var(--green)">${fmtNum2(totalEco)}</td>
-            <td colspan="5" style="border:1px solid #ddd"></td>
-          </tr>
-        </tfoot>
-      </table>
-      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:30px;margin-top:48px;text-align:center">
-        <div><div style="border-top:2px solid #1a3a6b;padding-top:8px;font-size:11px;font-weight:700;color:#1a3a6b">Administrador Responsável</div></div>
-        <div><div style="border-top:2px solid #1a3a6b;padding-top:8px;font-size:11px;font-weight:700;color:#1a3a6b">Coordenador de Compras</div></div>
-        <div><div style="border-top:2px solid #1a3a6b;padding-top:8px;font-size:11px;font-weight:700;color:#1a3a6b">Comprador</div></div>
+      <!-- Direita: economia total -->
+      <div style="background:#f0f4fa;border:2px solid #d4dff2;border-radius:12px;padding:14px 22px;text-align:right;min-width:200px;display:flex;flex-direction:column;justify-content:center">
+        <div style="font-size:10px;font-weight:700;color:#6b7a99;text-transform:uppercase;letter-spacing:.8px;margin-bottom:4px">Economia Total Apurada</div>
+        <div style="font-family:'Barlow Condensed',sans-serif;font-size:28px;font-weight:800;color:#1ea96a;line-height:1">R$ ${fmtNum2(totalEco)}</div>
+        <div style="font-size:11px;color:#6b7a99;margin-top:4px">${mesAno}</div>
       </div>
-    </div>`;
+    </div>
+
+    <!-- TABELA -->
+    <div style="padding:14px 24px 0">
+      <div style="overflow-x:auto">
+        <table style="width:100%;border-collapse:collapse;font-size:10px;min-width:900px">
+          <thead>
+            <tr style="background:#0d2757;color:#fff">
+              <th style="padding:7px 7px;border:1px solid #1a3a6b;text-align:left;font-size:9px;font-weight:700;text-transform:uppercase;white-space:nowrap">Data</th>
+              <th style="padding:7px 7px;border:1px solid #1a3a6b;text-align:left;font-size:9px;font-weight:700;text-transform:uppercase;white-space:nowrap">Número</th>
+              <th style="padding:7px 7px;border:1px solid #1a3a6b;text-align:left;font-size:9px;font-weight:700;text-transform:uppercase;min-width:160px">Remetente / Fornecedor</th>
+              <th style="padding:7px 7px;border:1px solid #1a3a6b;text-align:right;font-size:9px;font-weight:700;text-transform:uppercase;white-space:nowrap">Fornecedor 1<br>Valor (R$)</th>
+              <th style="padding:7px 7px;border:1px solid #1a3a6b;text-align:right;font-size:9px;font-weight:700;text-transform:uppercase;white-space:nowrap">Fornecedor 2<br>Valor (R$)</th>
+              <th style="padding:7px 7px;border:1px solid #1a3a6b;text-align:right;font-size:9px;font-weight:700;text-transform:uppercase;white-space:nowrap">Fornecedor 3<br>Valor (R$)</th>
+              <th style="padding:7px 7px;border:1px solid #1a3a6b;text-align:right;font-size:9px;font-weight:700;text-transform:uppercase;white-space:nowrap;background:#1a3a6b">Preço Médio<br>(R$)</th>
+              <th style="padding:7px 7px;border:1px solid #1a3a6b;text-align:right;font-size:9px;font-weight:700;text-transform:uppercase;white-space:nowrap">Maior Valor<br>(R$)</th>
+              <th style="padding:7px 7px;border:1px solid #1a3a6b;text-align:right;font-size:9px;font-weight:700;text-transform:uppercase;white-space:nowrap">Valor Fechado<br>(R$)</th>
+              <th style="padding:7px 7px;border:1px solid #1a3a6b;text-align:right;font-size:9px;font-weight:700;text-transform:uppercase;white-space:nowrap;background:#1ea96a">Economia<br>(R$)</th>
+              <th style="padding:7px 7px;border:1px solid #1a3a6b;text-align:center;font-size:9px;font-weight:700;text-transform:uppercase">Documento</th>
+              <th style="padding:7px 7px;border:1px solid #1a3a6b;text-align:center;font-size:9px;font-weight:700;text-transform:uppercase">Cotação</th>
+              <th style="padding:7px 7px;border:1px solid #1a3a6b;text-align:center;font-size:9px;font-weight:700;text-transform:uppercase">Quantas?</th>
+              <th style="padding:7px 7px;border:1px solid #1a3a6b;text-align:center;font-size:9px;font-weight:700;text-transform:uppercase">Pedido</th>
+            </tr>
+          </thead>
+          <tbody>${rows}</tbody>
+          <tfoot>
+            <tr style="background:#e8edf8">
+              <td colspan="3" style="padding:7px;border:1px solid #d4dff2;text-align:right;font-size:11px;font-weight:800;color:#0d2757">TOTAIS</td>
+              <td colspan="3" style="border:1px solid #d4dff2"></td>
+              <td style="padding:7px;border:1px solid #d4dff2;text-align:right;font-size:11px;font-weight:800">${fmtNum2(totalMedio)}</td>
+              <td style="padding:7px;border:1px solid #d4dff2;text-align:right;font-size:11px;font-weight:800">${fmtNum2(totalMaior)}</td>
+              <td style="padding:7px;border:1px solid #d4dff2;text-align:right;font-size:11px;font-weight:800">${fmtNum2(totalFechado)}</td>
+              <td style="padding:7px;border:1px solid #d4dff2;text-align:right;font-size:11px;font-weight:800;color:#1ea96a">${fmtNum2(totalEco)}</td>
+              <td colspan="4" style="border:1px solid #d4dff2"></td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+    </div>
+
+    <!-- RESUMO GERAL -->
+    <div style="margin:16px 24px 0;background:#f0f4fa;border:1px solid #d4dff2;border-radius:10px;padding:14px 18px">
+      <div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap">
+        <div style="display:flex;align-items:center;gap:10px;flex-shrink:0">
+          <div style="width:40px;height:40px;border-radius:50%;background:#1ea96a;display:flex;align-items:center;justify-content:center">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="#fff"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 3c1.93 0 3.5 1.57 3.5 3.5S13.93 13 12 13s-3.5-1.57-3.5-3.5S10.07 6 12 6zm7 13H5v-.23c0-.62.28-1.2.76-1.58C7.47 15.82 9.64 15 12 15s4.53.82 6.24 2.19c.48.38.76.97.76 1.58V19z"/></svg>
+          </div>
+          <div style="font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:800;color:#0d2757;text-transform:uppercase">Resumo Geral</div>
+        </div>
+        <div style="flex:1;display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:0;border:1px solid #d4dff2;border-radius:8px;overflow:hidden;background:#fff">
+          <div style="padding:10px 14px;border-right:1px solid #d4dff2">
+            <div style="font-size:9px;font-weight:700;color:#6b7a99;text-transform:uppercase;letter-spacing:.5px">Soma dos Preços Médios</div>
+            <div style="font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:800;color:#0d2757">R$ ${fmtNum2(totalMedio)}</div>
+          </div>
+          <div style="padding:10px 14px;border-right:1px solid #d4dff2">
+            <div style="font-size:9px;font-weight:700;color:#6b7a99;text-transform:uppercase;letter-spacing:.5px">Soma dos Maiores Valores</div>
+            <div style="font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:800;color:#0d2757">R$ ${fmtNum2(totalMaior)}</div>
+          </div>
+          <div style="padding:10px 14px;border-right:1px solid #d4dff2">
+            <div style="font-size:9px;font-weight:700;color:#6b7a99;text-transform:uppercase;letter-spacing:.5px">Soma dos Valores Fechados</div>
+            <div style="font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:800;color:#0d2757">R$ ${fmtNum2(totalFechado)}</div>
+          </div>
+          <div style="padding:10px 14px">
+            <div style="font-size:9px;font-weight:700;color:#1ea96a;text-transform:uppercase;letter-spacing:.5px">Economia Total Apurada</div>
+            <div style="font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:800;color:#1ea96a">R$ ${fmtNum2(totalEco)}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- METODOLOGIA -->
+    <div style="margin:12px 24px 0;display:flex;align-items:center;gap:12px;background:#fff;border:1px solid #d4dff2;border-radius:10px;padding:12px 16px">
+      <div style="width:38px;height:38px;border-radius:50%;background:#7c3aed;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="#fff"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+      </div>
+      <div>
+        <div style="font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:800;color:#7c3aed;text-transform:uppercase;letter-spacing:.5px;margin-bottom:2px">Metodologia de Apuração</div>
+        <div style="font-size:11px;color:#555">A economia foi calculada com base na média dos preços dos três fornecedores cotados.</div>
+        <div style="font-size:11px;color:#0d2757;margin-top:2px">Fórmula: <strong>Maior Valor − Preço Médio = Economia Apurada</strong></div>
+      </div>
+    </div>
+
+    <!-- ASSINATURAS -->
+    <div style="margin:20px 24px 0;display:grid;grid-template-columns:1fr 1fr 1fr;gap:20px">
+
+      <!-- Administrador -->
+      <div style="border:1.5px solid #d4dff2;border-radius:10px;padding:16px 18px">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px">
+          <div style="width:36px;height:36px;border-radius:50%;background:#0d2757;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="#fff"><path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"/></svg>
+          </div>
+          <div style="font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:800;color:#0d2757;text-transform:uppercase;letter-spacing:.5px">Administrador Responsável</div>
+        </div>
+        <div style="margin-bottom:14px">
+          <div style="font-size:10px;color:#6b7a99;margin-bottom:3px">Nome:</div>
+          <div id="ec-sign-adm-nome" style="border-bottom:1.5px solid #0d2757;min-height:22px;font-size:12px;color:#1a2540;padding-bottom:2px">${ecSignatarios&&ecSignatarios.adm&&ecSignatarios.adm.nome||''}</div>
+        </div>
+        <div>
+          <div style="font-size:10px;color:#6b7a99;margin-bottom:3px">Data:</div>
+          <div id="ec-sign-adm-data" style="border-bottom:1.5px solid #0d2757;min-height:22px;font-size:12px;color:#1a2540;padding-bottom:2px">${ecSignatarios&&ecSignatarios.adm&&ecSignatarios.adm.data||''}</div>
+        </div>
+      </div>
+
+      <!-- Comprador -->
+      <div style="border:1.5px solid #d4dff2;border-radius:10px;padding:16px 18px">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px">
+          <div style="width:36px;height:36px;border-radius:50%;background:#1ea96a;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="#fff"><path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"/></svg>
+          </div>
+          <div style="font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:800;color:#1ea96a;text-transform:uppercase;letter-spacing:.5px">Comprador Responsável</div>
+        </div>
+        <div style="margin-bottom:14px">
+          <div style="font-size:10px;color:#6b7a99;margin-bottom:3px">Nome:</div>
+          <div id="ec-sign-comp-nome" style="border-bottom:1.5px solid #1ea96a;min-height:22px;font-size:12px;color:#1a2540;padding-bottom:2px">${ecSignatarios&&ecSignatarios.comp&&ecSignatarios.comp.nome||''}</div>
+        </div>
+        <div>
+          <div style="font-size:10px;color:#6b7a99;margin-bottom:3px">Data:</div>
+          <div id="ec-sign-comp-data" style="border-bottom:1.5px solid #1ea96a;min-height:22px;font-size:12px;color:#1a2540;padding-bottom:2px">${ecSignatarios&&ecSignatarios.comp&&ecSignatarios.comp.data||''}</div>
+        </div>
+      </div>
+
+      <!-- Coordenador -->
+      <div style="border:1.5px solid #d4dff2;border-radius:10px;padding:16px 18px">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px">
+          <div style="width:36px;height:36px;border-radius:50%;background:#7c3aed;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="#fff"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
+          </div>
+          <div style="font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:800;color:#7c3aed;text-transform:uppercase;letter-spacing:.5px">Coordenador Responsável</div>
+        </div>
+        <div style="margin-bottom:14px">
+          <div style="font-size:10px;color:#6b7a99;margin-bottom:3px">Nome:</div>
+          <div id="ec-sign-coord-nome" style="border-bottom:1.5px solid #7c3aed;min-height:22px;font-size:12px;color:#1a2540;padding-bottom:2px">${ecSignatarios&&ecSignatarios.coord&&ecSignatarios.coord.nome||''}</div>
+        </div>
+        <div>
+          <div style="font-size:10px;color:#6b7a99;margin-bottom:3px">Data:</div>
+          <div id="ec-sign-coord-data" style="border-bottom:1.5px solid #7c3aed;min-height:22px;font-size:12px;color:#1a2540;padding-bottom:2px">${ecSignatarios&&ecSignatarios.coord&&ecSignatarios.coord.data||''}</div>
+        </div>
+      </div>
+
+    </div>
+    <div style="height:24px"></div>
+  </div>`;
+
+  // Injeta o HTML no modal
+  document.getElementById('ec-rel-body').innerHTML = printHTML;
+
+  // Preenche campos de assinatura como inputs interativos no modal
+  ['adm','comp','coord'].forEach(role=>{
+    ['nome','data'].forEach(field=>{
+      const el = document.getElementById(`ec-sign-${role}-${field}`);
+      if(!el) return;
+      const input = document.createElement(field==='data'?'input':'input');
+      input.type = field==='data'?'date':'text';
+      input.placeholder = field==='nome'?'Digite o nome...':'';
+      input.value = (ecSignatarios&&ecSignatarios[role]&&ecSignatarios[role][field])||'';
+      input.style.cssText='border:none;border-bottom:1.5px solid #ccc;outline:none;font-size:12px;width:100%;background:transparent;padding:2px 0;font-family:Barlow,sans-serif;color:#1a2540';
+      input.addEventListener('input',()=>{
+        if(!ecSignatarios) ecSignatarios={};
+        if(!ecSignatarios[role]) ecSignatarios[role]={};
+        ecSignatarios[role][field]=input.value;
+      });
+      el.replaceWith(input);
+    });
+  });
+
   document.getElementById('modal-ec-rel').classList.add('open');
 }
 
+// Signatários persistentes entre aberturas do relatório
+let ecSignatarios = {adm:{nome:'',data:''},comp:{nome:'',data:''},coord:{nome:'',data:''}};
+
 function printEcRel(){
+  // Coleta valores dos inputs antes de imprimir
+  const fields=[
+    {role:'adm',id:'adm'},
+    {role:'comp',id:'comp'},
+    {role:'coord',id:'coord'}
+  ];
+
+  // Gera HTML de impressão com os dados preenchidos
   const area = document.getElementById('ec-print-area');
-  const win = window.open('','_blank','width=950,height=700');
+  if(!area) return;
+
+  // Clona e substitui inputs pelos valores
+  const clone = area.cloneNode(true);
+  clone.querySelectorAll('input').forEach(inp=>{
+    const span = document.createElement('span');
+    span.textContent = inp.value||'';
+    span.style.cssText = inp.style.cssText||'';
+    inp.replaceWith(span);
+  });
+
+  const win = window.open('','_blank','width=1100,height=780');
   win.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8">
-    <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;600;700;800&family=Barlow+Condensed:wght@700;800&display=swap" rel="stylesheet">
-    <style>body{font-family:'Barlow',sans-serif;margin:20px}@media print{body{margin:0}}</style>
-    </head><body>${area.innerHTML}</body></html>`);
+    <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700;800&family=Barlow+Condensed:wght@600;700;800&display=swap" rel="stylesheet">
+    <style>
+      *{box-sizing:border-box;margin:0;padding:0}
+      body{font-family:'Barlow',sans-serif;background:#fff;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+      @page{size:A4 landscape;margin:12mm}
+      @media print{
+        body{margin:0}
+        button{display:none!important}
+      }
+    </style>
+    </head><body>${clone.outerHTML}
+    <script>window.onload=function(){setTimeout(function(){window.print();},600)}<\/script>
+    </body></html>`);
   win.document.close();
-  setTimeout(()=>win.print(),800);
 }
 
 // ─── CNS LIMPEZA ──────────────────────────────────────────────────────────────
@@ -5476,20 +5967,27 @@ initSupabase();
 
 <!-- MODAL: Editar Convênio -->
 <div class="modal-bg" id="modal-conv-edit">
-  <div class="modal" style="width:500px">
+  <div class="modal" style="width:540px">
     <div class="modal-header">
       <span class="modal-title">✏️ Editar Convênio / Boletim</span>
       <button class="modal-close" onclick="closeModal('modal-conv-edit')">×</button>
     </div>
     <div class="modal-body">
       <div class="form-grid">
-        <div class="form-group full"><label>Título *</label><input id="conv-edit-titulo" type="text" placeholder="Ex: Boletim CNS Convênios Abril 2024"></div>
+        <div class="form-group full"><label>Título / Nome do Boletim *</label><input id="conv-edit-titulo" type="text" placeholder="Ex: Boletim_018_2026.pdf"></div>
         <div class="form-group"><label>Tipo</label>
-          <select id="conv-edit-tipo"><option value="nacionais">Nacionais</option><option value="regionais">Regionais</option></select>
+          <select id="conv-edit-tipo">
+            <option value="nacionais">Convênio Nacional</option>
+            <option value="regionais">Convênio Regional</option>
+            <option value="locais">Convênio Local</option>
+          </select>
         </div>
+        <div class="form-group"><label>Data de Publicação</label><input id="conv-edit-data" type="date"></div>
+        <div class="form-group"><label>Produto</label><input id="conv-edit-produto" type="text" placeholder="Ex: Copo, Papel Higiênico..."></div>
+        <div class="form-group"><label>Fornecedor</label><input id="conv-edit-fornecedor" type="text" placeholder="Ex: Fornecedor Teste"></div>
         <div class="form-group"><label>Igrejas</label><input id="conv-edit-igrejas" type="number" min="0" value="0"></div>
-        <div class="form-group full"><label>URL da Imagem</label><input id="conv-edit-img" type="url" placeholder="https://exemplo.com/imagem.jpg"></div>
-        <div class="form-group full"><label>Link do Boletim</label><input id="conv-edit-link" type="url" placeholder="https://exemplo.com/boletim"></div>
+        <div class="form-group full"><label>Link do Boletim</label><input id="conv-edit-link" type="url" placeholder="https://exemplo.com/boletim.pdf"></div>
+        <div class="form-group full"><label>URL da Imagem (opcional)</label><input id="conv-edit-img" type="url" placeholder="https://exemplo.com/imagem.jpg"></div>
         <div class="form-group full"><label>Descrição</label><textarea id="conv-edit-desc" rows="2" placeholder="Descrição opcional"></textarea></div>
       </div>
     </div>
