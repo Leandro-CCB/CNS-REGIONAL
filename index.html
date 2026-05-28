@@ -2873,7 +2873,7 @@ function renderDashboard(){
 
   // worst 5
   const worst5=[...fornecedores].sort((a,b)=>a.score-b.score).slice(0,5);
-  document.getElementById('worst5-body').innerHTML=worst5.map((f,i)=>`
+  const w5el=document.getElementById('worst5-body'); if(w5el) w5el.innerHTML=worst5.map((f,i)=>`
     <tr><td><span class="rank-badge rank-n">${i+1}</span></td>
     <td><b>${f.nome}</b></td>
     <td><span class="${scoreClass(f.score)}">${f.score.toFixed(1)}</span></td></tr>`).join('');
@@ -5580,7 +5580,26 @@ CREATE TABLE IF NOT EXISTS "CNSREGIONAL_mapa_cns" (id bigserial primary key, cid
 -- Habilitar RLS e políticas de acesso (anon pode ler e escrever):
 ALTER TABLE "CNSREGIONAL_fornecedores" ENABLE ROW LEVEL SECURITY;
 CREATE POLICY "allow_all" ON "CNSREGIONAL_fornecedores" FOR ALL USING (true) WITH CHECK (true);
--- Repita para cada tabela CNSREGIONAL_*
+ALTER TABLE "CNSREGIONAL_agenda_compras" ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "allow_all" ON "CNSREGIONAL_agenda_compras" FOR ALL USING (true) WITH CHECK (true);
+ALTER TABLE "CNSREGIONAL_convenios" ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "allow_all" ON "CNSREGIONAL_convenios" FOR ALL USING (true) WITH CHECK (true);
+ALTER TABLE "CNSREGIONAL_pp_items" ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "allow_all" ON "CNSREGIONAL_pp_items" FOR ALL USING (true) WITH CHECK (true);
+ALTER TABLE "CNSREGIONAL_pp_components" ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "allow_all" ON "CNSREGIONAL_pp_components" FOR ALL USING (true) WITH CHECK (true);
+ALTER TABLE "CNSREGIONAL_usuarios" ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "allow_all" ON "CNSREGIONAL_usuarios" FOR ALL USING (true) WITH CHECK (true);
+ALTER TABLE "CNSREGIONAL_produtos" ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "allow_all" ON "CNSREGIONAL_produtos" FOR ALL USING (true) WITH CHECK (true);
+ALTER TABLE "CNSREGIONAL_cns_limpeza" ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "allow_all" ON "CNSREGIONAL_cns_limpeza" FOR ALL USING (true) WITH CHECK (true);
+ALTER TABLE "CNSREGIONAL_ge_meialuz" ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "allow_all" ON "CNSREGIONAL_ge_meialuz" FOR ALL USING (true) WITH CHECK (true);
+ALTER TABLE "CNSREGIONAL_ge_fotovoltaica" ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "allow_all" ON "CNSREGIONAL_ge_fotovoltaica" FOR ALL USING (true) WITH CHECK (true);
+ALTER TABLE "CNSREGIONAL_mapa_cns" ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "allow_all" ON "CNSREGIONAL_mapa_cns" FOR ALL USING (true) WITH CHECK (true);
 
 -- Enable RLS and add policies as needed
 */
@@ -6594,7 +6613,7 @@ function afterLoginHook(){
   }
 
   function buildTable(){
-    initState();
+    if(!mapaState.colunas || !mapaState.dados) initState(); else { DEFAULT_CIDADES.forEach(function(c){ if(!mapaState.dados[c]) mapaState.dados[c]={}; }); }
     var colunas=mapaState.colunas;
     buildHead(colunas);
     var tbody=document.getElementById('tbody-mapa-cns'); if(!tbody) return;
@@ -6639,20 +6658,31 @@ function afterLoginHook(){
   // ── Salvar / Reset ────────────────────────────────────────────────────────
   window.mapaSalvar = async function(){
     localSave();
-    if(window.db){
-      try{
-        var payload={colunas:mapaState.colunas, dados:mapaState.dados, updated_at:new Date().toISOString()};
-        if(mapaState._dbId){
-          await window.db.from('CNSREGIONAL_mapa_cns').update(payload).eq('id',mapaState._dbId);
-        } else {
-          var res = await window.db.from('CNSREGIONAL_mapa_cns').insert(payload).select();
-          if(res.data&&res.data[0]) mapaState._dbId=res.data[0].id;
-        }
-      }catch(e){ console.warn('Mapa save error:',e); }
+    if(!window.db){
+      if(window.toast) toast('Salvo localmente (sem conexão com Supabase)','success');
+      return;
     }
-    if(window.toast) toast('Mapa salvo com sucesso!','success');
-    else if(window.showToast) showToast('Mapa salvo com sucesso!','success');
-    else alert('Mapa salvo!');
+    if(window.toast) toast('Salvando no Supabase...','');
+    try{
+      var payload={colunas:mapaState.colunas, dados:mapaState.dados, updated_at:new Date().toISOString()};
+      var res;
+      if(mapaState._dbId){
+        res = await window.db.from('CNSREGIONAL_mapa_cns').update(payload).eq('id',mapaState._dbId);
+      } else {
+        res = await window.db.from('CNSREGIONAL_mapa_cns').insert(payload).select();
+        if(res.data&&res.data[0]) mapaState._dbId=res.data[0].id;
+      }
+      if(res && res.error){
+        console.error('Mapa save error:', res.error);
+        if(window.toast) toast('Erro ao salvar: '+res.error.message,'error');
+      } else {
+        if(window.toast) toast('Mapa salvo com sucesso no Supabase!','success');
+        else alert('Mapa salvo!');
+      }
+    }catch(e){
+      console.error('Mapa save exception:', e);
+      if(window.toast) toast('Erro ao salvar: '+e.message,'error');
+    }
   };
 
   window.mapaReset = function(){
@@ -6721,7 +6751,12 @@ function afterLoginHook(){
     if(!group) group='OUTROS';
     tempColunas.push({group:group, label:label});
     document.getElementById('nova-col-label').value='';
+    document.getElementById('nova-col-group').value='';
     renderColsList();
+    // Rola a lista até o final para mostrar a nova coluna
+    var container=document.getElementById('mapa-cols-list');
+    if(container) container.scrollTop=container.scrollHeight;
+    if(window.toast) toast('Coluna "'+label+'" adicionada! Clique em Aplicar Colunas para confirmar.','success');
   };
 
   window.mapaRemoverColuna = function(idx){
@@ -6743,6 +6778,7 @@ function afterLoginHook(){
       mapaState.dados[c]=novosDados;
     });
     mapaState.colunas=JSON.parse(JSON.stringify(tempColunas));
+    localSave();
     document.getElementById('modal-mapa-colunas').classList.remove('open');
     buildTable();
     if(window.toast) toast('Colunas atualizadas! Clique em Salvar Mapa para persistir.','success');
