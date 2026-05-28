@@ -5151,13 +5151,32 @@ async function loadFromSupabase(){
       safeLoad('ge_fotovoltaica'),
     ]);
 
-    // Detecta erro 406 (schema não exposto na API do Supabase)
-    if(f.error && (f.error.code === '406' || String(f.error.message||'').includes('406') || String(f.error.message||'').includes('schema'))){
-      console.warn('Erro ao conectar ao Supabase (schema public/CNSREGIONAL). Verifique as permissões RLS e se as tabelas existem.', f.error);
-      showSyncing(false);
-      renderAll();
-      return;
+    // Detecta erros de schema/conexão — tenta até 3 vezes antes de desistir
+    const hasSchemaError = f.error && (
+      f.error.code === '406' ||
+      f.error.code === 'PGRST002' ||
+      String(f.error.message||'').includes('406') ||
+      String(f.error.message||'').includes('schema') ||
+      String(f.error.message||'').includes('503') ||
+      String(f.error.message||'').includes('unavailable')
+    );
+    if(hasSchemaError){
+      console.warn('Erro de schema no Supabase, tentando novamente em 3s...', f.error);
+      if(!window._supaRetry) window._supaRetry = 0;
+      window._supaRetry++;
+      if(window._supaRetry <= 3){
+        showSyncing(false);
+        setTimeout(loadFromSupabase, 3000);
+        return;
+      } else {
+        console.warn('Supabase inacessível após 3 tentativas. Usando dados locais.');
+        window._supaRetry = 0;
+        showSyncing(false);
+        renderAll();
+        return;
+      }
     }
+    window._supaRetry = 0;
     if(f.data && f.data.length > 0){
       fornecedores = f.data.map(r=>({
         id:r.id, _dbId:r.id, codigo:r.codigo||'', nome:r.nome, cnpj:r.cnpj||'', cat:r.cat||'',
