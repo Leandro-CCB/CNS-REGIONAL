@@ -5,7 +5,26 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>COMISSÃO REGIONAL DE SUPRIMENTOS</title>
 <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700;800&family=Barlow+Condensed:wght@600;700;800&display=swap" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+// Carrega o SDK do Supabase com fallback entre CDNs
+(function(){
+  var cdns = [
+    'https://unpkg.com/@supabase/supabase-js@2/dist/umd/supabase.js',
+    'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2',
+    'https://esm.sh/@supabase/supabase-js@2/dist/umd/supabase.js'
+  ];
+  var idx = 0;
+  function tryLoad(){
+    if(idx >= cdns.length){ console.error('Supabase SDK não pôde ser carregado de nenhuma CDN.'); return; }
+    var s = document.createElement('script');
+    s.src = cdns[idx];
+    s.onload = function(){ console.log('Supabase SDK carregado de:', cdns[idx]); };
+    s.onerror = function(){ idx++; tryLoad(); };
+    document.head.appendChild(s);
+  }
+  tryLoad();
+})();
+</script>
 <style>
 :root{
   --navy:#0d2757;
@@ -6046,7 +6065,21 @@ function abrirCentralAjuda(){
 }
 
 // ── Init ──────────────────────────────────────────────────────────────────────
-initSupabase();
+// Aguarda o SDK do Supabase carregar (pode vir de CDN com delay)
+(function(){
+  var attempts = 0;
+  function tryInit(){
+    if(typeof supabase !== 'undefined'){
+      initSupabase();
+    } else if(attempts < 20){
+      attempts++;
+      setTimeout(tryInit, 300);
+    } else {
+      console.warn('SDK do Supabase não carregou. Usando dados locais.');
+    }
+  }
+  tryInit();
+})();
 
 // ── Aviso de file:// ─────────────────────────────────────────────────────────
 (function(){
