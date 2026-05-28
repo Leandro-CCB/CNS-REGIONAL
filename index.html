@@ -5170,6 +5170,8 @@ let db = null;
 function initSupabase(){
   try {
     db = supabase.createClient(SUPA_URL, SUPA_KEY);
+    window.db = db; // expõe globalmente para o módulo do mapa
+    console.log('Supabase inicializado com sucesso.');
   } catch(e){ console.warn('Supabase init failed:', e); }
 }
 
