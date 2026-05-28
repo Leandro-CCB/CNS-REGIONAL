@@ -2891,7 +2891,7 @@ function renderDashboard(){
   }).join('');
 
   // atividades recentes
-  document.getElementById('atividades-body').innerHTML=`
+  const atividadesEl=document.getElementById('atividades-body'); if(atividadesEl) atividadesEl.innerHTML=`
     <div class="atividade-item"><div class="ativ-icon" style="background:#dce8ff">👤</div><div>João indicou o fornecedor <b>ABC Ltda.</b></div></div>
     <div class="atividade-item"><div class="ativ-icon" style="background:#fde2e2">📄</div><div>Documento CNA em vencimento</div></div>
     <div class="atividade-item"><div class="ativ-icon" style="background:#fff3d4">⚠️</div><div>Avaliação pendente para a <b>Empresa XYZ</b></div></div>
@@ -3390,6 +3390,37 @@ function renderAgenda(){
   }
 
   renderGraficoEcoMes();
+}
+
+function renderGraficoEcoMes(){
+  const container = document.getElementById('ag-grafico-mes');
+  const labelsEl = document.getElementById('ag-meses-labels');
+  if(!container) return;
+  const ano = parseInt((document.getElementById('ag-grafico-ano')||{}).value||new Date().getFullYear());
+  const meses = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
+  // Agrupa economia por mês
+  const totais = Array(12).fill(0);
+  agenda.forEach(a => {
+    if(!a.data) return;
+    const d = new Date(a.data);
+    if(isNaN(d)) return;
+    if(d.getFullYear() !== ano) return;
+    if(a.status !== 'Concluído') return;
+    const val = parseFloat((a.valorEstimado||0)) || 0;
+    totais[d.getMonth()] += val;
+  });
+  const maxVal = Math.max(...totais, 1);
+  container.innerHTML = totais.map((v, i) => {
+    const h = Math.round((v / maxVal) * 90);
+    const color = v > 0 ? 'var(--green)' : 'var(--border)';
+    const label = v > 0 ? 'R$'+Math.round(v/1000)+'k' : '';
+    return `<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;position:relative">
+      <span style="font-size:8px;color:var(--green);font-weight:700;position:absolute;top:-14px">${label}</span>
+      <div style="width:100%;background:${color};border-radius:3px 3px 0 0;height:${h}px;min-height:2px;transition:.3s"></div>
+      <span style="font-size:8px;color:var(--muted);margin-top:2px">${meses[i]}</span>
+    </div>`;
+  }).join('');
+  if(labelsEl) labelsEl.textContent = '';
 }
 
 function abrirEditarAgenda(id){
