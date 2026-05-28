@@ -2689,61 +2689,44 @@ async function doLogin(){
   btn.textContent='Verificando...';
   btn.disabled=true;
 
-  // 1) Tenta autenticar direto no Supabase via REST API
+  // 1) Tenta autenticar via Supabase REST API (schema public, tabela CNSREGIONAL_usuarios)
   if(typeof SUPA_URL !== 'undefined' && typeof SUPA_KEY !== 'undefined'){
-    // Tenta schema suprimentos primeiro, depois public como fallback
-    const schemas = ['suprimentos', 'public'];
     let loginOk = false;
-    for(const schema of schemas){
-      try {
-        const headers = {
-          'apikey': SUPA_KEY,
-          'Authorization': `Bearer ${SUPA_KEY}`,
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
-        };
-        // Só adiciona Accept-Profile se for schema não-public
-        if(schema !== 'public') headers['Accept-Profile'] = schema;
-
-        const res = await fetch(
-          `${SUPA_URL}/rest/v1/usuarios?select=*&login=eq.${encodeURIComponent(u)}`,
-          { headers }
-        );
-
-        if(res.status === 406) { console.warn(`Schema ${schema} retornou 406, tentando próximo...`); continue; }
-
-        if(res.ok){
-          loginOk = true;
-          const data = await res.json();
-          if(data && data.length > 0){
-            // Filtra por senha; trata ativo=null como ativo (retrocompatibilidade)
-            const r = data.find(x => x.senha === p && x.ativo !== false);
-            if(r){
-              const found = {id:r.id, nome:r.nome||'', login:r.login||'', email:r.email||'', perfil:r.perfil||'Comprador', cargo:r.cargo||'', senha:r.senha||'', ativo:r.ativo!==false, modulos:r.modulos||[], cidadesCoord:r.cidades_coord||''};
-              _loginSuccess(found);
-              btn.textContent='Entrar'; btn.disabled=false;
-              return;
-            }
-            // Usuário existe no banco mas senha errada
-            errEl.textContent = 'Usuário ou senha incorretos.';
-            errEl.style.display='block';
-            btn.textContent='Entrar'; btn.disabled=false;
-            return;
-          } else {
-            // Login não encontrado no banco — não tenta fallback local (banco é autoritativo)
-            errEl.textContent = 'Usuário ou senha incorretos.';
-            errEl.style.display='block';
+    try {
+      const headers = {
+        'apikey': SUPA_KEY,
+        'Authorization': `Bearer ${SUPA_KEY}`,
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+      };
+      const res = await fetch(
+        `${SUPA_URL}/rest/v1/CNSREGIONAL_usuarios?select=*&login=eq.${encodeURIComponent(u)}`,
+        { headers }
+      );
+      if(res.ok){
+        loginOk = true;
+        const data = await res.json();
+        if(data && data.length > 0){
+          const r = data.find(x => x.senha === p && x.ativo !== false);
+          if(r){
+            const found = {id:r.id, nome:r.nome||'', login:r.login||'', email:r.email||'', perfil:r.perfil||'Comprador', cargo:r.cargo||'', senha:r.senha||'', ativo:r.ativo!==false, modulos:r.modulos||[], cidadesCoord:r.cidades_coord||''};
+            _loginSuccess(found);
             btn.textContent='Entrar'; btn.disabled=false;
             return;
           }
+          errEl.textContent = 'Usuário ou senha incorretos.';
+          errEl.style.display='block';
+          btn.textContent='Entrar'; btn.disabled=false;
+          return;
+        } else {
+          errEl.textContent = 'Usuário ou senha incorretos.';
+          errEl.style.display='block';
+          btn.textContent='Entrar'; btn.disabled=false;
+          return;
         }
-      } catch(e){ console.warn(`Supabase REST login (schema ${schema}) failed:`, e); }
-    }
-    // Se todos os schemas falharam (406, CORS ou file://) — cai no fallback local silenciosamente
-    if(!loginOk){
-      console.warn('Supabase inacessível (406/CORS/file://) — usando fallback local.');
-      // Não exibe mensagem técnica ao usuário — tenta fallback local abaixo
-    }
+      }
+    } catch(e){ console.warn('Supabase REST login failed:', e); }
+    if(!loginOk) console.warn('Supabase inacessível — usando fallback local.');
   }
 
   // 2) Fallback: verifica usuários locais (sempre tenta, inclusive se Supabase falhou com 406)
@@ -2858,7 +2841,9 @@ function renderDashboard(){
   const docs=8;
   const agendaAtivas = agenda.filter(a=>a.status!=='cancelado').length;
   const convAtivos = convenios.length;
-  document.getElementById('stats-row').innerHTML=`
+  const statsRowEl = document.getElementById('stats-row');
+  if(!statsRowEl) return;
+  statsRowEl.innerHTML=`
     <div class="stat-card">
       <div class="stat-icon blue"><svg viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg></div>
       <div><div class="stat-number">${total}</div><div class="stat-label">Fornecedores Cadastrados</div><a class="stat-link" onclick="showPage('fornecedores',null)">Ver todos</a></div>
@@ -5134,9 +5119,7 @@ let db = null;
 
 function initSupabase(){
   try {
-    db = supabase.createClient(SUPA_URL, SUPA_KEY, {
-      db: { schema: 'suprimentos' }
-    });
+    db = supabase.createClient(SUPA_URL, SUPA_KEY);
   } catch(e){ console.warn('Supabase init failed:', e); }
 }
 
@@ -5151,7 +5134,7 @@ async function loadFromSupabase(){
   try {
     // Carrega cada tabela individualmente — falha em uma não bloqueia as outras
     const safeLoad = async (table) => {
-      try { return await db.schema('suprimentos').from(table).select('*'); }
+      try { return await db.from('CNSREGIONAL_'+table).select('*'); }
       catch(e){ console.warn(`Erro ao carregar ${table}:`, e); return {data:null, error:e}; }
     };
 
@@ -5168,7 +5151,7 @@ async function loadFromSupabase(){
 
     // Detecta erro 406 (schema não exposto na API do Supabase)
     if(f.error && (f.error.code === '406' || String(f.error.message||'').includes('406') || String(f.error.message||'').includes('schema'))){
-      console.warn('Schema suprimentos nao exposto na API. Usando dados locais. Veja: Supabase > Settings > API > Exposed schemas.', f.error);
+      console.warn('Erro ao conectar ao Supabase (schema public/CNSREGIONAL). Verifique as permissões RLS e se as tabelas existem.', f.error);
       showSyncing(false);
       renderAll();
       return;
@@ -5259,10 +5242,10 @@ async function sbSaveFornecedor(obj){
   const dbId = obj._dbId || (typeof obj.id === 'number' && obj.id > 0 ? obj.id : null);
   let error;
   if(dbId){
-    const res = await db.schema('suprimentos').from('fornecedores').update(row).eq('id', dbId);
+    const res = await db.from('CNSREGIONAL_fornecedores').update(row).eq('id', dbId);
     error = res.error;
   } else {
-    const res = await db.schema('suprimentos').from('fornecedores').insert(row).select();
+    const res = await db.from('CNSREGIONAL_fornecedores').insert(row).select();
     error = res.error;
     if(!error && res.data && res.data[0]) obj._dbId = res.data[0].id;
   }
@@ -5273,7 +5256,7 @@ async function sbSaveFornecedor(obj){
 async function sbDeleteFornecedor(id){
   if(!db) return;
   showSyncing(true);
-  const {error} = await db.schema('suprimentos').from('fornecedores').delete().eq('id', id);
+  const {error} = await db.from('CNSREGIONAL_fornecedores').delete().eq('id', id);
   if(error) console.error('Del forn:', error);
   showSyncing(false);
 }
@@ -5285,11 +5268,11 @@ async function sbSaveAgenda(obj){
   const dbId = obj._dbId || (typeof obj.id === 'number' && obj.id > 0 ? obj.id : null);
   let error;
   if(dbId){
-    const res = await db.schema('suprimentos').from('agenda_compras').update(row).eq('id', dbId);
+    const res = await db.from('CNSREGIONAL_agenda_compras').update(row).eq('id', dbId);
     error = res.error;
     if(error && error.code === '428C9') error = null; // ignorar se identity
   } else {
-    const res = await db.schema('suprimentos').from('agenda_compras').insert(row).select();
+    const res = await db.from('CNSREGIONAL_agenda_compras').insert(row).select();
     error = res.error;
     if(!error && res.data && res.data[0]) obj._dbId = res.data[0].id;
   }
@@ -5300,7 +5283,7 @@ async function sbSaveAgenda(obj){
 async function sbDeleteAgenda(id){
   if(!db) return;
   showSyncing(true);
-  await db.schema('suprimentos').from('agenda_compras').delete().eq('id', id);
+  await db.from('CNSREGIONAL_agenda_compras').delete().eq('id', id);
   showSyncing(false);
 }
 
@@ -5311,11 +5294,11 @@ async function sbSaveConvenio(obj){
   let error, data;
   if(obj._dbId){
     // Atualiza registro existente
-    const res = await db.schema('suprimentos').from('convenios').update(row).eq('id', obj._dbId).select();
+    const res = await db.from('CNSREGIONAL_convenios').update(row).eq('id', obj._dbId).select();
     error = res.error; data = res.data;
   } else {
     // Insere novo registro — sem enviar o campo id (é GENERATED ALWAYS)
-    const res = await db.schema('suprimentos').from('convenios').insert(row).select();
+    const res = await db.from('CNSREGIONAL_convenios').insert(row).select();
     error = res.error; data = res.data;
     if(!error && data && data[0]){
       obj._dbId = data[0].id; // guarda o id gerado pelo banco
@@ -5333,17 +5316,17 @@ async function sbSaveConvenio(obj){
 async function sbDeleteConvenio(id){
   if(!db) return;
   showSyncing(true);
-  await db.schema('suprimentos').from('convenios').delete().eq('id', id);
+  await db.from('CNSREGIONAL_convenios').delete().eq('id', id);
   showSyncing(false);
 }
 
 async function sbSavePPItems(){
   if(!db) return;
   showSyncing(true);
-  await db.schema('suprimentos').from('pp_items').delete().neq('id', 0);
+  await db.from('CNSREGIONAL_pp_items').delete().neq('id', 0);
   if(ppItems.length > 0){
     const rows = ppItems.map((it,i)=>({cidade:it.cidade, val:it.val, pct:it.pct, ano:it.ano||2026}));
-    await db.schema('suprimentos').from('pp_items').insert(rows);
+    await db.from('CNSREGIONAL_pp_items').insert(rows);
   }
   showSyncing(false);
 }
@@ -5351,9 +5334,9 @@ async function sbSavePPItems(){
 async function sbSavePPComponents(){
   if(!db) return;
   showSyncing(true);
-  await db.schema('suprimentos').from('pp_components').delete().neq('id', 0);
+  await db.from('CNSREGIONAL_pp_components').delete().neq('id', 0);
   const rows = ppComponents.map((c,i)=>({label:c.label, link:c.link||''}));
-  await db.schema('suprimentos').from('pp_components').insert(rows);
+  await db.from('CNSREGIONAL_pp_components').insert(rows);
   showSyncing(false);
 }
 
@@ -5366,11 +5349,11 @@ async function sbSaveUser(obj){
   let error;
   if(dbId){
     // Registro já existe no banco — atualiza
-    const res = await db.schema('suprimentos').from('usuarios').update(rowFull).eq('id', dbId);
+    const res = await db.from('CNSREGIONAL_usuarios').update(rowFull).eq('id', dbId);
     error = res.error;
   } else {
     // Novo registro — insert sem id
-    const res = await db.schema('suprimentos').from('usuarios').insert(rowFull).select();
+    const res = await db.from('CNSREGIONAL_usuarios').insert(rowFull).select();
     error = res.error;
     if(!error && res.data && res.data[0]) obj._dbId = res.data[0].id;
   }
@@ -5379,9 +5362,14 @@ async function sbSaveUser(obj){
     // Fallback: tenta sem colunas que podem não existir na tabela antiga
     const rowMin = {nome:obj.nome, login:obj.login, email:obj.email||'', perfil:obj.perfil, cargo:obj.cargo||'', senha:obj.senha, ativo:obj.ativo, modulos:obj.modulos||[]};
     const r2 = dbId
-      ? await db.schema('suprimentos').from('usuarios').update(rowMin).eq('id', dbId)
-      : await db.schema('suprimentos').from('usuarios').insert(rowMin).select();
-    if(r2.error) console.error('Save user fallback error:', r2.error);
+      ? await db.from('CNSREGIONAL_usuarios').update(rowMin).eq('id', dbId)
+      : await db.from('CNSREGIONAL_usuarios').insert(rowMin).select();
+    if(r2.error){
+      console.error('Save user fallback error:', r2.error);
+      showSyncing(false);
+      toast('Erro ao salvar usuário: ' + (r2.error.message || r2.error.code || 'verifique o console'), 'error');
+      return;
+    }
     else if(!dbId && r2.data && r2.data[0]) obj._dbId = r2.data[0].id;
   }
   showSyncing(false);
@@ -5390,7 +5378,7 @@ async function sbSaveUser(obj){
 async function sbDeleteUser(id){
   if(!db) return;
   showSyncing(true);
-  const {error} = await db.schema('suprimentos').from('usuarios').delete().eq('id', id);
+  const {error} = await db.from('CNSREGIONAL_usuarios').delete().eq('id', id);
   if(error) console.error('Del user:', error);
   showSyncing(false);
 }
@@ -5476,7 +5464,10 @@ saveCompLink = async function(){
 const _origSaveUser = saveUser;
 saveUser = async function(){
   const wasEditing = editingUserId;
+  const countBefore = users.length;
   _origSaveUser();
+  // Se era novo e o array não cresceu, a validação falhou — não salva no Supabase
+  if(!wasEditing && users.length === countBefore) return;
   const saved = wasEditing
     ? users.find(u=>u.id===wasEditing)
     : users[users.length-1];
@@ -5502,7 +5493,7 @@ async function sbSaveCNSCidades(){
   if(!db) return;
   showSyncing(true);
   try {
-    await db.schema('suprimentos').from('cns_limpeza').delete().neq('id', 0);
+    await db.from('CNSREGIONAL_cns_limpeza').delete().neq('id', 0);
     if(cnsCidades.length){
       const rows = cnsCidades.map(c=>({
         id: c.id,
@@ -5518,7 +5509,7 @@ async function sbSaveCNSCidades(){
         eco_historico: c.ecoHistorico||[],
         link_admin: c.linkAdmin||''
       }));
-      await db.schema('suprimentos').from('cns_limpeza').insert(rows);
+      await db.from('CNSREGIONAL_cns_limpeza').insert(rows);
     }
   } catch(e){ console.error('Save CNS:', e); }
   showSyncing(false);
@@ -5552,9 +5543,9 @@ saveCNSJust = async function(){
 async function sbSaveProdutos(){
   if(!db) return;
   showSyncing(true);
-  await db.schema('suprimentos').from('produtos').delete().neq('id', 0);
+  await db.from('CNSREGIONAL_produtos').delete().neq('id', 0);
   const rows = produtos.map((p,i)=>({id:i+1, nome:p.nome||p, categoria:p.categoria||'', forn_id:p.fornecedorId||null, marca:p.marca||''}));
-  if(rows.length) await db.schema('suprimentos').from('produtos').insert(rows);
+  if(rows.length) await db.from('CNSREGIONAL_produtos').insert(rows);
   showSyncing(false);
 }
 
@@ -5572,17 +5563,25 @@ deleteProduto = async function(i){
 
 // ── Supabase SQL setup hint (run once in Supabase SQL Editor) ──────────────────
 /*
-CREATE TABLE IF NOT EXISTS fornecedores (id int primary key, codigo text, nome text, cnpj text, cat text, email text, tel text, resp text, cidade text, uf text, endereco text, status text, score float, obs text, avals jsonb default '[]');
-CREATE TABLE IF NOT EXISTS agenda_compras (id int primary key, prod text, forn_id int, data text, igrejas int, obs text, status text);
-CREATE TABLE IF NOT EXISTS convenios (id int primary key, titulo text, tipo text, img_url text, link text default '', igrejas int, descricao text, data_criacao text);
-CREATE TABLE IF NOT EXISTS pp_items (id int primary key, cidade text, val text, pct text, ano int);
-CREATE TABLE IF NOT EXISTS pp_components (id int primary key, label text, link text);
-CREATE TABLE IF NOT EXISTS usuarios (id int primary key, nome text, login text unique, email text, perfil text, cargo text, cidade text, senha text, ativo boolean default true, modulos jsonb default '[]', cidades_coord text default '');
-CREATE TABLE IF NOT EXISTS produtos (id int primary key, nome text unique);
-CREATE TABLE IF NOT EXISTS cns_limpeza (id int primary key, cidade text, predios int, sim int, nao int, eco_val text, eco_pct text, ano int, status text, just text, eco_historico jsonb default '[]', link_admin text default '');
--- Para tabelas já existentes, adicionar colunas faltando:
--- ALTER TABLE suprimentos.convenios ADD COLUMN IF NOT EXISTS link text DEFAULT '';
--- ALTER TABLE suprimentos.cns_limpeza ADD COLUMN IF NOT EXISTS link_admin text DEFAULT '';
+===== EXECUTE ESTE SQL NO EDITOR DO SUPABASE (schema: public) =====
+
+CREATE TABLE IF NOT EXISTS "CNSREGIONAL_fornecedores" (id bigserial primary key, codigo text, nome text, cnpj text, cat text, email text, tel text, resp text, cidade text, uf text, endereco text, status text, score float, obs text, avals jsonb default '[]');
+CREATE TABLE IF NOT EXISTS "CNSREGIONAL_agenda_compras" (id bigserial primary key, prod text, forn_id int, data text, igrejas int, obs text, status text, admin text, comprador text, contato text);
+CREATE TABLE IF NOT EXISTS "CNSREGIONAL_convenios" (id bigserial primary key, titulo text, tipo text, img_url text, link text default '', igrejas int, descricao text, data_criacao text, produto text, fornecedor text, data_publicacao text);
+CREATE TABLE IF NOT EXISTS "CNSREGIONAL_pp_items" (id bigserial primary key, cidade text, val text, pct text, ano int);
+CREATE TABLE IF NOT EXISTS "CNSREGIONAL_pp_components" (id bigserial primary key, label text, link text);
+CREATE TABLE IF NOT EXISTS "CNSREGIONAL_usuarios" (id bigserial primary key, nome text, login text unique, email text, perfil text, cargo text, cidade text, senha text, ativo boolean default true, modulos jsonb default '[]', cidades_coord text default '');
+CREATE TABLE IF NOT EXISTS "CNSREGIONAL_produtos" (id bigserial primary key, nome text unique, categoria text, forn_id int, marca text);
+CREATE TABLE IF NOT EXISTS "CNSREGIONAL_cns_limpeza" (id bigserial primary key, cidade text, predios int, sim int, nao int, eco_val text, eco_pct text, ano int, status text, just text, eco_historico jsonb default '[]', link_admin text default '');
+CREATE TABLE IF NOT EXISTS "CNSREGIONAL_ge_meialuz" (id bigserial primary key, cidade text, predios int, sim int, eco text, pct text, ano int, status text, just text);
+CREATE TABLE IF NOT EXISTS "CNSREGIONAL_ge_fotovoltaica" (id bigserial primary key, cidade text, predios int, sim int, eco text, pct text, ano int, status text, just text);
+CREATE TABLE IF NOT EXISTS "CNSREGIONAL_mapa_cns" (id bigserial primary key, cidades jsonb default '[]', colunas jsonb default '[]', dados jsonb default '{}', updated_at timestamptz default now());
+
+-- Habilitar RLS e políticas de acesso (anon pode ler e escrever):
+ALTER TABLE "CNSREGIONAL_fornecedores" ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "allow_all" ON "CNSREGIONAL_fornecedores" FOR ALL USING (true) WITH CHECK (true);
+-- Repita para cada tabela CNSREGIONAL_*
+
 -- Enable RLS and add policies as needed
 */
 
@@ -5773,13 +5772,13 @@ async function sbSaveGE(){
   if(!db) return;
   showSyncing(true);
   try {
-    await db.schema('suprimentos').from('ge_meialuz').delete().neq('id',0);
+    await db.from('CNSREGIONAL_ge_meialuz').delete().neq('id',0);
     if(geMlCidades.length){
-      await db.schema('suprimentos').from('ge_meialuz').insert(geMlCidades.map((c,i)=>({id:i+1,...c})));
+      await db.from('CNSREGIONAL_ge_meialuz').insert(geMlCidades.map((c,i)=>({id:i+1,...c})));
     }
-    await db.schema('suprimentos').from('ge_fotovoltaica').delete().neq('id',0);
+    await db.from('CNSREGIONAL_ge_fotovoltaica').delete().neq('id',0);
     if(geFvCidades.length){
-      await db.schema('suprimentos').from('ge_fotovoltaica').insert(geFvCidades.map((c,i)=>({id:i+1,...c})));
+      await db.from('CNSREGIONAL_ge_fotovoltaica').insert(geFvCidades.map((c,i)=>({id:i+1,...c})));
     }
   } catch(e){ console.warn('GE save error',e); }
   showSyncing(false);
@@ -6379,65 +6378,75 @@ function afterLoginHook(){
 </script>
 
 
+
 <!-- ══ MODAL MAPA DA REGIONAL CNS ══════════════════════════════════════ -->
 <div class="modal-bg" id="modal-mapa-convenio">
   <div class="modal" style="width:97vw;max-width:1400px;max-height:92vh">
-    <div class="modal-header" style="background:var(--navy);border-radius:14px 14px 0 0">
-      <div>
+    <div class="modal-header" style="background:var(--navy);border-radius:14px 14px 0 0;flex-wrap:wrap;gap:8px">
+      <div style="flex:1;min-width:0">
         <div class="modal-title" style="color:#fff;font-family:'Barlow Condensed',sans-serif;font-size:20px;font-weight:800">COMISSÃO NACIONAL DE SUPRIMENTOS — MAPA DA REGIONAL JUNDIAÍ</div>
         <div style="font-size:11px;color:rgba(255,255,255,.6);margin-top:2px">Verificação dos convênios por cidade · preencha os campos manualmente</div>
       </div>
-      <button class="modal-close" onclick="document.getElementById('modal-mapa-convenio').classList.remove('open')" style="color:#fff;font-size:24px">&times;</button>
+      <div style="display:flex;align-items:center;gap:8px">
+        <button id="btn-mapa-gerenciar-cols" onclick="mapaAbrirGerenciarColunas()" style="display:none;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);color:#fff;border-radius:7px;padding:6px 12px;font-size:12px;font-weight:600;cursor:pointer;font-family:Barlow,sans-serif" title="Gerenciar colunas (Master)">
+          ⚙️ Colunas
+        </button>
+        <button class="modal-close" onclick="document.getElementById('modal-mapa-convenio').classList.remove('open')" style="color:#fff;font-size:24px">&times;</button>
+      </div>
     </div>
     <div class="modal-body" style="padding:0;overflow-x:auto">
-      <table id="tbl-mapa-cns" style="width:100%;border-collapse:collapse;font-size:11px;min-width:1100px">
-        <thead>
-          <tr>
-            <th rowspan="2" style="background:#0d2757;color:#fff;padding:8px 10px;text-align:left;position:sticky;left:0;z-index:5;min-width:130px;border-right:2px solid rgba(255,255,255,.2)">CIDADES</th>
-            <th colspan="2" style="background:#1a3a6b;color:#fff;padding:6px 8px;text-align:center;border-left:1px solid rgba(255,255,255,.2)">ECONOMIA DE COMPRAS</th>
-            <th colspan="1" style="background:#1a3a6b;color:#fff;padding:6px 8px;text-align:center;border-left:1px solid rgba(255,255,255,.2)">CNS LIMPEZA</th>
-            <th colspan="3" style="background:#1a3a6b;color:#fff;padding:6px 8px;text-align:center;border-left:1px solid rgba(255,255,255,.2)">PROJETOS DE ECONOMIA</th>
-            <th colspan="2" style="background:#1a3a6b;color:#fff;padding:6px 8px;text-align:center;border-left:1px solid rgba(255,255,255,.2)">EQUIPE CONVENIADA</th>
-            <th colspan="2" style="background:#1a3a6b;color:#fff;padding:6px 8px;text-align:center;border-left:1px solid rgba(255,255,255,.2)">CONVÊNIOS BANCÁRIOS</th>
-            <th colspan="2" style="background:#1a3a6b;color:#fff;padding:6px 8px;text-align:center;border-left:1px solid rgba(255,255,255,.2)">SEGUROS CONVENIADOS</th>
-            <th colspan="1" style="background:#1a3a6b;color:#fff;padding:6px 8px;text-align:center;border-left:1px solid rgba(255,255,255,.2)">PIEDADE</th>
-            <th rowspan="2" style="background:#0d2757;color:#fff;padding:8px 6px;text-align:center;border-left:2px solid rgba(255,255,255,.3);min-width:60px">TOTAL</th>
-          </tr>
-          <tr>
-            <th style="background:#1e4a8a;color:#dce8ff;padding:5px 7px;text-align:center;font-size:10px;border-left:1px solid rgba(255,255,255,.15)">1. Usa módulo Compras</th>
-            <th style="background:#1e4a8a;color:#dce8ff;padding:5px 7px;text-align:center;font-size:10px;border-left:1px solid rgba(255,255,255,.15)">2. Realiza Compras do Convênio</th>
-            <th style="background:#1e4a8a;color:#dce8ff;padding:5px 7px;text-align:center;font-size:10px;border-left:1px solid rgba(255,255,255,.15)">2. Realiza Visitas às Casas de Oração</th>
-            <th style="background:#1e4a8a;color:#dce8ff;padding:5px 7px;text-align:center;font-size:10px;border-left:1px solid rgba(255,255,255,.15)">3. Realiza compra dos Convênios</th>
-            <th style="background:#1e4a8a;color:#dce8ff;padding:5px 7px;text-align:center;font-size:10px;border-left:1px solid rgba(255,255,255,.15)">4. Meia Luz / Fotovoltaico</th>
-            <th style="background:#1e4a8a;color:#dce8ff;padding:5px 7px;text-align:center;font-size:10px;border-left:1px solid rgba(255,255,255,.15)">5. Pintura Programada</th>
-            <th style="background:#1e4a8a;color:#dce8ff;padding:5px 7px;text-align:center;font-size:10px;border-left:1px solid rgba(255,255,255,.15)">6. Técnico de Órgão Voluntário</th>
-            <th style="background:#1e4a8a;color:#dce8ff;padding:5px 7px;text-align:center;font-size:10px;border-left:1px solid rgba(255,255,255,.15)">7. CNS Climatização Téc. Voluntário</th>
-            <th style="background:#1e4a8a;color:#dce8ff;padding:5px 7px;text-align:center;font-size:10px;border-left:1px solid rgba(255,255,255,.15)">8. Banco Bradesco Convênio</th>
-            <th style="background:#1e4a8a;color:#dce8ff;padding:5px 7px;text-align:center;font-size:10px;border-left:1px solid rgba(255,255,255,.15)">9. PagBan Convênio</th>
-            <th style="background:#1e4a8a;color:#dce8ff;padding:5px 7px;text-align:center;font-size:10px;border-left:1px solid rgba(255,255,255,.15)">10. Seguro Voluntário (Porto)</th>
-            <th style="background:#1e4a8a;color:#dce8ff;padding:5px 7px;text-align:center;font-size:10px;border-left:1px solid rgba(255,255,255,.15)">11. Seguro Patrimonial (Chubby)</th>
-            <th style="background:#1e4a8a;color:#dce8ff;padding:5px 7px;text-align:center;font-size:10px;border-left:1px solid rgba(255,255,255,.15)">12. Compras Consumo e Ativo Convênio</th>
-          </tr>
-        </thead>
-        <tbody id="tbody-mapa-cns"></tbody>
-        <tfoot>
-          <tr id="tr-mapa-totals" style="background:#f0f4fa;font-weight:700">
-            <td style="padding:8px 10px;position:sticky;left:0;background:#f0f4fa;border-top:2px solid var(--border);font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:800;color:var(--navy)">TOTAL GERAL</td>
-          </tr>
-        </tfoot>
-      </table>
+      <div id="tbl-mapa-wrap">
+        <table id="tbl-mapa-cns" style="width:100%;border-collapse:collapse;font-size:11px;min-width:1100px">
+          <thead id="thead-mapa-cns"></thead>
+          <tbody id="tbody-mapa-cns"></tbody>
+          <tfoot><tr id="tr-mapa-totals" style="background:#f0f4fa;font-weight:700"></tr></tfoot>
+        </table>
+      </div>
     </div>
-    <div class="modal-footer" style="justify-content:space-between;align-items:center">
+    <div class="modal-footer" style="justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px">
       <div style="font-size:11px;color:var(--muted)">
         <span style="color:var(--green);font-weight:700">&#9632;</span> Sim &nbsp;
         <span style="color:var(--red);font-weight:700">&#9632;</span> Não &nbsp;
         <span style="color:var(--muted);font-weight:700">&#9632;</span> —
       </div>
-      <div style="display:flex;gap:10px">
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
         <button class="btn btn-outline btn-sm" onclick="mapaReset()">Limpar Tudo</button>
-        <button class="btn btn-primary btn-sm" onclick="mapaSalvar()">Salvar Mapa</button>
+        <button class="btn btn-primary btn-sm" onclick="mapaSalvar()">💾 Salvar Mapa</button>
+        <button class="btn btn-sm" style="background:#e03535;color:#fff" onclick="mapaExportPDF()">📄 Salvar PDF</button>
         <button class="btn btn-outline btn-sm" onclick="document.getElementById('modal-mapa-convenio').classList.remove('open')">Fechar</button>
       </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ MODAL GERENCIAR COLUNAS DO MAPA (Master) ═══════════════════════ -->
+<div class="modal-bg" id="modal-mapa-colunas">
+  <div class="modal" style="width:680px;max-width:96vw;max-height:88vh">
+    <div class="modal-header" style="background:var(--navy);border-radius:14px 14px 0 0">
+      <div class="modal-title" style="color:#fff;font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:800">⚙️ Gerenciar Colunas do Mapa</div>
+      <button class="modal-close" onclick="document.getElementById('modal-mapa-colunas').classList.remove('open')" style="color:#fff;font-size:22px">&times;</button>
+    </div>
+    <div class="modal-body" style="padding:20px">
+      <div style="font-size:12px;color:var(--muted);margin-bottom:14px">Arraste para reordenar, edite o nome e grupo, ou exclua colunas. Colunas excluídas perdem seus dados.</div>
+      <div id="mapa-cols-list" style="display:flex;flex-direction:column;gap:8px;max-height:340px;overflow-y:auto"></div>
+      <div style="margin-top:16px;padding-top:14px;border-top:1px solid var(--border)">
+        <div style="font-weight:700;font-size:13px;color:var(--navy);margin-bottom:10px">➕ Adicionar Nova Coluna</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr auto;gap:10px;align-items:end">
+          <div class="form-group" style="margin:0">
+            <label>Nome da Coluna</label>
+            <input id="nova-col-label" type="text" placeholder="Ex: 13. Novo Convênio" style="font-size:12px">
+          </div>
+          <div class="form-group" style="margin:0">
+            <label>Grupo / Categoria</label>
+            <input id="nova-col-group" type="text" placeholder="Ex: PROJETOS DE ECONOMIA" style="font-size:12px">
+          </div>
+          <button class="btn btn-green btn-sm" onclick="mapaAdicionarColuna()" style="height:38px">+ Adicionar</button>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline btn-sm" onclick="document.getElementById('modal-mapa-colunas').classList.remove('open')">Cancelar</button>
+      <button class="btn btn-primary btn-sm" onclick="mapaSalvarColunas()">✅ Aplicar Colunas</button>
     </div>
   </div>
 </div>
@@ -6453,22 +6462,350 @@ function afterLoginHook(){
 .mapa-select.val-nao{background:#fde2e2;color:#9a1515;border-color:#f9c0c0}
 .mapa-total-cell{font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:800;padding:8px 6px!important;border-top:2px solid var(--border)!important}
 .mapa-total-pct{font-size:11px;color:var(--muted);font-weight:500;display:block}
+.mapa-col-row{display:grid;grid-template-columns:24px 1fr 1fr auto;gap:8px;align-items:center;padding:8px 10px;background:#f8fbff;border:1px solid var(--border);border-radius:8px;font-size:12px}
+.mapa-col-row input{border:1px solid var(--border);border-radius:5px;padding:4px 8px;font-size:12px;font-family:Barlow,sans-serif;background:#fff;color:var(--text)}
+.mapa-col-row input:focus{border-color:var(--blue);outline:none}
 </style>
 
 <script>
 (function(){
-  var CIDADES=['Cajamar','Jundiai','Itupeva','Cabreúva','Itatiba','Franco da Rocha','Caieiras','Campo Limpo Pta','Várzea Paulista','Francisco Morato'];
-  var N_COLS=13;
-  var STORAGE_KEY='mapa_cns_data_v1';
-  function loadData(){try{var d=JSON.parse(localStorage.getItem(STORAGE_KEY));if(d&&d.length===CIDADES.length)return d;}catch(e){}return CIDADES.map(function(){return Array(N_COLS).fill('');});}
-  function saveData(data){try{localStorage.setItem(STORAGE_KEY,JSON.stringify(data));}catch(e){}}
-  function updateSelClass(sel){sel.className='mapa-select';if(sel.value==='1')sel.classList.add('val-sim');else if(sel.value==='0')sel.classList.add('val-nao');}
-  function setRowTotText(td,row){var sim=row.filter(function(v){return v==='1';}).length;var pct=Math.round(sim/N_COLS*100);td.innerHTML=sim+'/'+N_COLS+'<span class="mapa-total-pct">'+pct+'%</span>';td.style.color=pct>=70?'var(--green)':pct>=40?'var(--orange)':'var(--red)';}
-  function updateColTotals(data){var tfoot=document.getElementById('tr-mapa-totals');if(!tfoot)return;tfoot.innerHTML='<td style="padding:8px 10px;position:sticky;left:0;background:#f0f4fa;border-top:2px solid var(--border);font-family:Barlow Condensed,sans-serif;font-size:13px;font-weight:800;color:var(--navy)">TOTAL GERAL</td>';var allSim=0;for(var c=0;c<N_COLS;c++){var sim=data.filter(function(r){return r[c]==='1';}).length;allSim+=sim;var td=document.createElement('td');td.className='mapa-total-cell';var pct=Math.round(sim/CIDADES.length*100);td.innerHTML=sim+'/'+CIDADES.length+'<span class="mapa-total-pct">'+pct+'%</span>';td.style.color=pct>=70?'var(--green)':pct>=40?'var(--orange)':'var(--red)';tfoot.appendChild(td);}var grandPct=Math.round(allSim/(CIDADES.length*N_COLS)*100);var tdG=document.createElement('td');tdG.className='mapa-total-cell';tdG.innerHTML=allSim+'/'+(CIDADES.length*N_COLS)+'<span class="mapa-total-pct">'+grandPct+'%</span>';tdG.style.color=grandPct>=70?'var(--green)':grandPct>=40?'var(--orange)':'var(--red)';tfoot.appendChild(tdG);}
-  function buildTable(){var data=loadData();var tbody=document.getElementById('tbody-mapa-cns');if(!tbody)return;tbody.innerHTML='';CIDADES.forEach(function(cidade,r){var tr=document.createElement('tr');var td0=document.createElement('td');td0.textContent=cidade;tr.appendChild(td0);for(var c=0;c<N_COLS;c++){var td=document.createElement('td');var sel=document.createElement('select');sel.className='mapa-select';sel.innerHTML='<option value="">—</option><option value="1">Sim</option><option value="0">Não</option>';sel.value=data[r][c];updateSelClass(sel);(function(rr,cc,s,d){s.addEventListener('change',function(){d[rr][cc]=s.value;updateSelClass(s);var totCell=tr.querySelector('.mapa-total-cell');if(totCell)setRowTotText(totCell,d[rr]);updateColTotals(d);});})(r,c,sel,data);td.appendChild(sel);tr.appendChild(td);}var tdTot=document.createElement('td');tdTot.className='mapa-total-cell';setRowTotText(tdTot,data[r]);tr.appendChild(tdTot);tbody.appendChild(tr);});updateColTotals(data);}
-  window.openMapaConvenio=function(){buildTable();var m=document.getElementById('modal-mapa-convenio');if(m)m.classList.add('open');};
-  window.mapaSalvar=function(){var data=loadData();var tbody=document.getElementById('tbody-mapa-cns');if(!tbody)return;var rows=tbody.querySelectorAll('tr');rows.forEach(function(tr,r){var sels=tr.querySelectorAll('select');sels.forEach(function(s,c){if(r<data.length&&c<N_COLS)data[r][c]=s.value;});});saveData(data);if(window.showToast)showToast('Mapa salvo com sucesso!','success');else alert('Mapa salvo!');};
-  window.mapaReset=function(){if(!confirm('Limpar todos os dados do mapa?'))return;localStorage.removeItem(STORAGE_KEY);buildTable();};
+  // ── Configuração padrão de colunas ────────────────────────────────────────
+  var DEFAULT_COLUNAS = [
+    {group:'ECONOMIA DE COMPRAS', label:'1. Usa Módulo Compras'},
+    {group:'ECONOMIA DE COMPRAS', label:'2. Realiza Compras do Convênio'},
+    {group:'CNS LIMPEZA',         label:'3. Realiza Visitas às Casas de Oração'},
+    {group:'PROJETOS DE ECONOMIA',label:'4. Realiza Compra dos Convênios'},
+    {group:'PROJETOS DE ECONOMIA',label:'5. Meia Luz / Fotovoltaico'},
+    {group:'PROJETOS DE ECONOMIA',label:'6. Pintura Programada'},
+    {group:'EQUIPE CONVENIADA',   label:'7. Técnico de Órgão Voluntário'},
+    {group:'EQUIPE CONVENIADA',   label:'8. CNS Climatização Téc. Voluntário'},
+    {group:'CONVÊNIOS BANCÁRIOS', label:'9. Banco Bradesco Convênio'},
+    {group:'CONVÊNIOS BANCÁRIOS', label:'10. PagBan Convênio'},
+    {group:'SEGUROS CONVENIADOS', label:'11. Seguro Voluntário (Porto)'},
+    {group:'SEGUROS CONVENIADOS', label:'12. Seguro Patrimonial (Chubby)'},
+    {group:'PIEDADE',             label:'13. Compras Consumo e Ativo Convênio'}
+  ];
+  var DEFAULT_CIDADES = ['Cajamar','Jundiaí','Itupeva','Cabreúva','Itatiba','Franco da Rocha','Caieiras','Campo Limpo Pta','Várzea Paulista','Francisco Morato'];
+
+  var STORAGE_KEY = 'mapa_cns_v2';
+
+  // Estado do mapa em memória
+  var mapaState = {
+    colunas: null,   // array de {group, label}
+    dados: null,     // {cidadeKey: {colIdx: valor}}
+    _dbId: null
+  };
+
+  // ── Persistência local ────────────────────────────────────────────────────
+  function localSave(){
+    try{ localStorage.setItem(STORAGE_KEY, JSON.stringify({colunas:mapaState.colunas, dados:mapaState.dados})); }catch(e){}
+  }
+  function localLoad(){
+    try{
+      var s = JSON.parse(localStorage.getItem(STORAGE_KEY)||'null');
+      if(s && s.colunas && s.dados){ mapaState.colunas = s.colunas; mapaState.dados = s.dados; return true; }
+    }catch(e){}
+    return false;
+  }
+
+  // ── Inicialização dos dados ────────────────────────────────────────────────
+  function initState(){
+    if(!localLoad()){
+      mapaState.colunas = JSON.parse(JSON.stringify(DEFAULT_COLUNAS));
+      var d = {};
+      DEFAULT_CIDADES.forEach(function(c){ d[c] = {}; });
+      mapaState.dados = d;
+    }
+    // Garante que todas as cidades default existam
+    DEFAULT_CIDADES.forEach(function(c){ if(!mapaState.dados[c]) mapaState.dados[c]={}; });
+  }
+
+  // ── Valor de uma célula ───────────────────────────────────────────────────
+  function getCelVal(cidade, colIdx){
+    if(!mapaState.dados[cidade]) return '';
+    return mapaState.dados[cidade][colIdx] || '';
+  }
+  function setCelVal(cidade, colIdx, val){
+    if(!mapaState.dados[cidade]) mapaState.dados[cidade]={};
+    mapaState.dados[cidade][colIdx] = val;
+  }
+
+  // ── Renderiza o cabeçalho da tabela ───────────────────────────────────────
+  function buildHead(colunas){
+    var thead = document.getElementById('thead-mapa-cns');
+    if(!thead) return;
+    // Agrupa colunas por grupo
+    var groups = [];
+    var lastGroup = null;
+    colunas.forEach(function(col, i){
+      if(col.group !== lastGroup){ groups.push({name:col.group, start:i, count:1}); lastGroup=col.group; }
+      else { groups[groups.length-1].count++; }
+    });
+    // Linha 1: grupos
+    var row1 = '<tr><th rowspan="2" style="background:#0d2757;color:#fff;padding:8px 10px;text-align:left;position:sticky;left:0;z-index:5;min-width:130px;border-right:2px solid rgba(255,255,255,.2)">CIDADES</th>';
+    groups.forEach(function(g){
+      row1 += '<th colspan="'+g.count+'" style="background:#1a3a6b;color:#fff;padding:6px 8px;text-align:center;border-left:1px solid rgba(255,255,255,.2)">'+escHtml(g.name)+'</th>';
+    });
+    row1 += '<th rowspan="2" style="background:#0d2757;color:#fff;padding:8px 6px;text-align:center;border-left:2px solid rgba(255,255,255,.3);min-width:60px">TOTAL</th></tr>';
+    // Linha 2: nomes das colunas
+    var row2 = '<tr>';
+    colunas.forEach(function(col){
+      row2 += '<th style="background:#1e4a8a;color:#dce8ff;padding:5px 7px;text-align:center;font-size:10px;border-left:1px solid rgba(255,255,255,.15)">'+escHtml(col.label)+'</th>';
+    });
+    row2 += '</tr>';
+    thead.innerHTML = row1 + row2;
+  }
+
+  function escHtml(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+  // ── Renders ───────────────────────────────────────────────────────────────
+  function updateSelClass(sel){
+    sel.className='mapa-select';
+    if(sel.value==='1') sel.classList.add('val-sim');
+    else if(sel.value==='0') sel.classList.add('val-nao');
+  }
+  function setRowTotText(td, cidade, colunas){
+    var sim=0, n=colunas.length;
+    for(var c=0;c<n;c++){ if(getCelVal(cidade,c)==='1') sim++; }
+    var pct=n>0?Math.round(sim/n*100):0;
+    td.innerHTML=sim+'/'+n+'<span class="mapa-total-pct">'+pct+'%</span>';
+    td.style.color=pct>=70?'var(--green)':pct>=40?'var(--orange)':'var(--red)';
+  }
+  function updateColTotals(colunas){
+    var tfoot=document.getElementById('tr-mapa-totals'); if(!tfoot) return;
+    var cidades=Object.keys(mapaState.dados);
+    var nC=colunas.length, nR=cidades.length;
+    tfoot.innerHTML='<td style="padding:8px 10px;position:sticky;left:0;background:#f0f4fa;border-top:2px solid var(--border);font-family:Barlow Condensed,sans-serif;font-size:13px;font-weight:800;color:var(--navy)">TOTAL GERAL</td>';
+    var allSim=0;
+    for(var c=0;c<nC;c++){
+      var sim=cidades.filter(function(ci){return getCelVal(ci,c)==='1';}).length;
+      allSim+=sim;
+      var td=document.createElement('td'); td.className='mapa-total-cell';
+      var pct=nR>0?Math.round(sim/nR*100):0;
+      td.innerHTML=sim+'/'+nR+'<span class="mapa-total-pct">'+pct+'%</span>';
+      td.style.color=pct>=70?'var(--green)':pct>=40?'var(--orange)':'var(--red)';
+      tfoot.appendChild(td);
+    }
+    var grandPct=nR*nC>0?Math.round(allSim/(nR*nC)*100):0;
+    var tdG=document.createElement('td'); tdG.className='mapa-total-cell';
+    tdG.innerHTML=allSim+'/'+(nR*nC)+'<span class="mapa-total-pct">'+grandPct+'%</span>';
+    tdG.style.color=grandPct>=70?'var(--green)':grandPct>=40?'var(--orange)':'var(--red)';
+    tfoot.appendChild(tdG);
+  }
+
+  function buildTable(){
+    initState();
+    var colunas=mapaState.colunas;
+    buildHead(colunas);
+    var tbody=document.getElementById('tbody-mapa-cns'); if(!tbody) return;
+    tbody.innerHTML='';
+    Object.keys(mapaState.dados).sort(function(a,b){
+      var ia=DEFAULT_CIDADES.indexOf(a), ib=DEFAULT_CIDADES.indexOf(b);
+      if(ia===-1&&ib===-1) return a.localeCompare(b);
+      if(ia===-1) return 1; if(ib===-1) return -1;
+      return ia-ib;
+    }).forEach(function(cidade){
+      var tr=document.createElement('tr');
+      var td0=document.createElement('td'); td0.textContent=cidade; tr.appendChild(td0);
+      colunas.forEach(function(col,c){
+        var td=document.createElement('td');
+        var sel=document.createElement('select');
+        sel.className='mapa-select';
+        sel.innerHTML='<option value="">—</option><option value="1">Sim</option><option value="0">Não</option>';
+        sel.value=getCelVal(cidade,c);
+        updateSelClass(sel);
+        (function(ci,cc,s){
+          s.addEventListener('change',function(){
+            setCelVal(ci,cc,s.value);
+            updateSelClass(s);
+            var totCell=tr.querySelector('.mapa-total-cell');
+            if(totCell) setRowTotText(totCell,ci,colunas);
+            updateColTotals(colunas);
+          });
+        })(cidade,c,sel);
+        td.appendChild(sel); tr.appendChild(td);
+      });
+      var tdTot=document.createElement('td'); tdTot.className='mapa-total-cell';
+      setRowTotText(tdTot,cidade,colunas);
+      tr.appendChild(tdTot);
+      tbody.appendChild(tr);
+    });
+    updateColTotals(colunas);
+    // Botão "Gerenciar Colunas" visível só para Master
+    var btnCols=document.getElementById('btn-mapa-gerenciar-cols');
+    if(btnCols) btnCols.style.display=(typeof isMaster==='function'&&isMaster())?'block':'none';
+  }
+
+  // ── Salvar / Reset ────────────────────────────────────────────────────────
+  window.mapaSalvar = async function(){
+    localSave();
+    if(window.db){
+      try{
+        var payload={colunas:mapaState.colunas, dados:mapaState.dados, updated_at:new Date().toISOString()};
+        if(mapaState._dbId){
+          await window.db.from('CNSREGIONAL_mapa_cns').update(payload).eq('id',mapaState._dbId);
+        } else {
+          var res = await window.db.from('CNSREGIONAL_mapa_cns').insert(payload).select();
+          if(res.data&&res.data[0]) mapaState._dbId=res.data[0].id;
+        }
+      }catch(e){ console.warn('Mapa save error:',e); }
+    }
+    if(window.toast) toast('Mapa salvo com sucesso!','success');
+    else if(window.showToast) showToast('Mapa salvo com sucesso!','success');
+    else alert('Mapa salvo!');
+  };
+
+  window.mapaReset = function(){
+    if(!confirm('Limpar todos os dados do mapa? Esta ação não pode ser desfeita.')) return;
+    var cidades=Object.keys(mapaState.dados);
+    cidades.forEach(function(c){ mapaState.dados[c]={}; });
+    buildTable();
+    if(window.toast) toast('Mapa limpo!');
+  };
+
+  // ── Carregar do Supabase ──────────────────────────────────────────────────
+  window.mapaCarregarSupabase = async function(){
+    if(!window.db) return;
+    try{
+      var res = await window.db.from('CNSREGIONAL_mapa_cns').select('*').order('id',{ascending:false}).limit(1);
+      if(res.data&&res.data[0]){
+        var row=res.data[0];
+        if(row.colunas&&row.dados){
+          mapaState.colunas=row.colunas;
+          mapaState.dados=row.dados;
+          mapaState._dbId=row.id;
+          localSave();
+        }
+      }
+    }catch(e){ console.warn('Mapa load error:',e); }
+  };
+
+  // ── Abertura do modal ─────────────────────────────────────────────────────
+  window.openMapaConvenio = async function(){
+    if(window.db){ await window.mapaCarregarSupabase(); }
+    buildTable();
+    var m=document.getElementById('modal-mapa-convenio'); if(m) m.classList.add('open');
+  };
+
+  // ── Gerenciar Colunas (Master) ────────────────────────────────────────────
+  var tempColunas = [];
+
+  window.mapaAbrirGerenciarColunas = function(){
+    tempColunas = JSON.parse(JSON.stringify(mapaState.colunas));
+    renderColsList();
+    document.getElementById('nova-col-label').value='';
+    document.getElementById('nova-col-group').value='';
+    document.getElementById('modal-mapa-colunas').classList.add('open');
+  };
+
+  function renderColsList(){
+    var container=document.getElementById('mapa-cols-list'); if(!container) return;
+    container.innerHTML=tempColunas.map(function(col,i){
+      return '<div class="mapa-col-row" data-idx="'+i+'">'+
+        '<span style="color:var(--muted);font-size:11px;font-weight:700;text-align:center">'+String(i+1).padStart(2,'0')+'</span>'+
+        '<input type="text" value="'+escHtml(col.label)+'" placeholder="Nome da coluna" onchange="mapaEditCol('+i+',\'label\',this.value)">'+
+        '<input type="text" value="'+escHtml(col.group)+'" placeholder="Grupo" onchange="mapaEditCol('+i+',\'group\',this.value)">'+
+        '<button onclick="mapaRemoverColuna('+i+')" style="background:#fde2e2;color:#9a1515;border:1px solid #f9c0c0;border-radius:6px;padding:4px 8px;font-size:12px;font-weight:700;cursor:pointer" title="Remover coluna">✕</button>'+
+      '</div>';
+    }).join('');
+  }
+
+  window.mapaEditCol = function(idx, field, val){
+    if(tempColunas[idx]) tempColunas[idx][field]=val;
+  };
+
+  window.mapaAdicionarColuna = function(){
+    var label=document.getElementById('nova-col-label').value.trim();
+    var group=document.getElementById('nova-col-group').value.trim();
+    if(!label){ if(window.toast) toast('Informe o nome da coluna','error'); return; }
+    if(!group) group='OUTROS';
+    tempColunas.push({group:group, label:label});
+    document.getElementById('nova-col-label').value='';
+    renderColsList();
+  };
+
+  window.mapaRemoverColuna = function(idx){
+    if(!confirm('Remover coluna "'+tempColunas[idx].label+'"? Os dados desta coluna serão perdidos ao salvar.')) return;
+    tempColunas.splice(idx,1);
+    renderColsList();
+  };
+
+  window.mapaSalvarColunas = function(){
+    if(tempColunas.length===0){ if(window.toast) toast('O mapa precisa ter pelo menos 1 coluna','error'); return; }
+    // Ajusta dados: remove índices além do novo total, mantém o que há
+    var nNew=tempColunas.length;
+    Object.keys(mapaState.dados).forEach(function(c){
+      var novosDados={};
+      // Mapeia índices antigos → novos (mantém por posição)
+      for(var i=0;i<nNew;i++){
+        if(mapaState.dados[c][i]!==undefined) novosDados[i]=mapaState.dados[c][i];
+      }
+      mapaState.dados[c]=novosDados;
+    });
+    mapaState.colunas=JSON.parse(JSON.stringify(tempColunas));
+    document.getElementById('modal-mapa-colunas').classList.remove('open');
+    buildTable();
+    if(window.toast) toast('Colunas atualizadas! Clique em Salvar Mapa para persistir.','success');
+  };
+
+  // ── Exportar PDF ──────────────────────────────────────────────────────────
+  window.mapaExportPDF = function(){
+    var colunas=mapaState.colunas;
+    var cidades=Object.keys(mapaState.dados).sort(function(a,b){
+      var ia=DEFAULT_CIDADES.indexOf(a), ib=DEFAULT_CIDADES.indexOf(b);
+      if(ia===-1&&ib===-1) return a.localeCompare(b);
+      if(ia===-1) return 1; if(ib===-1) return -1; return ia-ib;
+    });
+    // Agrupa para cabeçalho
+    var groups=[]; var lastG=null;
+    colunas.forEach(function(col){
+      if(col.group!==lastG){ groups.push({name:col.group,count:1}); lastG=col.group; }
+      else groups[groups.length-1].count++;
+    });
+    var thStyle='padding:5px 6px;border:1px solid #1a3a6b;text-align:center;font-size:8px;font-weight:700;text-transform:uppercase;white-space:normal;word-break:break-word;max-width:70px;vertical-align:bottom';
+    var groupRow=groups.map(function(g){
+      return '<th colspan="'+g.count+'" style="'+thStyle+';background:#1a3a6b">'+g.name+'</th>';
+    }).join('');
+    var colRow=colunas.map(function(c){
+      return '<th style="'+thStyle+';background:#1e4a8a;color:#dce8ff">'+c.label+'</th>';
+    }).join('');
+    var bodyRows=cidades.map(function(cidade,ri){
+      var bg=ri%2===0?'#fff':'#f7f9fc';
+      var cells=colunas.map(function(col,c){
+        var v=getCelVal(cidade,c);
+        var txt=v==='1'?'✔':v==='0'?'✘':'—';
+        var color=v==='1'?'#1ea96a':v==='0'?'#e03535':'#6b7a99';
+        return '<td style="padding:5px 4px;border:1px solid #d4dff2;text-align:center;font-size:12px;font-weight:700;color:'+color+'">'+txt+'</td>';
+      }).join('');
+      var sim=colunas.filter(function(col,c){return getCelVal(cidade,c)==='1';}).length;
+      var pct=colunas.length>0?Math.round(sim/colunas.length*100):0;
+      var totColor=pct>=70?'#1ea96a':pct>=40?'#e87c1a':'#e03535';
+      cells+='<td style="padding:5px 4px;border:1px solid #d4dff2;text-align:center;font-size:11px;font-weight:800;color:'+totColor+'">'+sim+'/'+colunas.length+'<br><span style="font-size:9px">'+pct+'%</span></td>';
+      return '<tr style="background:'+bg+'"><td style="padding:5px 8px;border:1px solid #d4dff2;font-weight:700;font-size:11px;color:#0d2757">'+cidade+'</td>'+cells+'</tr>';
+    }).join('');
+    var now=new Date().toLocaleDateString('pt-BR');
+    var html='<!DOCTYPE html><html><head><meta charset="UTF-8">'+
+      '<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;600;700;800&family=Barlow+Condensed:wght@700;800&display=swap" rel="stylesheet">'+
+      '<style>*{box-sizing:border-box;margin:0;padding:0}body{font-family:Barlow,sans-serif;background:#fff;-webkit-print-color-adjust:exact;print-color-adjust:exact}'+
+      '@page{size:A3 landscape;margin:10mm}@media print{button{display:none!important}}</style></head><body>'+
+      '<div style="padding:14px 18px 0">'+
+      '<div style="background:#0d2757;color:#fff;border-radius:10px;padding:14px 20px;display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">'+
+      '<div><div style="font-family:Barlow Condensed,sans-serif;font-size:20px;font-weight:800">COMISSÃO NACIONAL DE SUPRIMENTOS — MAPA DA REGIONAL JUNDIAÍ</div>'+
+      '<div style="font-size:11px;opacity:.7;margin-top:2px">Verificação dos convênios por cidade</div></div>'+
+      '<div style="text-align:right;font-size:11px;opacity:.7">Gerado em '+now+'</div></div>'+
+      '<div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse;font-size:11px">'+
+      '<thead><tr><th rowspan="2" style="background:#0d2757;color:#fff;padding:8px 10px;text-align:left;min-width:110px;border:1px solid #1a3a6b">CIDADES</th>'+
+      groupRow+'<th rowspan="2" style="background:#0d2757;color:#fff;padding:8px 6px;text-align:center;border:1px solid #1a3a6b;min-width:52px">TOTAL</th></tr>'+
+      '<tr>'+colRow+'</tr></thead>'+
+      '<tbody>'+bodyRows+'</tbody>'+
+      '</table></div></div>'+
+      '<script>window.onload=function(){setTimeout(function(){window.print();},600)}<\/script>'+
+      '</body></html>';
+    var win=window.open('','_blank','width=1200,height=820');
+    win.document.write(html);
+    win.document.close();
+  };
+
 })();
 </script>
 
