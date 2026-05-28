@@ -1584,6 +1584,10 @@ textarea{resize:vertical;min-height:80px}
             <label>Marca / Modelo</label>
             <input id="p-marca" type="text" placeholder="Ex: 3M, Tramontina, Dell XPS...">
           </div>
+          <div class="form-group">
+            <label>Valor do Produto (R$)</label>
+            <input id="p-valor" type="text" placeholder="Ex: 150,00" oninput="maskValorProd(this)">
+          </div>
         </div>
         <div class="form-actions" style="margin-top:12px">
           <button class="btn btn-outline" onclick="clearProdForm()">Limpar</button>
@@ -1610,7 +1614,7 @@ textarea{resize:vertical;min-height:80px}
         </div>
         <div class="card-body">
           <table>
-            <thead><tr><th>#</th><th>Nome do Produto</th><th>Categoria</th><th>Fornecedor</th><th>Marca/Modelo</th><th>Ações</th></tr></thead>
+            <thead><tr><th>#</th><th>Nome do Produto</th><th>Categoria</th><th>Fornecedor</th><th>Marca/Modelo</th><th>Valor</th><th>Ações</th></tr></thead>
             <tbody id="produtos-body"></tbody>
           </table>
         </div>
@@ -4053,6 +4057,7 @@ function renderProdutos(){
       <td>${p.categoria ? `<span class="badge badge-blue">${p.categoria}</span>` : '<span style="color:var(--muted)">—</span>'}</td>
       <td style="font-size:12px">${forn ? forn.nome : '<span style="color:var(--muted)">—</span>'}</td>
       <td style="font-size:12px">${p.marca || '<span style="color:var(--muted)">—</span>'}</td>
+      <td style="font-size:12px;font-weight:700;color:var(--green)">${p.valor ? 'R$ '+p.valor : '<span style="color:var(--muted)">—</span>'}</td>
       <td style="white-space:nowrap">
         <button class="btn btn-outline btn-sm" style="color:var(--blue)" onclick="editProduto(${realIdx})">Editar</button>
         <button class="btn btn-red btn-sm" onclick="deleteProduto(${realIdx})">✕ Excluir</button>
@@ -4075,7 +4080,8 @@ function saveProduto(){
     nome,
     categoria: document.getElementById('p-categoria').value,
     fornecedorId: parseInt(document.getElementById('p-fornecedor').value)||null,
-    marca: document.getElementById('p-marca').value.trim()
+    marca: document.getElementById('p-marca').value.trim(),
+    valor: document.getElementById('p-valor').value.trim()
   };
   if(editingProdIndex >= 0){
     produtos[editingProdIndex] = obj;
@@ -4097,6 +4103,7 @@ function editProduto(i){
   document.getElementById('p-categoria').value = p.categoria||'';
   document.getElementById('p-fornecedor').value = p.fornecedorId||'';
   document.getElementById('p-marca').value = p.marca||'';
+  document.getElementById('p-valor').value = p.valor||'';
   document.getElementById('prod-form-title').textContent = 'Editar Produto';
   document.getElementById('p-save-btn').textContent = 'Atualizar Produto';
   document.getElementById('p-nome').focus();
@@ -4111,8 +4118,15 @@ function deleteProduto(i){
   }
 }
 
+function maskValorProd(el){
+  let v = el.value.replace(/\D/g,'');
+  if(!v){el.value='';return;}
+  v = (parseInt(v)/100).toFixed(2);
+  el.value = v.replace('.',',').replace(/\B(?=(\d{3})+(?!\d))/g,'.');
+}
+
 function clearProdForm(){
-  ['p-nome','p-marca'].forEach(id=>{ const el=document.getElementById(id); if(el) el.value=''; });
+  ['p-nome','p-marca','p-valor'].forEach(id=>{ const el=document.getElementById(id); if(el) el.value=''; });
   const cat=document.getElementById('p-categoria'); if(cat) cat.value='';
   const forn=document.getElementById('p-fornecedor'); if(forn) forn.value='';
   document.getElementById('prod-form-title').textContent='Novo Produto';
@@ -5279,7 +5293,7 @@ async function loadFromSupabase(){
       }
     }
     if(pr.data && pr.data.length > 0){
-      produtos = pr.data.map(r=>({nome:r.nome||'', categoria:r.categoria||'', fornecedorId:r.forn_id||null, marca:r.marca||''})).filter(p=>p.nome);
+      produtos = pr.data.map(r=>({nome:r.nome||'', categoria:r.categoria||'', fornecedorId:r.forn_id||null, marca:r.marca||'', valor:r.valor||''})).filter(p=>p.nome);
     }
     if(cns.data && cns.data.length > 0){
       cnsCidades = cns.data.map(r=>({
@@ -5632,7 +5646,7 @@ async function sbSaveProdutos(){
   if(!db) return;
   showSyncing(true);
   await db.from('CNSREGIONAL_produtos').delete().neq('id', 0);
-  const rows = produtos.map((p,i)=>({id:i+1, nome:p.nome||p, categoria:p.categoria||'', forn_id:p.fornecedorId||null, marca:p.marca||''}));
+  const rows = produtos.map((p,i)=>({id:i+1, nome:p.nome||p, categoria:p.categoria||'', forn_id:p.fornecedorId||null, marca:p.marca||'', valor:p.valor||''}));
   if(rows.length) await db.from('CNSREGIONAL_produtos').insert(rows);
   showSyncing(false);
 }
@@ -6916,12 +6930,12 @@ function afterLoginHook(){
       if(col.group!==lastG){ groups.push({name:col.group,count:1}); lastG=col.group; }
       else groups[groups.length-1].count++;
     });
-    var thStyle='padding:5px 6px;border:1px solid #1a3a6b;text-align:center;font-size:8px;font-weight:700;text-transform:uppercase;white-space:normal;word-break:break-word;max-width:70px;vertical-align:bottom';
+    var thStyle='padding:5px 6px;border:1px solid #0d2757;text-align:center;font-size:8px;font-weight:700;text-transform:uppercase;white-space:normal;word-break:break-word;max-width:70px;vertical-align:bottom;background:#ffffff;color:#0d2757';
     var groupRow=groups.map(function(g){
-      return '<th colspan="'+g.count+'" style="'+thStyle+';background:#1a3a6b">'+g.name+'</th>';
+      return '<th colspan="'+g.count+'" style="'+thStyle+';background:#e8eef8;color:#0d2757;border-bottom:2px solid #0d2757">'+g.name+'</th>';
     }).join('');
     var colRow=colunas.map(function(c){
-      return '<th style="'+thStyle+';background:#1e4a8a;color:#dce8ff">'+c.label+'</th>';
+      return '<th style="'+thStyle+';background:#f4f7fd;color:#0d2757">'+c.label+'</th>';
     }).join('');
     var bodyRows=cidades.map(function(cidade,ri){
       var bg=ri%2===0?'#fff':'#f7f9fc';
@@ -6937,21 +6951,36 @@ function afterLoginHook(){
       cells+='<td style="padding:5px 4px;border:1px solid #d4dff2;text-align:center;font-size:11px;font-weight:800;color:'+totColor+'">'+sim+'/'+colunas.length+'<br><span style="font-size:9px">'+pct+'%</span></td>';
       return '<tr style="background:'+bg+'"><td style="padding:5px 8px;border:1px solid #d4dff2;font-weight:700;font-size:11px;color:#0d2757">'+cidade+'</td>'+cells+'</tr>';
     }).join('');
+    // Linha de totais por coluna
+    var totalCells=colunas.map(function(col,c){
+      var simCount=cidades.filter(function(cidade){ return getCelVal(cidade,c)==='1'; }).length;
+      var total=cidades.length;
+      var pctCol=total>0?Math.round(simCount/total*100):0;
+      var cor=pctCol>=70?'#1ea96a':pctCol>=40?'#e87c1a':'#e03535';
+      return '<td style="padding:5px 4px;border:1px solid #0d2757;border-top:2px solid #0d2757;text-align:center;font-size:11px;font-weight:800;background:#f0f4fa;color:'+cor+'">'+simCount+'/'+total+'<br><span style="font-size:9px">'+pctCol+'%</span></td>';
+    }).join('');
+    // Total geral (soma de todos os sim de todas cidades/colunas)
+    var totalSim=cidades.reduce(function(acc,cidade){ return acc+colunas.filter(function(col,c){return getCelVal(cidade,c)==='1';}).length; },0);
+    var totalPossivel=cidades.length*colunas.length;
+    var totalPct=totalPossivel>0?Math.round(totalSim/totalPossivel*100):0;
+    var totalGeral='<td style="padding:5px 4px;border:1px solid #0d2757;border-top:2px solid #0d2757;text-align:center;font-size:11px;font-weight:800;background:#f0f4fa;color:#0d2757">'+totalSim+'/'+totalPossivel+'<br><span style="font-size:9px">'+totalPct+'%</span></td>';
+    var footRow='<tfoot><tr><td style="padding:5px 8px;border:1px solid #0d2757;border-top:2px solid #0d2757;font-weight:800;font-size:11px;color:#0d2757;background:#f0f4fa;text-transform:uppercase;letter-spacing:.5px">TOTAL</td>'+totalCells+totalGeral+'</tr></tfoot>';
     var now=new Date().toLocaleDateString('pt-BR');
     var html='<!DOCTYPE html><html><head><meta charset="UTF-8">'+
       '<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;600;700;800&family=Barlow+Condensed:wght@700;800&display=swap" rel="stylesheet">'+
       '<style>*{box-sizing:border-box;margin:0;padding:0}body{font-family:Barlow,sans-serif;background:#fff;-webkit-print-color-adjust:exact;print-color-adjust:exact}'+
+      'div,th,td{-webkit-print-color-adjust:exact;print-color-adjust:exact}'+
       '@page{size:A3 landscape;margin:10mm}@media print{button{display:none!important}}</style></head><body>'+
       '<div style="padding:14px 18px 0">'+
-      '<div style="background:#0d2757;color:#fff;border-radius:10px;padding:14px 20px;display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">'+
-      '<div><div style="font-family:Barlow Condensed,sans-serif;font-size:20px;font-weight:800">COMISSÃO NACIONAL DE SUPRIMENTOS — MAPA DA REGIONAL JUNDIAÍ</div>'+
-      '<div style="font-size:11px;opacity:.7;margin-top:2px">Verificação dos convênios por cidade</div></div>'+
-      '<div style="text-align:right;font-size:11px;opacity:.7">Gerado em '+now+'</div></div>'+
+      '<div style="border:3px solid #0d2757;border-radius:10px;padding:14px 20px;display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;background:#ffffff">'+
+      '<div><div style="font-family:Barlow Condensed,sans-serif;font-size:20px;font-weight:800;color:#0d2757">COMISSÃO NACIONAL DE SUPRIMENTOS — MAPA DA REGIONAL JUNDIAÍ</div>'+
+      '<div style="font-size:11px;color:#6b7a99;margin-top:2px">Verificação dos convênios por cidade</div></div>'+
+      '<div style="text-align:right;font-size:11px;color:#6b7a99">Gerado em '+now+'</div></div>'+
       '<div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse;font-size:11px">'+
-      '<thead><tr><th rowspan="2" style="background:#0d2757;color:#fff;padding:8px 10px;text-align:left;min-width:110px;border:1px solid #1a3a6b">CIDADES</th>'+
-      groupRow+'<th rowspan="2" style="background:#0d2757;color:#fff;padding:8px 6px;text-align:center;border:1px solid #1a3a6b;min-width:52px">TOTAL</th></tr>'+
+      '<thead><tr><th rowspan="2" style="background:#e8eef8;color:#0d2757;padding:8px 10px;text-align:left;min-width:110px;border:1px solid #0d2757;font-size:10px;font-weight:800;text-transform:uppercase">CIDADES</th>'+
+      groupRow+'<th rowspan="2" style="background:#e8eef8;color:#0d2757;padding:8px 6px;text-align:center;border:1px solid #0d2757;min-width:52px;font-size:10px;font-weight:800;text-transform:uppercase">TOTAL</th></tr>'+
       '<tr>'+colRow+'</tr></thead>'+
-      '<tbody>'+bodyRows+'</tbody>'+
+      '<tbody>'+bodyRows+'</tbody>'+footRow+
       '</table></div></div>'+
       '<script>window.onload=function(){setTimeout(function(){window.print();},600)}<\/script>'+
       '</body></html>';
