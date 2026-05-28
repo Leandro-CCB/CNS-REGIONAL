@@ -5138,7 +5138,7 @@ async function loadFromSupabase(){
       catch(e){ console.warn(`Erro ao carregar ${table}:`, e); return {data:null, error:e}; }
     };
 
-    const [f, a, c, pp, pc, us, pr, cns] = await Promise.all([
+    const [f, a, c, pp, pc, us, pr, cns, geml, gefv] = await Promise.all([
       safeLoad('fornecedores'),
       safeLoad('agenda_compras'),
       safeLoad('convenios'),
@@ -5147,6 +5147,8 @@ async function loadFromSupabase(){
       safeLoad('usuarios'),
       safeLoad('produtos'),
       safeLoad('cns_limpeza'),
+      safeLoad('ge_meialuz'),
+      safeLoad('ge_fotovoltaica'),
     ]);
 
     // Detecta erro 406 (schema não exposto na API do Supabase)
@@ -5177,7 +5179,8 @@ async function loadFromSupabase(){
       convenios = c.data.map(r=>({
         id:r.id, _dbId:r.id, titulo:r.titulo||'', tipo:r.tipo||'nacionais',
         imgUrl:r.img_url||'', link:r.link||'', igrejas:r.igrejas||0, desc:r.descricao||'',
-        dataCriacao:r.data_criacao||'recente'
+        dataCriacao:r.data_criacao||'recente', produto:r.produto||'',
+        fornecedor:r.fornecedor||'', dataPublicacao:r.data_publicacao||''
       }));
       nextConvId = Math.max(...convenios.map(x=>x.id), 0) + 1;
     }
@@ -5223,6 +5226,20 @@ async function loadFromSupabase(){
         linkAdmin: r.link_admin||''
       }));
       nextCNSId = Math.max(...cnsCidades.map(x=>x.id), 0) + 1;
+    }
+    if(geml.data && geml.data.length > 0){
+      geMlCidades = geml.data.map(r=>({
+        id:r.id, cidade:r.cidade||'', predios:r.predios||0, sim:r.sim||0,
+        eco:r.eco||'', pct:r.pct||'', ano:r.ano||new Date().getFullYear(),
+        status:r.status||'pendente', just:r.just||''
+      }));
+    }
+    if(gefv.data && gefv.data.length > 0){
+      geFvCidades = gefv.data.map(r=>({
+        id:r.id, cidade:r.cidade||'', predios:r.predios||0, sim:r.sim||0,
+        eco:r.eco||'', pct:r.pct||'', ano:r.ano||new Date().getFullYear(),
+        status:r.status||'pendente', just:r.just||''
+      }));
     }
     toast('Dados carregados!');
   } catch(e){ console.warn('Load error:', e); }
@@ -5290,7 +5307,7 @@ async function sbDeleteAgenda(id){
 async function sbSaveConvenio(obj){
   if(!db) return;
   showSyncing(true);
-  const row = {titulo:obj.titulo, tipo:obj.tipo, img_url:obj.imgUrl||'', link:obj.link||'', igrejas:obj.igrejas||0, descricao:obj.desc||'', data_criacao:obj.dataCriacao||''};
+  const row = {titulo:obj.titulo, tipo:obj.tipo, img_url:obj.imgUrl||'', link:obj.link||'', igrejas:obj.igrejas||0, descricao:obj.desc||'', data_criacao:obj.dataCriacao||'', produto:obj.produto||'', fornecedor:obj.fornecedor||'', data_publicacao:obj.dataPublicacao||''};
   let error, data;
   if(obj._dbId){
     // Atualiza registro existente
@@ -5980,6 +5997,22 @@ function abrirCentralAjuda(){
 
 // ── Init ──────────────────────────────────────────────────────────────────────
 initSupabase();
+
+// ── Aviso de file:// ─────────────────────────────────────────────────────────
+(function(){
+  if(location.protocol === 'file:'){
+    setTimeout(function(){
+      var banner = document.createElement('div');
+      banner.id = 'file-protocol-warning';
+      banner.innerHTML = '⚠️ <b>Atenção:</b> O sistema está sendo aberto como arquivo local (<code>file://</code>). ' +
+        'A sincronização com o Supabase <b>não funcionará</b> por restrições de segurança do navegador. ' +
+        'Use o arquivo <b>INICIAR_SERVIDOR.bat</b> (incluído na pasta) para abrir via <code>http://localhost:8080</code>.';
+      banner.style.cssText = 'position:fixed;bottom:0;left:0;right:0;z-index:9999;background:#7c3aed;color:#fff;' +
+        'padding:12px 20px;font-size:13px;text-align:center;line-height:1.5;box-shadow:0 -4px 16px rgba(0,0,0,.3)';
+      document.body.appendChild(banner);
+    }, 1500);
+  }
+})();
 
 </script>
 
