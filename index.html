@@ -4381,37 +4381,108 @@ function readEcXLSX(file){
   reader.readAsArrayBuffer(file);
 }
 
+function parseNum(v){
+  if(v===null||v===undefined||v==='') return 0;
+  return parseFloat(String(v).replace(/\./g,'').replace(',','.'))||0;
+}
+
+function detectModeloExcel(keys){
+  // Verifica se é o padrão do modelo (colunas em PT com FORNECEDOR FECHADO / V. FECHADO / SITUAÇÃO / ORÇ)
+  const k = keys.join('|').toUpperCase();
+  return /FORNECEDOR|V\. FECHADO|SITUA|OR[ÇC]/.test(k);
+}
+
 function processEcRows(json){
-  // Map colunas do Excel para nosso modelo interno
-  ecRows = json.map((r,i)=>({
-    _idx: i,
-    data:    r['Data']||r['data']||'',
-    hora:    r['Hora']||r['hora']||'',
-    numero:  r['Número']||r['Numero']||r['numero']||'',
-    remetente: r['Remetente']||r['remetente']||'',
-    valorFechado: parseFloat(String(r['Valor Fechado']||r['valor_fechado']||0).replace(',','.'))||0,
-    valorMaior:   parseFloat(String(r['Valor Maior']||r['valor_maior']||0).replace(',','.'))||0,
-    economia:     parseFloat(String(r['Economia']||r['economia']||0).replace(',','.'))||0,
-    // colunas manuais (podem vir do excel ou serem preenchidas)
-    documento: r['Documento']||r['documento']||'Produto',
-    cotacaoNome: r['Cotação']||r['Cotacao']||r['cotacao']||'',
-    cotacaoNum:  (()=>{
-      // SheetJS duplica colunas com mesmo nome adicionando _1, _2...
-      // Pandas usa .1, .2 — testamos ambas as variantes
-      const v = r['Cotação.1']||r['Cotação_1']||r['cotacao_num']||r['Nº Cotação']||r['Num Cotacao']||r['N° Cotação']||r['CotacaoNum']||r['cotacaoNum']||r['Número da Cotação']||r['Num. Cotação']||'';
-      if(v) return String(v);
-      // Fallback: procura qualquer chave que contenha "cotac" e também "1","num","nº"
-      const k = Object.keys(r).find(k=>/cotac/i.test(k)&&(/[_\.]1$/.test(k)||/num/i.test(k)||/nº/i.test(k)||/n°/i.test(k)));
-      return k ? String(r[k]||'') : '';
-    })(),
-    quantas:     r['Quantas?']||r['quantas']||'',
-    pedido:      String(r['Pedido']||r['pedido']||''),
-  }));
+  if(!json.length){ ecRows=[]; renderEcTable(); return; }
+  const keys = Object.keys(json[0]);
+  const isModelo = detectModeloExcel(keys);
+
+  if(isModelo){
+    // ── Padrão Modelo Excel ──────────────────────────────────────────────────
+    // Colunas: DATA | NUMERO | DOCUMENTO | COTACAO | PEDIDO | FORNECEDOR FECHADO
+    //          V. FECHADO | SITUAÇÃO | ORÇ(1) | ORÇ(2) | ORÇ(3) | P.MÉDIO($) | MAIOR VALOR($) | ECONOMIA($)
+    ecRows = json.filter(r=>{
+      // Filtra linha de totais e linhas vazias
+      const anyKey = Object.values(r).join('');
+      if(!anyKey.trim()) return false;
+      const numVal = r['NUMERO']||r['Numero']||r['numero']||'';
+      if(String(numVal).toUpperCase().includes('TOTAIS')) return false;
+      return true;
+    }).map((r,i)=>{
+      // Ler orçamentos para calcular P.MÉDIO se necessário
+      const orc1 = parseNum(r['ORÇ ( 1)']||r['ORÇ(1)']||r['Orç 1']||r['ORC1']||0);
+      const orc2 = parseNum(r['ORÇ ( 2)']||r['ORÇ(2)']||r['Orç 2']||r['ORC2']||0);
+      const orc3 = parseNum(r['ORÇ ( 3)']||r['ORÇ(3)']||r['Orç 3']||r['ORC3']||0);
+      // P.MÉDIO: pega do Excel ou recalcula como média dos orç > 0
+      let valorMedio = parseNum(r['P.MÉDIO ($)']||r['P.MEDIO ($)']||r['P.MÉDIO']||r['P.MEDIO']||r['Preço Médio']||r['Valor Médio']||0);
+      if(!valorMedio){
+        const orcVals = [orc1,orc2,orc3].filter(v=>v>0);
+        if(orcVals.length) valorMedio = orcVals.reduce((a,b)=>a+b,0)/orcVals.length;
+      }
+      const valorFechado = parseNum(r['V. FECHADO']||r['V.FECHADO']||r['Valor Fechado']||r['VALOR FECHADO']||0);
+      const valorMaior   = parseNum(r['MAIOR VALOR ($)']||r['MAIOR VALOR']||r['Maior Valor']||r['Valor Maior']||0);
+      let economia       = parseNum(r['ECONOMIA ($)']||r['ECONOMIA']||r['Economia']||0);
+      if(!economia && valorMaior > valorFechado) economia = valorMaior - valorFechado;
+
+      // Situação → cotacaoNome
+      const sit = String(r['SITUAÇÃO']||r['SITUACAO']||r['Situação']||r['Situacao']||'').trim().toUpperCase();
+      const cotacaoNome = ['SIM','NÃO','NAO','CNS','CRS'].includes(sit) ? (sit==='NAO'?'NÃO':sit) : '';
+
+      // COTACAO → cotacaoNum (número da cotação)
+      const cotacaoNum = String(r['COTACAO']||r['COTAÇÃO']||r['Cotação']||r['cotacao']||'');
+
+      return {
+        _idx: i,
+        data: r['DATA']||r['Data']||r['data']||'',
+        hora: '',
+        numero: String(r['NUMERO']||r['Número']||r['numero']||''),
+        remetente: r['FORNECEDOR FECHADO']||r['Fornecedor Fechado']||r['FORNECEDOR']||r['Remetente']||r['remetente']||'',
+        valorFechado,
+        valorMaior,
+        valorMedio,
+        orc1, orc2, orc3,
+        economia,
+        documento: r['DOCUMENTO']||r['Documento']||r['documento']||'Produto',
+        cotacaoNome,
+        cotacaoNum,
+        quantas: r['Quantas?']||r['quantas']||'',
+        pedido: String(r['PEDIDO']||r['Pedido']||r['pedido']||''),
+      };
+    });
+    toast(`✅ ${ecRows.length} linhas carregadas (padrão Modelo)!`,'success');
+  } else {
+    // ── Padrão Original ──────────────────────────────────────────────────────
+    ecRows = json.map((r,i)=>({
+      _idx: i,
+      data:    r['Data']||r['data']||'',
+      hora:    r['Hora']||r['hora']||'',
+      numero:  r['Número']||r['Numero']||r['numero']||'',
+      remetente: r['Remetente']||r['remetente']||'',
+      valorFechado: parseNum(r['Valor Fechado']||r['valor_fechado']||0),
+      valorMaior:   parseNum(r['Valor Maior']||r['valor_maior']||0),
+      valorMedio:   parseNum(r['Valor Médio']||r['Valor Medio']||r['P.MÉDIO']||r['valor_medio']||0),
+      orc1: parseNum(r['Orç 1']||r['ORC1']||0),
+      orc2: parseNum(r['Orç 2']||r['ORC2']||0),
+      orc3: parseNum(r['Orç 3']||r['ORC3']||0),
+      economia: parseNum(r['Economia']||r['economia']||0),
+      documento: r['Documento']||r['documento']||'Produto',
+      cotacaoNome: r['Cotação']||r['Situação']||r['Cotacao']||r['cotacao']||'',
+      cotacaoNum:  (()=>{
+        const v = r['Cotação.1']||r['Cotação_1']||r['cotacao_num']||r['Nº Cotação']||r['Num Cotacao']||r['N° Cotação']||r['CotacaoNum']||r['cotacaoNum']||r['Número da Cotação']||r['Num. Cotação']||'';
+        if(v) return String(v);
+        const k = Object.keys(r).find(k=>/cotac/i.test(k)&&(/[_\.]1$/.test(k)||/num/i.test(k)||/nº/i.test(k)||/n°/i.test(k)));
+        return k ? String(r[k]||'') : '';
+      })(),
+      quantas:     r['Quantas?']||r['quantas']||'',
+      pedido:      String(r['Pedido']||r['pedido']||''),
+    }));
+    toast(`✅ ${ecRows.length} linhas carregadas!`,'success');
+  }
 
   renderEcTable();
   document.getElementById('ec-actions-bar').style.display='flex';
-  document.getElementById('ec-drop-zone').style.borderColor='var(--green)';
-  toast(`${ecRows.length} linhas carregadas!`);
+  const dz = document.getElementById('ec-drop-zone');
+  if(dz) dz.style.borderColor='var(--green)';
 }
 
 // ── Table Render ─────────────────────────────────────────────────────────────
@@ -4421,6 +4492,9 @@ function renderEcTable(){
     container.innerHTML='<div class="ec-no-data">Nenhum dado carregado.</div>';
     return;
   }
+  function thPaste(label,field){
+    return `<th class="ec-col-edit" style="white-space:nowrap">${label} ✎ <button title="Colar coluna inteira" onclick="openPasteCol('${field}','${label}')" style="padding:1px 5px;border-radius:4px;border:1px solid #b0bcd4;background:#f4f7fd;font-size:9px;cursor:pointer;color:var(--navy)">📋</button></th>`;
+  }
   container.innerHTML=`
     <div class="ec-table-wrap">
       <table class="ec-table">
@@ -4428,17 +4502,16 @@ function renderEcTable(){
           <tr>
             <th>#</th>
             <th>Data</th>
-            <th>Hora</th>
-            <th class="ec-col-edit" title="Editável">Número ✎</th>
-            <th style="min-width:200px">Remetente</th>
-            <th>Valor Fechado</th>
-            <th class="ec-col-edit" title="Campo editável manualmente">Valor Maior ✎</th>
+            <th style="min-width:200px">Fornecedor</th>
+            <th>V. Fechado</th>
+            <th style="background:#e8f4ff;color:var(--blue)">Valor Médio</th>
+            ${thPaste('V. Maior','valorMaior')}
             <th>Economia</th>
-            <th class="ec-col-edit" title="Coluna manual">Documento ✎</th>
-            <th class="ec-col-edit" title="Coluna manual">Cotação ✎</th>
-            <th class="ec-col-edit" title="Coluna manual">Cotação Nº ✎</th>
-            <th class="ec-col-edit" title="Coluna manual">Quantas? ✎</th>
-            <th class="ec-col-edit" title="Coluna manual">Pedido ✎</th>
+            ${thPaste('Documento','documento')}
+            ${thPaste('Situação','cotacaoNome')}
+            ${thPaste('Cotação Nº','cotacaoNum')}
+            ${thPaste('Quantas?','quantas')}
+            ${thPaste('Pedido','pedido')}
           </tr>
         </thead>
         <tbody>
@@ -4446,12 +4519,11 @@ function renderEcTable(){
             <tr>
               <td><b>${i+1}</b></td>
               <td>${fmtEcDate(r.data)}</td>
-              <td>${r.hora}</td>
-              <td class="ec-col-edit"><input type="text" value="${r.numero}" onchange="ecEditRow(${i},'numero',this.value)" style="width:80px"></td>
-              <td style="max-width:220px;white-space:normal;word-break:break-word;font-size:11px">${r.remetente}</td>
+              <td style="max-width:220px;white-space:normal;word-break:break-word;font-size:11px">${r.remetente||r.numero||''}</td>
               <td style="text-align:right">${fmtNum2(r.valorFechado)}</td>
+              <td style="text-align:right;background:#f0f7ff;color:var(--blue);font-weight:600">${r.valorMedio ? fmtNum2(r.valorMedio) : '<span style="color:var(--muted)">—</span>'}</td>
               <td class="ec-col-edit"><input type="number" step="0.01" value="${r.valorMaior||''}" onchange="ecEditRow(${i},'valorMaior',parseFloat(this.value)||0)" style="width:90px;text-align:right" placeholder="0,00"></td>
-              <td style="text-align:right;font-weight:700;color:${r.economia>0?'var(--green)':'var(--muted)'}">${fmtNum2(r.economia)}</td>
+              <td style="text-align:right;font-weight:700;color:${r.economia>0?'var(--green)':\'var(--muted)'}">${fmtNum2(r.economia)}</td>
               <td class="ec-col-edit">
                 <select onchange="ecEditRow(${i},'documento',this.value)" style="min-width:80px">
                   <option ${r.documento==='Produto'?'selected':''}>Produto</option>
@@ -4464,9 +4536,10 @@ function renderEcTable(){
                   <option ${r.cotacaoNome==='SIM'?'selected':''}>SIM</option>
                   <option ${r.cotacaoNome==='NÃO'?'selected':''}>NÃO</option>
                   <option ${r.cotacaoNome==='CNS'?'selected':''}>CNS</option>
+                  <option ${r.cotacaoNome==='CRS'?'selected':''}>CRS</option>
                 </select>
               </td>
-              <td class="ec-col-edit"><input type="text" value="${r.cotacaoNum}" onchange="ecEditRow(${i},'cotacaoNum',this.value)" style="width:68px"></td>
+              <td class="ec-col-edit"><input type="text" value="${r.cotacaoNum||''}" onchange="ecEditRow(${i},'cotacaoNum',this.value)" style="width:68px"></td>
               <td class="ec-col-edit">
                 <select onchange="ecEditRow(${i},'quantas',this.value)" style="min-width:55px">
                   <option value="" ${!r.quantas?'selected':''}>—</option>
@@ -4477,41 +4550,93 @@ function renderEcTable(){
                   <option ${r.quantas==='C5'?'selected':''}>C5</option>
                 </select>
               </td>
-              <td class="ec-col-edit"><input type="text" value="${r.pedido}" onchange="ecEditRow(${i},'pedido',this.value)" style="width:60px"></td>
+              <td class="ec-col-edit"><input type="text" value="${r.pedido||''}" onchange="ecEditRow(${i},'pedido',this.value)" style="width:60px"></td>
             </tr>`).join('')}
         </tbody>
       </table>
     </div>
     <div style="font-size:11px;color:var(--muted);margin-top:6px">
-      ✎ Colunas com fundo amarelo são <b>editáveis manualmente</b>. Clique em qualquer campo para editar.
+      ✎ Campos editáveis. 📋 Clique no ícone clipboard no cabeçalho para <b>colar coluna inteira</b> copiada do Excel.
     </div>`;
+}
+
+// ── Paste Column ─────────────────────────────────────────────────────────────
+let _pasteField='', _pasteLabel='';
+function openPasteCol(field, label){
+  _pasteField=field; _pasteLabel=label;
+  let modal = document.getElementById('modal-paste-col');
+  if(!modal){
+    modal = document.createElement('div');
+    modal.className='modal-bg'; modal.id='modal-paste-col';
+    modal.innerHTML=`<div class="modal" style="width:480px">
+      <div class="modal-header">
+        <span class="modal-title" id="paste-col-title">Colar Coluna</span>
+        <button class="modal-close" onclick="document.getElementById('modal-paste-col').classList.remove('open')">✕</button>
+      </div>
+      <div class="modal-body">
+        <div id="paste-col-info" style="font-size:12px;color:var(--muted);margin-bottom:10px"></div>
+        <textarea id="paste-col-area" placeholder="Cole aqui os valores copiados do Excel (Ctrl+V)…" style="width:100%;height:220px;font-size:12px;font-family:monospace;border:1.5px solid var(--border);border-radius:8px;padding:10px;resize:vertical"></textarea>
+        <div id="paste-col-preview" style="font-size:11px;color:var(--muted);margin-top:6px"></div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-outline" onclick="document.getElementById('modal-paste-col').classList.remove('open')">Cancelar</button>
+        <button class="btn btn-primary" onclick="applyPasteCol()">✓ Aplicar</button>
+      </div>
+    </div>`;
+    document.body.appendChild(modal);
+    document.getElementById('paste-col-area').addEventListener('input',()=>{
+      const lines=document.getElementById('paste-col-area').value.split('\n').map(l=>l.trim()).filter(l=>l);
+      document.getElementById('paste-col-preview').textContent=`${lines.length} valor(es) detectado(s) — ${ecRows.length} linha(s) na tabela.`;
+    });
+  }
+  document.getElementById('paste-col-title').textContent='Colar coluna: '+label;
+  document.getElementById('paste-col-info').textContent=`Copie a coluna no Excel (Ctrl+C) e cole aqui (Ctrl+V). ${ecRows.length} linha(s) esperadas.`;
+  document.getElementById('paste-col-area').value='';
+  document.getElementById('paste-col-preview').textContent='';
+  modal.classList.add('open');
+  setTimeout(()=>document.getElementById('paste-col-area').focus(),80);
+}
+
+function applyPasteCol(){
+  const raw=document.getElementById('paste-col-area').value;
+  const lines=raw.split('\n').map(l=>l.split('\t')[0].trim()).filter(l=>l);
+  if(!lines.length){toast('Nenhum valor para colar','error');return;}
+  const numFields=['valorMaior','valorFechado','valorMedio'];
+  const selectMap={'sim':'SIM','não':'NÃO','nao':'NÃO','cns':'CNS','crs':'CRS','produto':'Produto','serviço':'Serviço','servico':'Serviço'};
+  let applied=0;
+  lines.forEach((v,i)=>{
+    if(!ecRows[i]) return;
+    if(numFields.includes(_pasteField)) ecRows[i][_pasteField]=parseNum(v);
+    else ecRows[i][_pasteField]=selectMap[v.toLowerCase()]||v;
+    if(_pasteField==='valorMaior'||_pasteField==='valorFechado'){
+      const r=ecRows[i];
+      if((r.valorMaior||0)>(r.valorFechado||0)) r.economia=(r.valorMaior||0)-(r.valorFechado||0);
+    }
+    applied++;
+  });
+  document.getElementById('modal-paste-col').classList.remove('open');
+  renderEcTable();
+  toast(`✅ ${applied} valores colados na coluna "${_pasteLabel}"!`,'success');
 }
 
 function ecEditRow(i, field, val){
   if(!ecRows[i]) return;
   ecRows[i][field] = val;
-  // Recalcular economia quando valorFechado ou valorMaior muda
-  if(field === 'valorFechado' || field === 'valorMaior'){
-    const r = ecRows[i];
-    const vf = r.valorFechado||0;
-    const vm = r.valorMaior||0;
-    if(vm > vf) r.economia = vm - vf;
-    // Re-render apenas a célula de economia
-    const rows = document.querySelectorAll('#ec-table-container tbody tr');
+  if(field==='valorFechado'||field==='valorMaior'){
+    const r=ecRows[i];
+    const vf=r.valorFechado||0, vm=r.valorMaior||0;
+    if(vm>vf) r.economia=vm-vf;
+    const rows=document.querySelectorAll('#ec-table-container tbody tr');
     if(rows[i]){
-      const ecoTd = rows[i].querySelector('td:nth-child(8)');
-      if(ecoTd){
-        const eco = r.economia||0;
-        ecoTd.style.color = eco>0 ? 'var(--green)' : 'var(--muted)';
-        ecoTd.textContent = fmtNum2(eco);
-      }
+      const ecoTd=rows[i].querySelector('td:nth-child(7)');
+      if(ecoTd){ const eco=r.economia||0; ecoTd.style.color=eco>0?'var(--green)':\'var(--muted)'; ecoTd.textContent=fmtNum2(eco); }
     }
   }
 }
 
 function fmtEcDate(d){
   if(!d) return '—';
-  const s = String(d);
+  const s=String(d);
   if(s.includes('T')) return s.split('T')[0].split('-').reverse().join('/');
   return s;
 }
@@ -4524,6 +4649,8 @@ function addEcApurada(){
   if(!cidade||!mes||!ano){toast('Informe Cidade, Mês e Ano','error');return;}
   if(!ecRows.length){toast('Carregue um arquivo Excel primeiro','error');return;}
 
+  // Calcula totais com base no campo Cotação
+  let valSim=0, valCNS=0, valNao=0;
   // Calcula totais com base no campo Cotação
   let valSim=0, valCNS=0, valNao=0;
   ecRows.forEach(r=>{
