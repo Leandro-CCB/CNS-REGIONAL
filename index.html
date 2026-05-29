@@ -587,6 +587,9 @@ textarea{resize:vertical;min-height:80px}
     <div class="nav-item nav-master-regional-only" onclick="showPage('suporte',this)">
       <svg viewBox="0 0 24 24" fill="currentColor"><path d="M11.5 2C6.81 2 3 5.81 3 10.5S6.81 19 11.5 19h.5v3c4.86-2.34 8-7 8-11.5C20 5.81 16.19 2 11.5 2zm1 14.5h-2v-2h2v2zm0-4h-2c0-3.25 3-3 3-5 0-1.1-.9-2-2-2s-2 .9-2 2h-2c0-2.21 1.79-4 4-4s4 1.79 4 4c0 2.5-3 2.75-3 5z"/></svg> Suporte
     </div>
+    <div class="nav-item nav-master-only" onclick="showPage('categorias',this)">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l-5.5 9h11zm0 3.84L14.6 10h-5.2zM17.5 13c-2.49 0-4.5 2.01-4.5 4.5S15.01 22 17.5 22 22 19.99 22 17.5 19.99 13 17.5 13zm0 7c-1.38 0-2.5-1.12-2.5-2.5S16.12 15 17.5 15 20 16.12 20 17.5 18.88 20 17.5 20zM3 21.5h8v-8H3v8zm2-6h4v4H5v-4z"/></svg> Gerenciar Categorias
+    </div>
   </nav>
 </div>
 
@@ -994,17 +997,7 @@ textarea{resize:vertical;min-height:80px}
               </div>
               <div class="form-group">
                 <label>Categoria *</label>
-                <select id="nd-categoria" onchange="ndAtualizarResumo()">
-                  <option value="">Selecione a categoria</option>
-                  <option>Elétrica</option>
-                  <option>Limpeza</option>
-                  <option>Escritório</option>
-                  <option>Pintura</option>
-                  <option>TI</option>
-                  <option>Hidráulica</option>
-                  <option>Uniformes</option>
-                  <option>Outros</option>
-                </select>
+                <select id="nd-categoria" onchange="ndAtualizarResumo()"><option value="">Selecione a categoria</option></select>
               </div>
               <div class="form-group full">
                 <label>Descrição detalhada</label>
@@ -1226,12 +1219,7 @@ textarea{resize:vertical;min-height:80px}
           <div class="form-group"><label>Nome / Razão Social *</label><input id="f-nome" type="text" placeholder="Nome completo"></div>
           <div class="form-group"><label>CNPJ / CPF *</label><input id="f-cnpj" type="text" placeholder="00.000.000/0001-00"></div>
           <div class="form-group"><label>Categoria *</label>
-            <select id="f-cat">
-              <option value="">Selecione...</option>
-              <option>Construção</option><option>Limpeza</option><option>Tecnologia</option>
-              <option>Alimentação</option><option>Saúde</option><option>Materiais</option>
-              <option>Serviços Gerais</option><option>Transporte</option><option>Outros</option>
-            </select>
+            <select id="f-cat"><option value="">Selecione...</option></select>
           </div>
           <div class="form-group"><label>E-mail</label><input id="f-email" type="email" placeholder="email@empresa.com"></div>
           <div class="form-group"><label>Telefone</label><input id="f-tel" type="text" placeholder="(11) 99999-9999"></div>
@@ -1567,12 +1555,7 @@ textarea{resize:vertical;min-height:80px}
           </div>
           <div class="form-group">
             <label>Categoria</label>
-            <select id="p-categoria">
-              <option value="">Selecione...</option>
-              <option>Construção</option><option>Limpeza</option><option>Tecnologia</option>
-              <option>Alimentação</option><option>Saúde</option><option>Materiais</option>
-              <option>Serviços Gerais</option><option>Transporte</option><option>Outros</option>
-            </select>
+            <select id="p-categoria"><option value="">Selecione...</option></select>
           </div>
           <div class="form-group">
             <label>Fornecedor</label>
@@ -1601,12 +1584,7 @@ textarea{resize:vertical;min-height:80px}
           <span class="card-title" id="prod-count">Produtos Cadastrados</span>
           <div style="display:flex;gap:8px;align-items:center">
             <input type="text" id="prod-filter-nome" placeholder="Buscar produto..." style="width:160px;padding:6px 10px;font-size:12px;border:1.5px solid var(--border);border-radius:7px" oninput="renderProdutos()">
-            <select id="prod-filter-cat" style="width:140px;padding:6px 10px;font-size:12px;border:1.5px solid var(--border);border-radius:7px" onchange="renderProdutos()">
-              <option value="">Todas categorias</option>
-              <option>Construção</option><option>Limpeza</option><option>Tecnologia</option>
-              <option>Alimentação</option><option>Saúde</option><option>Materiais</option>
-              <option>Serviços Gerais</option><option>Transporte</option><option>Outros</option>
-            </select>
+            <select id="prod-filter-cat" style="width:140px;padding:6px 10px;font-size:12px;border:1.5px solid var(--border);border-radius:7px" onchange="renderProdutos()"><option value="">Todas categorias</option></select>
             <select id="prod-filter-forn" style="width:160px;padding:6px 10px;font-size:12px;border:1.5px solid var(--border);border-radius:7px" onchange="renderProdutos()">
               <option value="">Todos fornecedores</option>
             </select>
@@ -2425,6 +2403,48 @@ textarea{resize:vertical;min-height:80px}
       </div>
     </div>
 
+    <!-- GERENCIAR CATEGORIAS (Master only) -->
+    <div class="page" id="page-categorias">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px">
+        <div>
+          <div style="font-family:'Barlow Condensed',sans-serif;font-size:26px;font-weight:800;color:var(--navy)">Gerenciar Categorias</div>
+          <div style="font-size:13px;color:var(--muted);margin-top:4px">Crie, edite e remova categorias de Fornecedores/Produtos e de Compras Coordenadas.</div>
+        </div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:22px">
+
+        <!-- CATEGORIAS DE FORNECEDORES/PRODUTOS -->
+        <div class="form-section" style="margin-bottom:0">
+          <div class="form-section-title" style="display:flex;align-items:center;gap:8px">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="var(--blue)"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
+            Categorias &mdash; Fornecedores &amp; Produtos
+          </div>
+          <p style="font-size:12px;color:var(--muted);margin-bottom:14px">Usadas nos formulários de cadastro de Fornecedores e Produtos.</p>
+          <div style="display:flex;gap:8px;margin-bottom:14px">
+            <input id="cat-forn-nova" type="text" placeholder="Nome da nova categoria..." style="flex:1;padding:8px 12px;border:1.5px solid var(--border);border-radius:8px;font-size:13px;font-family:Barlow,sans-serif" onkeydown="if(event.key==='Enter')adicionarCatForn()">
+            <button class="btn btn-primary" onclick="adicionarCatForn()" style="white-space:nowrap">+ Adicionar</button>
+          </div>
+          <div id="cat-forn-list" style="display:flex;flex-direction:column;gap:6px;max-height:380px;overflow-y:auto"></div>
+        </div>
+
+        <!-- CATEGORIAS DE COMPRAS COORDENADAS -->
+        <div class="form-section" style="margin-bottom:0">
+          <div class="form-section-title" style="display:flex;align-items:center;gap:8px">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="var(--orange)"><path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96C5 16.1 6.9 18 9 18h12v-2H9.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63H19c.75 0 1.41-.41 1.75-1.03l3.58-6.49A1 1 0 0 0 23.47 5H5.21l-.94-2H1zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z"/></svg>
+            Categorias &mdash; Compras Coordenadas
+          </div>
+          <p style="font-size:12px;color:var(--muted);margin-bottom:14px">Usadas no formulário de Nova Demanda de Compra.</p>
+          <div style="display:flex;gap:8px;margin-bottom:14px">
+            <input id="cat-agenda-nova" type="text" placeholder="Nome da nova categoria..." style="flex:1;padding:8px 12px;border:1.5px solid var(--border);border-radius:8px;font-size:13px;font-family:Barlow,sans-serif" onkeydown="if(event.key==='Enter')adicionarCatAgenda()">
+            <button class="btn btn-primary" onclick="adicionarCatAgenda()" style="white-space:nowrap">+ Adicionar</button>
+          </div>
+          <div id="cat-agenda-list" style="display:flex;flex-direction:column;gap:6px;max-height:380px;overflow-y:auto"></div>
+        </div>
+
+      </div>
+    </div>
+
   </content>
 
 <!-- MODAL: Editar Link Aplicativo -->
@@ -2641,6 +2661,10 @@ function applyAdminVisibility(){
   document.querySelectorAll('.nav-master-regional-only').forEach(el=>{
     el.style.display = (p==='Master'||p==='Regional') ? '' : 'none';
   });
+  // Categorias: only Master
+  document.querySelectorAll('.nav-master-only').forEach(el=>{
+    el.style.display = (p==='Master') ? '' : 'none';
+  });
 }
 
 let fornecedores = [
@@ -2791,7 +2815,7 @@ function toggleSidebar(){
 document.getElementById('l-pass').addEventListener('keydown',e=>{if(e.key==='Enter')doLogin()});
 
 // ─── NAVIGATION ──────────────────────────────────────────────────────────────
-const pageTitles={dashboard:'Dashboard',economizometro:'Economizômetro',fornecedores:'Fornecedores',produtos:'Gestão de Produtos',ranking:'Ranking de Fornecedores','cad-fornecedor':'Cadastrar Fornecedor',agenda:'Compras Coordenadas','nova-demanda':'Nova Demanda de Compra',usuarios:'Gestão de Usuários',convenios:'Convênios',economia:'Economia de Compras','cns-limpeza':'CNS Limpeza',pintura:'Pintura Programada','gestao-energias':'Gestão de Energias',suporte:'Suporte',aplicativos:'Aplicativos'};
+const pageTitles={dashboard:'Dashboard',economizometro:'Economizômetro',fornecedores:'Fornecedores',produtos:'Gestão de Produtos',ranking:'Ranking de Fornecedores','cad-fornecedor':'Cadastrar Fornecedor',agenda:'Compras Coordenadas','nova-demanda':'Nova Demanda de Compra',usuarios:'Gestão de Usuários',convenios:'Convênios',economia:'Economia de Compras','cns-limpeza':'CNS Limpeza',pintura:'Pintura Programada','gestao-energias':'Gestão de Energias',suporte:'Suporte',aplicativos:'Aplicativos',categorias:'Gerenciar Categorias'};
 function showPage(id, el){
   window.scrollTo({top:0,left:0,behavior:'instant'});
   const mainEl = document.getElementById('main');
@@ -2821,6 +2845,7 @@ function showPage(id, el){
   if(id==='economizometro') renderEconomizometro();
   if(id==='gestao-energias') renderGE();
   if(id==='suporte') renderSuporte();
+  if(id==='categorias') renderCategorias();
   if(id==='cad-fornecedor'){ clearFornForm(); if(!editingFornId) document.getElementById('f-score').value='3.0'; applyAdminVisibility(); }
 }
 
@@ -6990,6 +7015,174 @@ function afterLoginHook(){
   };
 
 })();
+
+// ════════════════════════════════════════════════════════════════════════════
+// GERENCIAMENTO DE CATEGORIAS — Portal CRS
+// ════════════════════════════════════════════════════════════════════════════
+(function(){
+  // ── Defaults ─────────────────────────────────────────────────────────────
+  var DEFAULT_CATS_FORN  = ['Alimentação','Construção','Limpeza','Materiais','Outros','Saúde','Serviços Gerais','Tecnologia','Transporte'];
+  var DEFAULT_CATS_AGENDA = ['Elétrica','Escritório','Hidráulica','Limpeza','Outros','Pintura','TI','Uniformes'];
+
+  // ── Armazenamento em localStorage ────────────────────────────────────────
+  function loadCats(key, defaults){
+    try{
+      var v = localStorage.getItem(key);
+      if(v){ var arr=JSON.parse(v); if(Array.isArray(arr)&&arr.length) return arr; }
+    }catch(e){}
+    return defaults.slice();
+  }
+  function saveCats(key, arr){
+    try{ localStorage.setItem(key, JSON.stringify(arr)); }catch(e){}
+  }
+
+  var CATS_FORN  = loadCats('crs_cats_forn',  DEFAULT_CATS_FORN);
+  var CATS_AGENDA = loadCats('crs_cats_agenda', DEFAULT_CATS_AGENDA);
+
+  // ── Popula TODOS os selects de uma lista de categorias ───────────────────
+  function populateSelect(id, cats, firstLabel){
+    var el = document.getElementById(id);
+    if(!el) return;
+    var cur = el.value;
+    el.innerHTML = '<option value="">'+(firstLabel||'Selecione...')+'</option>';
+    cats.forEach(function(c){
+      var o = document.createElement('option');
+      o.value = c; o.textContent = c;
+      el.appendChild(o);
+    });
+    if(cur) el.value = cur;
+  }
+
+  function refreshAllSelects(){
+    var sorted_forn   = CATS_FORN.slice().sort(function(a,b){return a.localeCompare(b,'pt');});
+    var sorted_agenda = CATS_AGENDA.slice().sort(function(a,b){return a.localeCompare(b,'pt');});
+
+    populateSelect('f-cat',           sorted_forn,   'Selecione...');
+    populateSelect('p-categoria',     sorted_forn,   'Selecione...');
+    populateSelect('prod-filter-cat', sorted_forn,   'Todas as categorias');
+    populateSelect('nd-categoria',    sorted_agenda, 'Selecione a categoria');
+
+    // filtro de fornecedores (gerado dinamicamente em populateCatFilter)
+    if(typeof populateCatFilter === 'function') populateCatFilter();
+  }
+
+  // ── Render da página de categorias ───────────────────────────────────────
+  function renderCatList(listId, cats, saveFn, refreshFn){
+    var el = document.getElementById(listId);
+    if(!el) return;
+    if(cats.length === 0){
+      el.innerHTML = '<div style="text-align:center;color:var(--muted);font-size:12px;padding:18px 0">Nenhuma categoria cadastrada.</div>';
+      return;
+    }
+    el.innerHTML = cats.map(function(cat, idx){
+      return '<div style="display:flex;align-items:center;gap:8px;background:#f4f7fd;border:1px solid var(--border);border-radius:8px;padding:9px 12px">'+
+        '<span style="flex:1;font-size:13px;font-weight:600;color:var(--navy)" id="cat-label-'+listId+'-'+idx+'">'+escHtml(cat)+'</span>'+
+        '<button onclick="catEditarInline(''+listId+'','+idx+')" style="background:none;border:none;cursor:pointer;padding:4px;color:var(--blue);display:flex;align-items:center" title="Editar">'+
+          '<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>'+
+        '</button>'+
+        '<button onclick="catRemover(''+listId+'','+idx+')" style="background:none;border:none;cursor:pointer;padding:4px;color:var(--red);display:flex;align-items:center" title="Remover">'+
+          '<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>'+
+        '</button>'+
+      '</div>';
+    }).join('');
+  }
+
+  function escHtml(str){
+    return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
+  window.renderCategorias = function(){
+    renderCatList('cat-forn-list',   CATS_FORN,   'crs_cats_forn',   refreshAllSelects);
+    renderCatList('cat-agenda-list', CATS_AGENDA, 'crs_cats_agenda', refreshAllSelects);
+  };
+
+  // ── Adicionar ─────────────────────────────────────────────────────────────
+  window.adicionarCatForn = function(){
+    var inp = document.getElementById('cat-forn-nova');
+    var val = inp.value.trim();
+    if(!val){ if(window.toast) toast('Informe o nome da categoria','error'); return; }
+    if(CATS_FORN.map(function(c){return c.toLowerCase();}).includes(val.toLowerCase())){
+      if(window.toast) toast('Categoria já existe','error'); return;
+    }
+    CATS_FORN.push(val);
+    saveCats('crs_cats_forn', CATS_FORN);
+    inp.value = '';
+    renderCatList('cat-forn-list', CATS_FORN, 'crs_cats_forn', refreshAllSelects);
+    refreshAllSelects();
+    if(window.toast) toast('Categoria "'+val+'" adicionada!');
+  };
+
+  window.adicionarCatAgenda = function(){
+    var inp = document.getElementById('cat-agenda-nova');
+    var val = inp.value.trim();
+    if(!val){ if(window.toast) toast('Informe o nome da categoria','error'); return; }
+    if(CATS_AGENDA.map(function(c){return c.toLowerCase();}).includes(val.toLowerCase())){
+      if(window.toast) toast('Categoria já existe','error'); return;
+    }
+    CATS_AGENDA.push(val);
+    saveCats('crs_cats_agenda', CATS_AGENDA);
+    inp.value = '';
+    renderCatList('cat-agenda-list', CATS_AGENDA, 'crs_cats_agenda', refreshAllSelects);
+    refreshAllSelects();
+    if(window.toast) toast('Categoria "'+val+'" adicionada!');
+  };
+
+  // ── Editar inline ─────────────────────────────────────────────────────────
+  window.catEditarInline = function(listId, idx){
+    var cats   = listId === 'cat-forn-list' ? CATS_FORN : CATS_AGENDA;
+    var saveKey = listId === 'cat-forn-list' ? 'crs_cats_forn' : 'crs_cats_agenda';
+    var labelEl = document.getElementById('cat-label-'+listId+'-'+idx);
+    if(!labelEl) return;
+    var oldVal  = cats[idx];
+    var inp = document.createElement('input');
+    inp.type='text'; inp.value=oldVal;
+    inp.style.cssText='flex:1;padding:4px 8px;border:1.5px solid var(--blue);border-radius:6px;font-size:13px;font-family:Barlow,sans-serif;outline:none';
+    var row = labelEl.parentNode;
+    // replace label with input
+    row.replaceChild(inp, labelEl);
+    inp.focus(); inp.select();
+    function confirm(){
+      var val = inp.value.trim();
+      if(!val){ inp.focus(); return; }
+      // check duplicate (except self)
+      var dup = cats.some(function(c,i){ return i!==idx && c.toLowerCase()===val.toLowerCase(); });
+      if(dup){ if(window.toast) toast('Já existe uma categoria com esse nome','error'); inp.focus(); return; }
+      cats[idx] = val;
+      saveCats(saveKey, cats);
+      refreshAllSelects();
+      renderCatList(listId, cats, saveKey, refreshAllSelects);
+      if(window.toast) toast('Categoria renomeada para "'+val+'"!');
+    }
+    inp.addEventListener('keydown', function(e){
+      if(e.key==='Enter') confirm();
+      if(e.key==='Escape'){ renderCatList(listId, cats, saveKey, refreshAllSelects); }
+    });
+    inp.addEventListener('blur', function(){ setTimeout(confirm, 120); });
+  };
+
+  // ── Remover ───────────────────────────────────────────────────────────────
+  window.catRemover = function(listId, idx){
+    var cats    = listId === 'cat-forn-list' ? CATS_FORN : CATS_AGENDA;
+    var saveKey = listId === 'cat-forn-list' ? 'crs_cats_forn' : 'crs_cats_agenda';
+    if(cats.length <= 1){ if(window.toast) toast('Mantenha ao menos uma categoria','error'); return; }
+    var nome = cats[idx];
+    if(!confirm('Remover a categoria "'+nome+'"? Fornecedores/Produtos que a usam não serão alterados.')) return;
+    cats.splice(idx, 1);
+    saveCats(saveKey, cats);
+    renderCatList(listId, cats, saveKey, refreshAllSelects);
+    refreshAllSelects();
+    if(window.toast) toast('Categoria "'+nome+'" removida.','error');
+  };
+
+  // ── Init: popula selects assim que o DOM estiver pronto ───────────────────
+  document.addEventListener('DOMContentLoaded', function(){
+    refreshAllSelects();
+  });
+  // fallback se DOMContentLoaded já passou
+  if(document.readyState !== 'loading') refreshAllSelects();
+
+})();
+
 </script>
 
 </body>
