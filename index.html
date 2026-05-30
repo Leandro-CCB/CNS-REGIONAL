@@ -2667,58 +2667,21 @@ function applyAdminVisibility(){
   });
 }
 
-let fornecedores = [
-  {id:1,nome:'Serv-Técnica',cnpj:'12.345.678/0001-90',cat:'Tecnologia',email:'contato@servtecnica.com',tel:'(11)99001-0001',resp:'João Silva',end:'Av. Paulista 100, SP',status:'Aprovado',score:4.9,obs:'Parceiro premium',avals:[]},
-  {id:2,nome:'Construtora Firmeza',cnpj:'23.456.789/0001-01',cat:'Construção',email:'firmeza@mail.com',tel:'(11)99002-0002',resp:'Maria Santos',end:'Rua Augusta 200, SP',status:'Aprovado',score:4.8,obs:'',avals:[]},
-  {id:3,nome:'Floreste Materiais',cnpj:'34.567.890/0001-02',cat:'Materiais',email:'floreste@mail.com',tel:'(11)99003-0003',resp:'Carlos Lima',end:'Rua Vergueiro 300, SP',status:'Aprovado',score:4.7,obs:'',avals:[]},
-  {id:4,nome:'ABC Ltda.',cnpj:'45.678.901/0001-03',cat:'Serviços Gerais',email:'abc@mail.com',tel:'(11)99004-0004',resp:'Ana Costa',end:'',status:'Aprovado',score:4.6,obs:'',avals:[]},
-  {id:5,nome:'EletroBlue',cnpj:'56.789.012/0001-04',cat:'Tecnologia',email:'eletro@blue.com',tel:'(11)99005-0005',resp:'Pedro Ramos',end:'',status:'Aprovado',score:4.6,obs:'',avals:[]},
-  {id:6,nome:'ConsulMed',cnpj:'67.890.123/0001-05',cat:'Saúde',email:'consul@med.com',tel:'(11)99006-0006',resp:'Laura Mendes',end:'',status:'Aprovado',score:4.2,obs:'',avals:[]},
-  {id:7,nome:'FortePisos',cnpj:'78.901.234/0001-06',cat:'Construção',email:'forte@pisos.com',tel:'(11)99007-0007',resp:'Roberto Dias',end:'',status:'Aprovado',score:4.2,obs:'',avals:[]},
-  {id:8,nome:'TecPart Industrial',cnpj:'89.012.345/0001-07',cat:'Materiais',email:'tecpart@mail.com',tel:'(11)99008-0008',resp:'Fernanda Luz',end:'',status:'Aprovado',score:4.1,obs:'',avals:[]},
-  {id:9,nome:'DecoFlores',cnpj:'90.123.456/0001-08',cat:'Outros',email:'deco@flores.com',tel:'(11)99009-0009',resp:'Marcos Braga',end:'',status:'Pendente',score:4.2,obs:'',avals:[]},
-  {id:10,nome:'LavPro Limpeza',cnpj:'01.234.567/0001-09',cat:'Limpeza',email:'lavpro@mail.com',tel:'(11)99010-0010',resp:'Sônia Vera',end:'',status:'Aprovado',score:4.2,obs:'',avals:[]},
-  {id:11,nome:'Luma Distribuidora',cnpj:'11.222.333/0001-10',cat:'Materiais',email:'luma@dist.com',tel:'(11)99011-0011',resp:'Lúcia Lopes',end:'',status:'Suspenso',score:2.5,obs:'Problemas de entrega',avals:[]},
-  {id:12,nome:'MetalCarro',cnpj:'22.333.444/0001-11',cat:'Transporte',email:'metal@carro.com',tel:'(11)99012-0012',resp:'Tiago Ferro',end:'',status:'Suspenso',score:2.8,obs:'',avals:[]},
-  {id:13,nome:'Casa Fácil',cnpj:'33.444.555/0001-12',cat:'Serviços Gerais',email:'casa@facil.com',tel:'(11)99013-0013',resp:'Patrícia Gomes',end:'',status:'Pendente',score:2.9,obs:'',avals:[]},
-  {id:14,nome:'Dr. Plantas',cnpj:'44.555.666/0001-13',cat:'Outros',email:'dr@plantas.com',tel:'(11)99014-0014',resp:'Eduardo Flor',end:'',status:'Pendente',score:3.0,obs:'',avals:[]},
-  {id:15,nome:'Tintas Verde',cnpj:'55.666.777/0001-14',cat:'Materiais',email:'tintas@verde.com',tel:'(11)99015-0015',resp:'Renata Cor',end:'',status:'Pendente',score:3.1,obs:'',avals:[]},
-];
+// Dados carregados exclusivamente do Supabase
+let fornecedores = [];
 
-let agenda = [
-  {id:1,prod:'João 355 Audio System',fornId:1,data:'2026-04-20',igrejas:5,obs:'',status:'Agendado'},
-  {id:2,prod:'Pintura e Reparos',fornId:2,data:'2026-04-22',igrejas:3,obs:'',status:'Agendado'},
-  {id:3,prod:'Lustres e Lâmpadas',fornId:5,data:'2026-04-25',igrejas:4,obs:'',status:'Agendado'},
-  {id:4,prod:'Sacos de Lixo',fornId:10,data:'2026-04-18',igrejas:8,obs:'',status:'Agendado'},
-  {id:5,prod:'Rolos de Fio',fornId:3,data:'2026-05-01',igrejas:7,obs:'',status:'Agendado'},
-  {id:6,prod:'Produtos de Limpeza',fornId:10,data:'2026-05-05',igrejas:4,obs:'',status:'Agendado'},
-  {id:7,prod:'Microfone Semfio Lapela',fornId:1,data:'2026-05-10',igrejas:6,obs:'',status:'Agendado'},
-];
+let agenda = [];
 
-let users = [
-  {id:1,nome:'Leandro Machado',login:'leandro',email:'',perfil:'Master',cargo:'',cidade:'',senha:'190485',ativo:true,modulos:[]},
-  {id:2,nome:'Rodrigo Barbosa',login:'rodrigo',email:'',perfil:'Master',cargo:'',cidade:'',senha:'abacaxi',ativo:true,modulos:[]},
-  {id:3,nome:'Teste',login:'teste',email:'',perfil:'Comprador',cargo:'',cidade:'',senha:'123456',ativo:true,modulos:[]},
-];
+// Usuários carregados exclusivamente do Supabase
+let users = [];
 
-// Convênios data - suporta URL de imagem
-let convenios = [
-  {id:1,titulo:'Boletim_018_2026.pdf',tipo:'nacionais',imgUrl:'',link:'',igrejas:10,desc:'Boletim mensal de convênios',dataCriacao:'há 11 hips',produto:'Copo',fornecedor:'Fornecedor Teste',dataPublicacao:'2026-05-18'},
-  {id:2,titulo:'Boletim_017_2026.pdf',tipo:'regionais',imgUrl:'',link:'',igrejas:4,desc:'Convênios das regiões',dataCriacao:'há 11 mrs',produto:'Papel Higiênico',fornecedor:'Fornecedor Exemplo',dataPublicacao:'2026-05-15'},
-  {id:3,titulo:'Boletim_016_2026.pdf',tipo:'regionais',imgUrl:'',link:'',igrejas:4,desc:'Boletim de fevereiro',dataCriacao:'há 11 mrs',produto:'Saco de Lixo',fornecedor:'Empresa Parceira',dataPublicacao:'2026-05-12'},
-  {id:4,titulo:'Boletim_015_2026.pdf',tipo:'nacionais',imgUrl:'',link:'',igrejas:6,desc:'',dataCriacao:'',produto:'Sabonete Líquido',fornecedor:'Fornecedor Alpha',dataPublicacao:'2026-05-10'},
-  {id:5,titulo:'Boletim_014_2026.pdf',tipo:'locais',imgUrl:'',link:'',igrejas:2,desc:'',dataCriacao:'',produto:'Desinfetante',fornecedor:'Fornecedor Beta',dataPublicacao:'2026-05-08'},
-  {id:6,titulo:'Boletim_013_2026.pdf',tipo:'nacionais',imgUrl:'',link:'',igrejas:8,desc:'',dataCriacao:'',produto:'Álcool em Gel',fornecedor:'Fornecedor Gama',dataPublicacao:'2026-05-05'},
-  {id:7,titulo:'Boletim_012_2026.pdf',tipo:'regionais',imgUrl:'',link:'',igrejas:3,desc:'',dataCriacao:'',produto:'Guardanapo',fornecedor:'Fornecedor Delta',dataPublicacao:'2026-05-02'},
-  {id:8,titulo:'Boletim_011_2026.pdf',tipo:'nacionais',imgUrl:'',link:'',igrejas:5,desc:'',dataCriacao:'',produto:'Café',fornecedor:'Fornecedor Ômega',dataPublicacao:'2026-04-30'},
-  {id:9,titulo:'Boletim_010_2026.pdf',tipo:'locais',imgUrl:'',link:'',igrejas:1,desc:'',dataCriacao:'',produto:'Água Mineral',fornecedor:'Fornecedor Sigma',dataPublicacao:'2026-04-28'},
-  {id:10,titulo:'Boletim_009_2026.pdf',tipo:'regionais',imgUrl:'',link:'',igrejas:4,desc:'',dataCriacao:'',produto:'Açúcar',fornecedor:'Fornecedor Zeta',dataPublicacao:'2026-04-25'},
-];
-let nextConvId = 11;
+// Dados carregados exclusivamente do Supabase
+let convenios = [];
+let nextConvId = 1;
 
-let nextFornId = 16;
-let nextAgId = 8;
-let nextUserId = 3;
+let nextFornId = 1;
+let nextAgId = 1;
+let nextUserId = 1;
 let currentConvTab = 'nacionais';
 
 // ─── LOGIN ───────────────────────────────────────────────────────────────────
@@ -4041,12 +4004,7 @@ function toggleUser(id){
 }
 
 // ─── PRODUTOS ─────────────────────────────────────────────────────────────────
-let produtos = [
-  {nome:'Andaime', categoria:'Construção', fornecedorId:null, marca:''},
-  {nome:'Alcool Gel', categoria:'Limpeza', fornecedorId:null, marca:''},
-  {nome:'Copa', categoria:'Alimentação', fornecedorId:null, marca:''},
-  {nome:'Copos Descartáveis', categoria:'Outros', fornecedorId:null, marca:''},
-];
+let produtos = [];
 let editingProdIndex = -1;
 
 function populateProdFornSelect(){
@@ -4500,36 +4458,40 @@ function renderEcTable(){
       <table class="ec-table">
         <thead>
           <tr>
-            <th>#</th>
-            <th>Data</th>
-            <th style="min-width:200px">Fornecedor</th>
-            <th>V. Fechado</th>
-            <th style="background:#e8f4ff;color:var(--blue)">Valor Médio</th>
-            ${thPaste('V. Maior','valorMaior')}
-            <th>Economia</th>
+            <th style="min-width:80px">Data</th>
+            <th style="min-width:70px">Número</th>
             ${thPaste('Documento','documento')}
+            <th style="min-width:65px">Cotação</th>
+            <th style="min-width:65px">Pedido</th>
+            <th style="min-width:220px">Fornecedor Fechado</th>
+            <th style="min-width:90px;background:#e8f4ff;color:var(--blue)">V. Fechado</th>
             ${thPaste('Situação','cotacaoNome')}
-            ${thPaste('Cotação Nº','cotacaoNum')}
-            ${thPaste('Quantas?','quantas')}
-            ${thPaste('Pedido','pedido')}
+            <th style="min-width:80px">Orç (1)</th>
+            <th style="min-width:80px">Orç (2)</th>
+            <th style="min-width:80px">Orç (3)</th>
+            <th style="min-width:90px;background:#e8f4ff;color:var(--blue)">P.Médio ($)</th>
+            ${thPaste('Maior Valor ($)','valorMaior')}
+            <th style="min-width:85px;background:#d4f5e5;color:#0f7a46">Economia</th>
           </tr>
         </thead>
         <tbody>
-          ${ecRows.map((r,i)=>`
+          ${ecRows.map((r,i)=>{
+            const eco = r.economia||0;
+            const ecoColor = eco>0?'var(--green)':'var(--muted)';
+            return `
             <tr>
-              <td><b>${i+1}</b></td>
               <td>${fmtEcDate(r.data)}</td>
-              <td style="max-width:220px;white-space:normal;word-break:break-word;font-size:11px">${r.remetente||r.numero||''}</td>
-              <td style="text-align:right">${fmtNum2(r.valorFechado)}</td>
-              <td style="text-align:right;background:#f0f7ff;color:var(--blue);font-weight:600">${r.valorMedio ? fmtNum2(r.valorMedio) : '<span style="color:var(--muted)">—</span>'}</td>
-              <td class="ec-col-edit"><input type="number" step="0.01" value="${r.valorMaior||''}" onchange="ecEditRow(${i},'valorMaior',parseFloat(this.value)||0)" style="width:90px;text-align:right" placeholder="0,00"></td>
-              <td style="text-align:right;font-weight:700;color:${r.economia>0?'var(--green)':'var(--muted)'}">${fmtNum2(r.economia)}</td>
+              <td style="font-size:11px;color:var(--muted)">${r.numero||'—'}</td>
               <td class="ec-col-edit">
                 <select onchange="ecEditRow(${i},'documento',this.value)" style="min-width:80px">
                   <option ${r.documento==='Produto'?'selected':''}>Produto</option>
                   <option ${r.documento==='Serviço'?'selected':''}>Serviço</option>
                 </select>
               </td>
+              <td style="font-size:11px;text-align:center">${r.cotacaoNum||'—'}</td>
+              <td style="font-size:11px;text-align:center">${r.pedido||'—'}</td>
+              <td style="max-width:240px;white-space:normal;word-break:break-word;font-size:11px;font-weight:600">${r.remetente||'—'}</td>
+              <td style="text-align:right;background:#f0f7ff;color:var(--blue);font-weight:700">${fmtNum2(r.valorFechado)}</td>
               <td class="ec-col-edit">
                 <select onchange="ecEditRow(${i},'cotacaoNome',this.value)" style="min-width:65px">
                   <option value="" ${!r.cotacaoNome?'selected':''}>—</option>
@@ -4539,19 +4501,14 @@ function renderEcTable(){
                   <option ${r.cotacaoNome==='CRS'?'selected':''}>CRS</option>
                 </select>
               </td>
-              <td class="ec-col-edit"><input type="text" value="${r.cotacaoNum||''}" onchange="ecEditRow(${i},'cotacaoNum',this.value)" style="width:68px"></td>
-              <td class="ec-col-edit">
-                <select onchange="ecEditRow(${i},'quantas',this.value)" style="min-width:55px">
-                  <option value="" ${!r.quantas?'selected':''}>—</option>
-                  <option ${r.quantas==='C1'?'selected':''}>C1</option>
-                  <option ${r.quantas==='C2'?'selected':''}>C2</option>
-                  <option ${r.quantas==='C3'?'selected':''}>C3</option>
-                  <option ${r.quantas==='C4'?'selected':''}>C4</option>
-                  <option ${r.quantas==='C5'?'selected':''}>C5</option>
-                </select>
-              </td>
-              <td class="ec-col-edit"><input type="text" value="${r.pedido||''}" onchange="ecEditRow(${i},'pedido',this.value)" style="width:60px"></td>
-            </tr>`).join('')}
+              <td style="text-align:right;color:var(--muted)">${r.orc1 ? fmtNum2(r.orc1) : '—'}</td>
+              <td style="text-align:right;color:var(--muted)">${r.orc2 ? fmtNum2(r.orc2) : '—'}</td>
+              <td style="text-align:right;color:var(--muted)">${r.orc3 ? fmtNum2(r.orc3) : '—'}</td>
+              <td style="text-align:right;background:#f0f7ff;color:var(--blue);font-weight:600">${r.valorMedio ? fmtNum2(r.valorMedio) : '<span style="color:var(--muted)">—</span>'}</td>
+              <td class="ec-col-edit"><input type="number" step="0.01" value="${r.valorMaior||''}" onchange="ecEditRow(${i},'valorMaior',parseFloat(this.value)||0)" style="width:90px;text-align:right" placeholder="0,00"></td>
+              <td style="text-align:right;font-weight:800;color:${ecoColor}">${eco>0?fmtNum2(eco):'0,00'}</td>
+            </tr>`;
+          }).join('')}
         </tbody>
       </table>
     </div>
@@ -4749,44 +4706,35 @@ function gerarRelatorioEcItem(i){
 
 function buildEcRelatorio(a){
   let totalMedio=0, totalMaior=0, totalFechado=0, totalEco=0;
-  // Calcula preço médio como média dos 3 fornecedores (forn1+forn2+forn3)/3 ou usa valorFechado
   a.rows.forEach(r=>{
     totalFechado += r.valorFechado||0;
     totalMaior   += r.valorMaior||0;
     totalEco     += r.economia||0;
-    // Preço médio = valorFechado (média dos 3 cotados)
-    totalMedio   += r.valorFechado||0;
+    totalMedio   += r.valorMedio||0;
   });
   const mesAno = `${a.mes||''}/${a.ano||''}`;
 
-  // Monta linhas da tabela
+  // Monta linhas da tabela — colunas: DATA | NUMERO | DOCUMENTO | COTACAO | PEDIDO | FORNECEDOR FECHADO | V. FECHADO | SITUAÇÃO | ORÇ(1) | ORÇ(2) | ORÇ(3) | P.MÉDIO | MAIOR VALOR | ECONOMIA
   const rows = a.rows.map((r,i)=>{
-    // Simula os 3 fornecedores com base no valorMaior e valorFechado
-    const vm = r.valorMaior || r.valorFechado || 0;
-    const vf = r.valorFechado || 0;
-    // Fornecedor 1 = maior, Fornecedor 2 = intermediário, Fornecedor 3 = menor
-    const f1 = fmtNum2(vm);
-    const f2 = fmtNum2(vf > 0 ? (vm + vf)/2 : vm * 0.95);
-    const f3 = fmtNum2(vf);
-    const precoMedio = fmtNum2(vf);
-    const econColor = (r.economia||0) > 0 ? '#1ea96a' : '#e03535';
-    const ecoVal = fmtNum2(r.economia||0);
+    const econColor = (r.economia||0) > 0 ? '#1ea96a' : '#9a1515';
     const bg = i%2===0 ? '#ffffff' : '#f7f9fc';
+    const sitMap = {'SIM':'#1ea96a','NÃO':'#e03535','CNS':'#0d2757','CRS':'#7c3aed'};
+    const sitColor = sitMap[r.cotacaoNome]||'#6b7a99';
     return `<tr style="background:${bg}">
       <td style="padding:5px 7px;border:1px solid #d4dff2;font-size:10px;color:#555;white-space:nowrap">${fmtEcDate(r.data)}</td>
-      <td style="padding:5px 7px;border:1px solid #d4dff2;font-size:10px;font-weight:600">${r.numero||'—'}</td>
-      <td style="padding:5px 7px;border:1px solid #d4dff2;font-size:10px;max-width:200px;white-space:normal;word-break:break-word;font-weight:500">${r.remetente||'—'}</td>
-      <td style="padding:5px 7px;border:1px solid #d4dff2;font-size:10px;text-align:right">${f1}</td>
-      <td style="padding:5px 7px;border:1px solid #d4dff2;font-size:10px;text-align:right">${f2}</td>
-      <td style="padding:5px 7px;border:1px solid #d4dff2;font-size:10px;text-align:right">${f3}</td>
-      <td style="padding:5px 7px;border:1px solid #d4dff2;font-size:10px;text-align:right">${precoMedio}</td>
-      <td style="padding:5px 7px;border:1px solid #d4dff2;font-size:10px;text-align:right">${fmtNum2(r.valorMaior||0)}</td>
-      <td style="padding:5px 7px;border:1px solid #d4dff2;font-size:10px;text-align:right">${fmtNum2(r.valorFechado||0)}</td>
-      <td style="padding:5px 7px;border:1px solid #d4dff2;font-size:10px;text-align:right;font-weight:800;color:${econColor}">${ecoVal}</td>
+      <td style="padding:5px 7px;border:1px solid #d4dff2;font-size:10px;text-align:center;font-weight:600">${r.numero||'—'}</td>
       <td style="padding:5px 7px;border:1px solid #d4dff2;font-size:10px;text-align:center">${r.documento||'Produto'}</td>
       <td style="padding:5px 7px;border:1px solid #d4dff2;font-size:10px;text-align:center">${r.cotacaoNum||'—'}</td>
-      <td style="padding:5px 7px;border:1px solid #d4dff2;font-size:10px;text-align:center">${r.quantas||'—'}</td>
       <td style="padding:5px 7px;border:1px solid #d4dff2;font-size:10px;text-align:center">${r.pedido||'—'}</td>
+      <td style="padding:5px 7px;border:1px solid #d4dff2;font-size:10px;max-width:200px;white-space:normal;word-break:break-word;font-weight:600">${r.remetente||'—'}</td>
+      <td style="padding:5px 7px;border:1px solid #d4dff2;font-size:10px;text-align:right;font-weight:700;background:#f0f7ff">${fmtNum2(r.valorFechado||0)}</td>
+      <td style="padding:5px 7px;border:1px solid #d4dff2;font-size:10px;text-align:center;font-weight:800;color:${sitColor}">${r.cotacaoNome||'—'}</td>
+      <td style="padding:5px 7px;border:1px solid #d4dff2;font-size:10px;text-align:right">${r.orc1 ? fmtNum2(r.orc1) : '—'}</td>
+      <td style="padding:5px 7px;border:1px solid #d4dff2;font-size:10px;text-align:right">${r.orc2 ? fmtNum2(r.orc2) : '—'}</td>
+      <td style="padding:5px 7px;border:1px solid #d4dff2;font-size:10px;text-align:right">${r.orc3 ? fmtNum2(r.orc3) : '—'}</td>
+      <td style="padding:5px 7px;border:1px solid #d4dff2;font-size:10px;text-align:right;font-weight:700;background:#f0f7ff">${r.valorMedio ? fmtNum2(r.valorMedio) : '—'}</td>
+      <td style="padding:5px 7px;border:1px solid #d4dff2;font-size:10px;text-align:right">${fmtNum2(r.valorMaior||0)}</td>
+      <td style="padding:5px 7px;border:1px solid #d4dff2;font-size:10px;text-align:right;font-weight:800;color:${econColor};background:${(r.economia||0)>0?'#f0fdf4':'#fff6f6'}">${fmtNum2(r.economia||0)}</td>
     </tr>`;
   }).join('');
 
@@ -4821,31 +4769,31 @@ function buildEcRelatorio(a){
           <thead>
             <tr style="background:#0d2757;color:#fff">
               <th style="padding:7px 7px;border:1px solid #1a3a6b;text-align:left;font-size:9px;font-weight:700;text-transform:uppercase;white-space:nowrap">Data</th>
-              <th style="padding:7px 7px;border:1px solid #1a3a6b;text-align:left;font-size:9px;font-weight:700;text-transform:uppercase;white-space:nowrap">Número</th>
-              <th style="padding:7px 7px;border:1px solid #1a3a6b;text-align:left;font-size:9px;font-weight:700;text-transform:uppercase;min-width:160px">Remetente / Fornecedor</th>
-              <th style="padding:7px 7px;border:1px solid #1a3a6b;text-align:right;font-size:9px;font-weight:700;text-transform:uppercase;white-space:nowrap">Fornecedor 1<br>Valor (R$)</th>
-              <th style="padding:7px 7px;border:1px solid #1a3a6b;text-align:right;font-size:9px;font-weight:700;text-transform:uppercase;white-space:nowrap">Fornecedor 2<br>Valor (R$)</th>
-              <th style="padding:7px 7px;border:1px solid #1a3a6b;text-align:right;font-size:9px;font-weight:700;text-transform:uppercase;white-space:nowrap">Fornecedor 3<br>Valor (R$)</th>
-              <th style="padding:7px 7px;border:1px solid #1a3a6b;text-align:right;font-size:9px;font-weight:700;text-transform:uppercase;white-space:nowrap;background:#1a3a6b">Preço Médio<br>(R$)</th>
+              <th style="padding:7px 7px;border:1px solid #1a3a6b;text-align:center;font-size:9px;font-weight:700;text-transform:uppercase;white-space:nowrap">Número</th>
+              <th style="padding:7px 7px;border:1px solid #1a3a6b;text-align:center;font-size:9px;font-weight:700;text-transform:uppercase;white-space:nowrap">Documento</th>
+              <th style="padding:7px 7px;border:1px solid #1a3a6b;text-align:center;font-size:9px;font-weight:700;text-transform:uppercase;white-space:nowrap">Cotação</th>
+              <th style="padding:7px 7px;border:1px solid #1a3a6b;text-align:center;font-size:9px;font-weight:700;text-transform:uppercase;white-space:nowrap">Pedido</th>
+              <th style="padding:7px 7px;border:1px solid #1a3a6b;text-align:left;font-size:9px;font-weight:700;text-transform:uppercase;min-width:160px">Fornecedor Fechado</th>
+              <th style="padding:7px 7px;border:1px solid #1a3a6b;text-align:right;font-size:9px;font-weight:700;text-transform:uppercase;white-space:nowrap;background:#1a3a6b">V. Fechado<br>(R$)</th>
+              <th style="padding:7px 7px;border:1px solid #1a3a6b;text-align:center;font-size:9px;font-weight:700;text-transform:uppercase;white-space:nowrap">Situação</th>
+              <th style="padding:7px 7px;border:1px solid #1a3a6b;text-align:right;font-size:9px;font-weight:700;text-transform:uppercase;white-space:nowrap">Orç (1)<br>(R$)</th>
+              <th style="padding:7px 7px;border:1px solid #1a3a6b;text-align:right;font-size:9px;font-weight:700;text-transform:uppercase;white-space:nowrap">Orç (2)<br>(R$)</th>
+              <th style="padding:7px 7px;border:1px solid #1a3a6b;text-align:right;font-size:9px;font-weight:700;text-transform:uppercase;white-space:nowrap">Orç (3)<br>(R$)</th>
+              <th style="padding:7px 7px;border:1px solid #1a3a6b;text-align:right;font-size:9px;font-weight:700;text-transform:uppercase;white-space:nowrap;background:#1a3a6b">P.Médio ($)<br>(R$)</th>
               <th style="padding:7px 7px;border:1px solid #1a3a6b;text-align:right;font-size:9px;font-weight:700;text-transform:uppercase;white-space:nowrap">Maior Valor<br>(R$)</th>
-              <th style="padding:7px 7px;border:1px solid #1a3a6b;text-align:right;font-size:9px;font-weight:700;text-transform:uppercase;white-space:nowrap">Valor Fechado<br>(R$)</th>
               <th style="padding:7px 7px;border:1px solid #1a3a6b;text-align:right;font-size:9px;font-weight:700;text-transform:uppercase;white-space:nowrap;background:#1ea96a">Economia<br>(R$)</th>
-              <th style="padding:7px 7px;border:1px solid #1a3a6b;text-align:center;font-size:9px;font-weight:700;text-transform:uppercase">Documento</th>
-              <th style="padding:7px 7px;border:1px solid #1a3a6b;text-align:center;font-size:9px;font-weight:700;text-transform:uppercase">Cotação</th>
-              <th style="padding:7px 7px;border:1px solid #1a3a6b;text-align:center;font-size:9px;font-weight:700;text-transform:uppercase">Quantas?</th>
-              <th style="padding:7px 7px;border:1px solid #1a3a6b;text-align:center;font-size:9px;font-weight:700;text-transform:uppercase">Pedido</th>
             </tr>
           </thead>
           <tbody>${rows}</tbody>
           <tfoot>
             <tr style="background:#e8edf8">
-              <td colspan="3" style="padding:7px;border:1px solid #d4dff2;text-align:right;font-size:11px;font-weight:800;color:#0d2757">TOTAIS</td>
+              <td colspan="6" style="padding:7px;border:1px solid #d4dff2;text-align:right;font-size:11px;font-weight:800;color:#0d2757">TOTAIS</td>
+              <td style="padding:7px;border:1px solid #d4dff2;text-align:right;font-size:11px;font-weight:800;background:#e0eeff">${fmtNum2(totalFechado)}</td>
+              <td style="border:1px solid #d4dff2"></td>
               <td colspan="3" style="border:1px solid #d4dff2"></td>
-              <td style="padding:7px;border:1px solid #d4dff2;text-align:right;font-size:11px;font-weight:800">${fmtNum2(totalMedio)}</td>
+              <td style="padding:7px;border:1px solid #d4dff2;text-align:right;font-size:11px;font-weight:800;background:#e0eeff">${fmtNum2(totalMedio)}</td>
               <td style="padding:7px;border:1px solid #d4dff2;text-align:right;font-size:11px;font-weight:800">${fmtNum2(totalMaior)}</td>
-              <td style="padding:7px;border:1px solid #d4dff2;text-align:right;font-size:11px;font-weight:800">${fmtNum2(totalFechado)}</td>
-              <td style="padding:7px;border:1px solid #d4dff2;text-align:right;font-size:11px;font-weight:800;color:#1ea96a">${fmtNum2(totalEco)}</td>
-              <td colspan="4" style="border:1px solid #d4dff2"></td>
+              <td style="padding:7px;border:1px solid #d4dff2;text-align:right;font-size:11px;font-weight:800;color:#1ea96a;background:#f0fdf4">${fmtNum2(totalEco)}</td>
             </tr>
           </tfoot>
         </table>
@@ -7202,10 +7150,10 @@ function afterLoginHook(){
     el.innerHTML = cats.map(function(cat, idx){
       return '<div style="display:flex;align-items:center;gap:8px;background:#f4f7fd;border:1px solid var(--border);border-radius:8px;padding:9px 12px">'+
         '<span style="flex:1;font-size:13px;font-weight:600;color:var(--navy)" id="cat-label-'+listId+'-'+idx+'">'+escHtml(cat)+'</span>'+
-        '<button onclick="catEditarInline(''+listId+'','+idx+')" style="background:none;border:none;cursor:pointer;padding:4px;color:var(--blue);display:flex;align-items:center" title="Editar">'+
+        '<button onclick="catEditarInline(\''+listId+'\','+idx+')" style="background:none;border:none;cursor:pointer;padding:4px;color:var(--blue);display:flex;align-items:center" title="Editar">'+
           '<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>'+
         '</button>'+
-        '<button onclick="catRemover(''+listId+'','+idx+')" style="background:none;border:none;cursor:pointer;padding:4px;color:var(--red);display:flex;align-items:center" title="Remover">'+
+        '<button onclick="catRemover(\''+listId+'\','+idx+')" style="background:none;border:none;cursor:pointer;padding:4px;color:var(--red);display:flex;align-items:center" title="Remover">'+
           '<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>'+
         '</button>'+
       '</div>';
