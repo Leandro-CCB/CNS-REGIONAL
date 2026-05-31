@@ -2809,7 +2809,7 @@ function showPage(id, el){
   if(id==='gestao-energias') renderGE();
   if(id==='suporte') renderSuporte();
   if(id==='categorias') renderCategorias();
-  if(id==='cad-fornecedor'){ clearFornForm(); if(!editingFornId) document.getElementById('f-score').value='3.0'; applyAdminVisibility(); }
+  if(id==='cad-fornecedor'){ if(!editingFornId){ clearFornForm(); document.getElementById('f-score').value='3.0'; } applyAdminVisibility(); }
 }
 
 // ─── HELPERS ─────────────────────────────────────────────────────────────────
@@ -3619,20 +3619,22 @@ function editForn(id){
   const f=fornecedores.find(x=>x.id===id);
   if(!f) return;
   editingFornId=id;
+  // Navega primeiro (com editingFornId definido, showPage não limpa o formulário)
+  showPage('cad-fornecedor',null);
+  // Preenche os campos após a navegação
   document.getElementById('f-codigo').value=f.codigo||'';
   document.getElementById('f-nome').value=f.nome;
-  document.getElementById('f-cnpj').value=f.cnpj;
-  document.getElementById('f-cat').value=f.cat;
-  document.getElementById('f-email').value=f.email;
-  document.getElementById('f-tel').value=f.tel;
-  document.getElementById('f-resp').value=f.resp;
+  document.getElementById('f-cnpj').value=f.cnpj||'';
+  document.getElementById('f-cat').value=f.cat||'';
+  document.getElementById('f-email').value=f.email||'';
+  document.getElementById('f-tel').value=f.tel||'';
+  document.getElementById('f-resp').value=f.resp||'';
   document.getElementById('f-cidade').value=f.cidade||'';
   document.getElementById('f-uf').value=f.uf||'';
-  document.getElementById('f-end').value=f.end;
-  document.getElementById('f-status').value=f.status;
-  document.getElementById('f-score').value=f.score;
-  document.getElementById('f-obs').value=f.obs;
-  showPage('cad-fornecedor',null);
+  document.getElementById('f-end').value=f.end||'';
+  document.getElementById('f-status').value=f.status||'Pendente';
+  document.getElementById('f-score').value=f.score||3.0;
+  document.getElementById('f-obs').value=f.obs||'';
   applyAdminVisibility();
   document.getElementById('top-title').textContent='Editar Fornecedor';
 }
@@ -5284,6 +5286,21 @@ function initSupabase(){
     db = supabase.createClient(SUPA_URL, SUPA_KEY);
     window.db = db; // expõe globalmente para o módulo do mapa
     console.log('Supabase inicializado com sucesso.');
+    // Testa permissão de escrita na tabela de fornecedores (RLS check)
+    setTimeout(async function(){
+      try {
+        const testRow = {codigo:'__test__', nome:'__rls_test__', cnpj:'', cat:'Teste', email:'', tel:'', resp:'', cidade:'', uf:'', endereco:'', status:'Pendente', score:3.0, obs:'', avals:[]};
+        const res = await db.from('CNSREGIONAL_fornecedores').insert(testRow).select();
+        if(res.error){
+          console.error('⚠️ RLS/permissão Supabase bloqueando INSERT:', res.error.message, res.error.code);
+          toast('⚠️ Supabase: sem permissão de escrita (' + (res.error.code||res.error.message) + '). Verifique as políticas RLS.', 'error');
+        } else if(res.data && res.data[0]){
+          // Remove o registro de teste
+          await db.from('CNSREGIONAL_fornecedores').delete().eq('id', res.data[0].id);
+          console.log('✅ Supabase: permissão de escrita OK.');
+        }
+      } catch(e){ console.warn('RLS test exception:', e); }
+    }, 2000);
   } catch(e){ console.warn('Supabase init failed:', e); }
 }
 
@@ -5432,24 +5449,33 @@ async function loadFromSupabase(){
 
 // ── SAVE helpers ──────────────────────────────────────────────────────────────
 async function sbSaveFornecedor(obj){
-  if(!db) return;
+  if(!db){ console.warn('sbSaveFornecedor: db não inicializado'); return; }
   showSyncing(true);
   const row = {
     codigo:obj.codigo||'', nome:obj.nome, cnpj:obj.cnpj||'', cat:obj.cat||'',
     email:obj.email||'', tel:obj.tel||'', resp:obj.resp||'', cidade:obj.cidade||'', uf:obj.uf||'',
     endereco:obj.end||'', status:obj.status||'Pendente', score:obj.score||3.0, obs:obj.obs||'', avals:obj.avals||[]
   };
-  const dbId = obj._dbId || (typeof obj.id === 'number' && obj.id > 0 ? obj.id : null);
+  // _dbId é o id real do banco; obj.id pode ser um id local temporário
+  const dbId = obj._dbId || null;
   let error;
   if(dbId){
+    console.log('Supabase UPDATE fornecedor id:', dbId);
     const res = await db.from('CNSREGIONAL_fornecedores').update(row).eq('id', dbId);
     error = res.error;
   } else {
+    console.log('Supabase INSERT fornecedor:', row.nome);
     const res = await db.from('CNSREGIONAL_fornecedores').insert(row).select();
     error = res.error;
-    if(!error && res.data && res.data[0]) obj._dbId = res.data[0].id;
+    if(!error && res.data && res.data[0]){
+      obj._dbId = res.data[0].id;
+      console.log('Supabase INSERT ok, novo _dbId:', obj._dbId);
+    }
   }
-  if(error) console.error('Save forn:', error);
+  if(error){
+    console.error('Save forn erro:', error);
+    toast('Erro ao salvar no Supabase: ' + (error.message || error.code || JSON.stringify(error)), 'error');
+  }
   showSyncing(false);
 }
 
@@ -5588,9 +5614,18 @@ const _origSaveForn = saveFornecedor;
 saveFornecedor = async function(){
   const wasEditing = editingFornId;
   _origSaveForn();
-  const saved = wasEditing
-    ? fornecedores.find(f=>f.id===wasEditing)
-    : fornecedores[fornecedores.length-1];
+  let saved;
+  if(wasEditing){
+    saved = fornecedores.find(f=>f.id===wasEditing);
+    // Garante que _dbId seja preservado para o UPDATE no Supabase
+    if(saved && !saved._dbId) saved._dbId = wasEditing;
+  } else {
+    saved = fornecedores[fornecedores.length-1];
+  }
+  if(!db){
+    toast('Aviso: Supabase não conectado. Dado salvo apenas localmente.', 'error');
+    return;
+  }
   if(saved) await sbSaveFornecedor(saved);
 };
 
