@@ -645,14 +645,32 @@ textarea{resize:vertical;min-height:80px}
         </div>
       </div>
 
-      <!-- User info -->
-      <div id="topbar-user" style="display:flex;align-items:center;gap:8px;cursor:pointer;padding:4px 10px;border-radius:8px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15)" onclick="doLogout()" title="Clique para sair">
-        <div id="topbar-avatar" style="width:30px;height:30px;border-radius:50%;background:rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;font-weight:700;color:#fff;font-size:13px;flex-shrink:0">A</div>
-        <div style="text-align:left">
-          <div id="topbar-uname" style="font-size:12px;font-weight:700;color:#fff;line-height:1.2">Comissão CRS</div>
-          <div id="topbar-urole" style="font-size:10px;color:rgba(255,255,255,.6);line-height:1.2">Regional Jundiaí</div>
+      <!-- User info with dropdown -->
+      <div style="position:relative" id="user-menu-wrap">
+        <div id="topbar-user" style="display:flex;align-items:center;gap:8px;cursor:pointer;padding:4px 10px;border-radius:8px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15)" onclick="toggleUserMenu()" title="Menu do usuário">
+          <div id="topbar-avatar" style="width:30px;height:30px;border-radius:50%;background:rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;font-weight:700;color:#fff;font-size:13px;flex-shrink:0">A</div>
+          <div style="text-align:left">
+            <div id="topbar-uname" style="font-size:12px;font-weight:700;color:#fff;line-height:1.2">Comissão CRS</div>
+            <div id="topbar-urole" style="font-size:10px;color:rgba(255,255,255,.6);line-height:1.2">Regional Jundiaí</div>
+          </div>
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="rgba(255,255,255,.6)"><path d="M7 10l5 5 5-5z"/></svg>
         </div>
-        <svg viewBox="0 0 24 24" width="14" height="14" fill="rgba(255,255,255,.6)"><path d="M7 10l5 5 5-5z"/></svg>
+        <!-- User dropdown menu -->
+        <div id="user-dropdown" style="display:none;position:absolute;top:46px;right:0;width:200px;background:#fff;border-radius:12px;box-shadow:0 12px 40px rgba(0,0,0,.22);border:1px solid var(--border);z-index:700;overflow:hidden">
+          <div style="padding:12px 14px;border-bottom:1px solid var(--border);background:#f4f7fd">
+            <div id="ud-nome" style="font-size:13px;font-weight:700;color:var(--navy)">Usuário</div>
+            <div id="ud-perfil" style="font-size:11px;color:var(--muted)">Perfil</div>
+          </div>
+          <button onclick="abrirModalTrocarSenha()" style="width:100%;background:none;border:none;padding:11px 14px;text-align:left;font-size:13px;font-weight:600;color:var(--text);cursor:pointer;display:flex;align-items:center;gap:9px;font-family:'Barlow',sans-serif;transition:.15s" onmouseover="this.style.background='#f4f7fd'" onmouseout="this.style.background='none'">
+            <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="var(--blue)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            Trocar Senha
+          </button>
+          <div style="border-top:1px solid var(--border)"></div>
+          <button onclick="doLogout()" style="width:100%;background:none;border:none;padding:11px 14px;text-align:left;font-size:13px;font-weight:600;color:var(--red);cursor:pointer;display:flex;align-items:center;gap:9px;font-family:'Barlow',sans-serif;transition:.15s" onmouseover="this.style.background='#fff5f5'" onmouseout="this.style.background='none'">
+            <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="var(--red)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+            Sair
+          </button>
+        </div>
       </div>
     </div>
   </div>
@@ -2756,12 +2774,18 @@ function _loginSuccess(found){
   document.getElementById('topbar-uname').textContent = found.nome;
   document.getElementById('topbar-urole').textContent = (found.perfil||'') + (found.cargo ? ' · ' + found.cargo : '');
   document.getElementById('topbar-avatar').textContent = found.nome[0].toUpperCase();
+  var udNome = document.getElementById('ud-nome');
+  var udPerfil = document.getElementById('ud-perfil');
+  if(udNome) udNome.textContent = found.nome || 'Usuário';
+  if(udPerfil) udPerfil.textContent = (found.perfil||'') + (found.cargo ? ' · ' + found.cargo : '');
   applyAdminVisibility();
   loadFromSupabase();
   // Carregar notificações após login
   if(typeof afterLoginHook === 'function') afterLoginHook();
 }
 function doLogout(){
+  var dd = document.getElementById('user-dropdown');
+  if(dd) dd.style.display = 'none';
   currentUser = null;
   document.getElementById('login-screen').classList.add('open');
   document.getElementById('l-user').value='';
@@ -3840,7 +3864,7 @@ function setStar(v){
     s.classList.toggle('on',parseInt(s.dataset.v)<=v);
   });
 }
-function submitAval(){
+async function submitAval(){
   if(!starVal){toast('Selecione uma nota','error');return;}
   const f=fornecedores.find(x=>x.id===avalFornId);
   if(!f) return;
@@ -3854,6 +3878,8 @@ function submitAval(){
   const rankPage = document.getElementById('page-ranking');
   if(rankPage && rankPage.classList.contains('active')) renderRanking();
   renderDashboard();
+  // Persiste avaliação + novo score no Supabase
+  if(typeof sbSaveFornecedor === 'function') await sbSaveFornecedor(f);
 }
 
 // ─── USUÁRIOS ────────────────────────────────────────────────────────────────
@@ -5481,8 +5507,11 @@ async function sbSaveFornecedor(obj){
 
 async function sbDeleteFornecedor(id){
   if(!db) return;
+  // id local pode diferir do _dbId real; busca o objeto para obter o dbId correto
+  const obj = fornecedores.find(f=>f.id===id);
+  const dbId = (obj && obj._dbId) ? obj._dbId : id;
   showSyncing(true);
-  const {error} = await db.from('CNSREGIONAL_fornecedores').delete().eq('id', id);
+  const {error} = await db.from('CNSREGIONAL_fornecedores').delete().eq('id', dbId);
   if(error) console.error('Del forn:', error);
   showSyncing(false);
 }
@@ -5491,18 +5520,17 @@ async function sbSaveAgenda(obj){
   if(!db) return;
   showSyncing(true);
   const row = {prod:obj.prod, forn_id:obj.fornId, data:obj.data, igrejas:obj.igrejas||1, obs:obj.obs||'', status:obj.status||'Agendado', admin:obj.admin||'', comprador:obj.comprador||'', contato:obj.contato||''};
-  const dbId = obj._dbId || (typeof obj.id === 'number' && obj.id > 0 ? obj.id : null);
+  const dbId = obj._dbId || null;
   let error;
   if(dbId){
     const res = await db.from('CNSREGIONAL_agenda_compras').update(row).eq('id', dbId);
     error = res.error;
-    if(error && error.code === '428C9') error = null; // ignorar se identity
   } else {
     const res = await db.from('CNSREGIONAL_agenda_compras').insert(row).select();
     error = res.error;
     if(!error && res.data && res.data[0]) obj._dbId = res.data[0].id;
   }
-  if(error) console.error('Save agenda:', error);
+  if(error){ console.error('Save agenda:', error); toast('Erro ao salvar agenda: '+(error.message||error.code),'error'); }
   showSyncing(false);
 }
 
@@ -5549,20 +5577,30 @@ async function sbDeleteConvenio(id){
 async function sbSavePPItems(){
   if(!db) return;
   showSyncing(true);
-  await db.from('CNSREGIONAL_pp_items').delete().neq('id', 0);
-  if(ppItems.length > 0){
-    const rows = ppItems.map((it,i)=>({cidade:it.cidade, val:it.val, pct:it.pct, ano:it.ano||2026}));
-    await db.from('CNSREGIONAL_pp_items').insert(rows);
-  }
+  try {
+    const {error: delErr} = await db.from('CNSREGIONAL_pp_items').delete().neq('id', 0);
+    if(delErr) throw delErr;
+    if(ppItems.length > 0){
+      const rows = ppItems.map(it=>({cidade:it.cidade, val:it.val, pct:it.pct, ano:it.ano||2026}));
+      const {error: insErr} = await db.from('CNSREGIONAL_pp_items').insert(rows);
+      if(insErr) throw insErr;
+    }
+  } catch(e){ console.error('Save PP items:', e); toast('Erro ao salvar Pintura Programada: '+(e.message||e),'error'); }
   showSyncing(false);
 }
 
 async function sbSavePPComponents(){
   if(!db) return;
   showSyncing(true);
-  await db.from('CNSREGIONAL_pp_components').delete().neq('id', 0);
-  const rows = ppComponents.map((c,i)=>({label:c.label, link:c.link||''}));
-  await db.from('CNSREGIONAL_pp_components').insert(rows);
+  try {
+    const {error: delErr} = await db.from('CNSREGIONAL_pp_components').delete().neq('id', 0);
+    if(delErr) throw delErr;
+    const rows = ppComponents.map(c=>({label:c.label, link:c.link||''}));
+    if(rows.length){
+      const {error: insErr} = await db.from('CNSREGIONAL_pp_components').insert(rows);
+      if(insErr) throw insErr;
+    }
+  } catch(e){ console.error('Save PP components:', e); toast('Erro ao salvar componentes PP: '+(e.message||e),'error'); }
   showSyncing(false);
 }
 
@@ -5638,16 +5676,22 @@ deleteForn = async function(id){
 
 const _origAddAgenda = addAgenda;
 addAgenda = async function(){
+  const countBefore = agenda.length;
   _origAddAgenda();
-  const added = agenda[agenda.length-1];
-  if(added) await sbSaveAgenda(added);
+  // Só vai ao Supabase se realmente um item foi adicionado (validação ok)
+  if(agenda.length > countBefore){
+    const added = agenda[agenda.length-1];
+    if(added) await sbSaveAgenda(added);
+  }
 };
 
 const _origDelAgenda = delAgenda;
 delAgenda = async function(id){
+  const itemToDelete = agenda.find(x=>x.id===id);
+  const dbId = itemToDelete ? (itemToDelete._dbId || id) : id;
   const before = agenda.length;
   _origDelAgenda(id);
-  if(agenda.length < before) await sbDeleteAgenda(id);
+  if(agenda.length < before) await sbDeleteAgenda(dbId);
 };
 
 const _origSetAgStatus = setAgStatus;
@@ -5659,16 +5703,21 @@ setAgStatus = async function(id, st){
 
 const _origSaveConv = saveConvenio;
 saveConvenio = async function(){
+  const countBefore = convenios.length;
   _origSaveConv();
-  const added = convenios[convenios.length-1];
-  if(added) await sbSaveConvenio(added);
+  if(convenios.length > countBefore){
+    const added = convenios[convenios.length-1];
+    if(added) await sbSaveConvenio(added);
+  }
 };
 
 const _origDelConv = deleteConvenio;
 deleteConvenio = async function(id){
+  const itemToDelete = convenios.find(x=>x.id===id);
+  const dbId = itemToDelete ? (itemToDelete._dbId || id) : id;
   const before = convenios.length;
   _origDelConv(id);
-  if(convenios.length < before) await sbDeleteConvenio(id);
+  if(convenios.length < before) await sbDeleteConvenio(dbId);
 };
 
 const _origSavePP = savePPItem;
@@ -5703,9 +5752,13 @@ saveUser = async function(){
   _origSaveUser();
   // Se era novo e o array não cresceu, a validação falhou — não salva no Supabase
   if(!wasEditing && users.length === countBefore) return;
-  const saved = wasEditing
-    ? users.find(u=>u.id===wasEditing)
-    : users[users.length-1];
+  let saved;
+  if(wasEditing){
+    saved = users.find(u=>u.id===wasEditing);
+    if(saved && !saved._dbId) saved._dbId = wasEditing;
+  } else {
+    saved = users[users.length-1];
+  }
   if(saved) await sbSaveUser(saved);
 };
 
@@ -5731,7 +5784,6 @@ async function sbSaveCNSCidades(){
     await db.from('CNSREGIONAL_cns_limpeza').delete().neq('id', 0);
     if(cnsCidades.length){
       const rows = cnsCidades.map(c=>({
-        id: c.id,
         cidade: c.cidade,
         predios: c.predios,
         sim: c.sim,
@@ -5746,7 +5798,7 @@ async function sbSaveCNSCidades(){
       }));
       await db.from('CNSREGIONAL_cns_limpeza').insert(rows);
     }
-  } catch(e){ console.error('Save CNS:', e); }
+  } catch(e){ console.error('Save CNS:', e); toast('Erro ao salvar CNS Limpeza: '+(e.message||e),'error'); }
   showSyncing(false);
 }
 
@@ -5778,9 +5830,15 @@ saveCNSJust = async function(){
 async function sbSaveProdutos(){
   if(!db) return;
   showSyncing(true);
-  await db.from('CNSREGIONAL_produtos').delete().neq('id', 0);
-  const rows = produtos.map((p,i)=>({id:i+1, nome:p.nome||p, categoria:p.categoria||'', forn_id:p.fornecedorId||null, marca:p.marca||'', valor:p.valor||''}));
-  if(rows.length) await db.from('CNSREGIONAL_produtos').insert(rows);
+  try {
+    const {error: delErr} = await db.from('CNSREGIONAL_produtos').delete().neq('id', 0);
+    if(delErr) throw delErr;
+    const rows = produtos.map(p=>({nome:p.nome||p, categoria:p.categoria||'', forn_id:p.fornecedorId||null, marca:p.marca||'', valor:p.valor||''}));
+    if(rows.length){
+      const {error: insErr} = await db.from('CNSREGIONAL_produtos').insert(rows);
+      if(insErr) throw insErr;
+    }
+  } catch(e){ console.error('Save produtos:', e); toast('Erro ao salvar Produtos: '+(e.message||e),'error'); }
   showSyncing(false);
 }
 
@@ -6028,13 +6086,15 @@ async function sbSaveGE(){
   try {
     await db.from('CNSREGIONAL_ge_meialuz').delete().neq('id',0);
     if(geMlCidades.length){
-      await db.from('CNSREGIONAL_ge_meialuz').insert(geMlCidades.map((c,i)=>({id:i+1,...c})));
+      const mlRows = geMlCidades.map(c=>({cidade:c.cidade,predios:c.predios,sim:c.sim,eco:c.eco,pct:c.pct,ano:c.ano,status:c.status,just:c.just}));
+      await db.from('CNSREGIONAL_ge_meialuz').insert(mlRows);
     }
     await db.from('CNSREGIONAL_ge_fotovoltaica').delete().neq('id',0);
     if(geFvCidades.length){
-      await db.from('CNSREGIONAL_ge_fotovoltaica').insert(geFvCidades.map((c,i)=>({id:i+1,...c})));
+      const fvRows = geFvCidades.map(c=>({cidade:c.cidade,predios:c.predios,sim:c.sim,eco:c.eco,pct:c.pct,ano:c.ano,status:c.status,just:c.just}));
+      await db.from('CNSREGIONAL_ge_fotovoltaica').insert(fvRows);
     }
-  } catch(e){ console.warn('GE save error',e); }
+  } catch(e){ console.error('GE save error',e); toast('Erro ao salvar Gestão de Energias: '+(e.message||e),'error'); }
   showSyncing(false);
 }
 
@@ -7291,6 +7351,114 @@ function afterLoginHook(){
 
 })();
 
+</script>
+
+<!-- ── MODAL TROCAR SENHA ── -->
+<div class="modal-bg" id="modal-trocar-senha">
+  <div class="modal" style="width:420px">
+    <div class="modal-header">
+      <span class="modal-title">🔒 Trocar Senha</span>
+      <button class="modal-close" onclick="fecharModalTrocarSenha()">×</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group" style="margin-bottom:14px">
+        <label>Senha Atual *</label>
+        <input type="password" id="ts-atual" placeholder="••••••••">
+      </div>
+      <div class="form-group" style="margin-bottom:14px">
+        <label>Nova Senha *</label>
+        <input type="password" id="ts-nova" placeholder="••••••••">
+      </div>
+      <div class="form-group">
+        <label>Confirmar Nova Senha *</label>
+        <input type="password" id="ts-confirma" placeholder="••••••••">
+      </div>
+      <div id="ts-erro" style="display:none;margin-top:12px;padding:9px 12px;background:#fde2e2;border-radius:8px;font-size:12px;color:#9a1515;font-weight:600"></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="fecharModalTrocarSenha()">Cancelar</button>
+      <button class="btn btn-primary" onclick="confirmarTrocarSenha()">Salvar Nova Senha</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── USER DROPDOWN MENU ────────────────────────────────────────────────────────
+function toggleUserMenu(){
+  var dd = document.getElementById('user-dropdown');
+  var isOpen = dd.style.display === 'block';
+  // close notif dropdown if open
+  var notifDd = document.getElementById('notif-dropdown');
+  if(notifDd) notifDd.style.display = 'none';
+  dd.style.display = isOpen ? 'none' : 'block';
+}
+// Close user dropdown when clicking outside
+document.addEventListener('click', function(e){
+  var wrap = document.getElementById('user-menu-wrap');
+  var dd = document.getElementById('user-dropdown');
+  if(wrap && dd && !wrap.contains(e.target)){
+    dd.style.display = 'none';
+  }
+});
+
+// ── MODAL TROCAR SENHA ────────────────────────────────────────────────────────
+function abrirModalTrocarSenha(){
+  document.getElementById('user-dropdown').style.display = 'none';
+  document.getElementById('ts-atual').value = '';
+  document.getElementById('ts-nova').value = '';
+  document.getElementById('ts-confirma').value = '';
+  document.getElementById('ts-erro').style.display = 'none';
+  document.getElementById('modal-trocar-senha').classList.add('open');
+}
+function fecharModalTrocarSenha(){
+  document.getElementById('modal-trocar-senha').classList.remove('open');
+}
+function confirmarTrocarSenha(){
+  var erroEl = document.getElementById('ts-erro');
+  erroEl.style.display = 'none';
+  var atual = document.getElementById('ts-atual').value;
+  var nova = document.getElementById('ts-nova').value;
+  var confirma = document.getElementById('ts-confirma').value;
+  if(!atual || !nova || !confirma){
+    erroEl.textContent = 'Preencha todos os campos.';
+    erroEl.style.display = 'block'; return;
+  }
+  if(currentUser.senha !== atual){
+    erroEl.textContent = 'Senha atual incorreta.';
+    erroEl.style.display = 'block'; return;
+  }
+  if(nova.length < 4){
+    erroEl.textContent = 'A nova senha deve ter ao menos 4 caracteres.';
+    erroEl.style.display = 'block'; return;
+  }
+  if(nova !== confirma){
+    erroEl.textContent = 'A nova senha e a confirmação não conferem.';
+    erroEl.style.display = 'block'; return;
+  }
+  // Update in memory
+  currentUser.senha = nova;
+  // Update in users array
+  var idx = users.findIndex(function(u){ return u.id === currentUser.id; });
+  if(idx !== -1){ users[idx].senha = nova; saveUsers(); }
+  fecharModalTrocarSenha();
+  if(window.toast) toast('Senha alterada com sucesso!', 'success');
+}
+// Update user dropdown info when user logs in
+var _origAfterLogin = window.afterLogin;
+document.addEventListener('DOMContentLoaded', function(){
+  // Patch setAfterLoginDisplay to also update dropdown names
+  var origShowPage = window.showPage;
+});
+// Hook into login to populate dropdown user info
+function updateUserDropdown(){
+  if(!currentUser) return;
+  var nom = document.getElementById('ud-nome');
+  var per = document.getElementById('ud-perfil');
+  if(nom) nom.textContent = currentUser.nome || 'Usuário';
+  if(per) per.textContent = (currentUser.perfil||'') + (currentUser.cargo ? ' · ' + currentUser.cargo : '');
+}
+// Periodically sync dropdown (lightweight)
+setInterval(function(){ if(currentUser) updateUserDropdown(); }, 1000);
 </script>
 
 </body>
