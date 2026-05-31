@@ -1838,6 +1838,7 @@ textarea{resize:vertical;min-height:80px}
                 <th>Ult.</th>
                 <th>Incluir</th>
                 <th>Planilha</th>
+                <th>Anexo</th>
                 <th>Ações</th>
               </tr>
             </thead>
@@ -3586,7 +3587,12 @@ function ndEnviarDemanda(){
   var qtd=parseInt((document.getElementById('nd-qtd')||{}).value)||0;
   var valorTotal=parseFloat((document.getElementById('nd-valor-total')||{}).value)||0;
   var prioridade=(document.getElementById('nd-prioridade')||{}).value;
-  agenda.push({id:nextAgId++,prod:prod,cat:cat,data:data,igrejas:1,admin:admin,status:'Agendado',valorEstimado:valorTotal,prioridade:prioridade});
+  var novoItem = {id:nextAgId++, prod:prod, cat:cat, data:data, igrejas:1, admin:admin,
+    status:'Agendado', valorEstimado:valorTotal, prioridade:prioridade,
+    obs:'', comprador:'', contato:'', fornId:null};
+  agenda.push(novoItem);
+  // Salva no Supabase
+  if(typeof sbSaveAgenda === 'function') sbSaveAgenda(novoItem);
   toast('Demanda enviada com sucesso! 🎉','success');
   showPage('agenda',null);
   renderAgenda();
@@ -5049,7 +5055,7 @@ function renderCNS(){
   // Tabela
   const tbody = document.getElementById('cns-tbody');
   if(!cnsCidades.length){
-    tbody.innerHTML = `<tr><td colspan="12" style="text-align:center;color:var(--muted);padding:24px">Nenhuma cidade cadastrada. Use o formulário acima para adicionar.</td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="13" style="text-align:center;color:var(--muted);padding:24px">Nenhuma cidade cadastrada. Use o formulário acima para adicionar.</td></tr>`;
     return;
   }
   tbody.innerHTML = cnsCidades.map((c,i)=>{
@@ -5057,6 +5063,7 @@ function renderCNS(){
     const hasJust = c.just && c.just.trim().length > 0;
     const bellColor = hasJust ? '#f59e0b' : '#9eaab8';
     const hasLink = c.linkAdmin && c.linkAdmin.trim() !== '';
+    const hasAnexo = c.linkAnexo && c.linkAnexo.trim() !== '';
     // Eco acumulada label
     let ecoLabel = c.ecoVal||'—';
     if(c.ecoHistorico && c.ecoHistorico.length){
@@ -5088,6 +5095,14 @@ function renderCNS(){
             : '📎 Link'}
         </button>
       </td>
+      <td>
+        <button class="btn btn-sm" style="background:${hasAnexo?'#d4f5e5':'#f4f7fd'};color:${hasAnexo?'var(--green)':'var(--muted)'};border:1.5px solid ${hasAnexo?'#a3e4c4':'var(--border)'};white-space:nowrap;font-size:11px;padding:4px 9px;border-radius:7px;cursor:pointer;font-weight:700"
+          onclick="openCNSAnexo(${c.id})" title="${hasAnexo?'Ver/editar link de anexo':'Adicionar link de pasta/administração'}">
+          ${hasAnexo
+            ? `<a href="${c.linkAnexo}" target="_blank" rel="noopener" style="color:var(--green);text-decoration:none" onclick="event.stopPropagation()">📁 Abrir</a> <span style="margin-left:4px;opacity:.6" onclick="openCNSAnexo(${c.id})">✏️</span>`
+            : '📁 Anexo'}
+        </button>
+      </td>
       <td style="white-space:nowrap">
         <button class="btn btn-outline btn-sm" style="color:var(--blue)" onclick="editCNS(${c.id})">Editar</button>
         <button class="btn btn-outline btn-sm" style="color:var(--green)" onclick="reabrirCNS(${c.id})">Reabrir</button>
@@ -5114,6 +5129,7 @@ function saveCNSCidade(){
     just:     document.getElementById('cns-f-just').value.trim(),
     ecoHistorico: cnsEcoEntries.filter(e=>e.val).map(e=>({ano:e.ano, val:e.val})),
     linkAdmin: editingCNSId ? (cnsCidades.find(c=>c.id===editingCNSId)||{}).linkAdmin||'' : '',
+    linkAnexo: editingCNSId ? (cnsCidades.find(c=>c.id===editingCNSId)||{}).linkAnexo||'' : '',
   };
   if(editingCNSId){
     const idx = cnsCidades.findIndex(c=>c.id===editingCNSId);
@@ -5176,6 +5192,7 @@ function reabrirCNS(id){
   if(!c) return;
   c.status='andamento';
   renderCNS();
+  if(typeof sbSaveCNSCidade === 'function') sbSaveCNSCidade(c);
   toast('Cidade reaberta!');
 }
 
@@ -5199,9 +5216,57 @@ function saveCNSLinkAdmin(){
   c.linkAdmin = val;
   closeModal('modal-cns-link-admin');
   renderCNS();
-  if(typeof sbSaveCNSCidades === 'function') sbSaveCNSCidades();
+  if(typeof sbSaveCNSCidade === 'function') sbSaveCNSCidade(c);
   toast(val ? 'Planilha de controle salva!' : 'Link removido!');
   cnsLinkAdminId = null;
+}
+
+// ── Link Anexo (pasta da administração) ────────────────────────────────────
+let cnsAnexoId = null;
+function openCNSAnexo(id){
+  const c = cnsCidades.find(x=>x.id===id);
+  if(!c) return;
+  cnsAnexoId = id;
+  let modal = document.getElementById('modal-cns-anexo');
+  if(!modal){
+    modal = document.createElement('div');
+    modal.className='modal-bg'; modal.id='modal-cns-anexo';
+    modal.innerHTML=`<div class="modal" style="width:480px">
+      <div class="modal-header">
+        <span class="modal-title">📁 Anexo — <span id="cns-anexo-city"></span></span>
+        <button class="modal-close" onclick="closeModal('modal-cns-anexo')">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label>Link da Pasta / Administração</label>
+          <input id="cns-anexo-input" type="url" placeholder="https://drive.google.com/...">
+          <small style="color:var(--muted);font-size:11px;margin-top:4px;display:block">Cole aqui o link do Google Drive, OneDrive ou qualquer pasta compartilhada.</small>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-outline" onclick="closeModal('modal-cns-anexo')">Cancelar</button>
+        <button class="btn btn-primary" onclick="saveCNSAnexo()">Salvar</button>
+      </div>
+    </div>`;
+    document.body.appendChild(modal);
+  }
+  document.getElementById('cns-anexo-city').textContent = c.cidade;
+  document.getElementById('cns-anexo-input').value = c.linkAnexo || '';
+  modal.classList.add('open');
+  setTimeout(()=>document.getElementById('cns-anexo-input').focus(),100);
+}
+function saveCNSAnexo(){
+  if(cnsAnexoId === null) return;
+  const c = cnsCidades.find(x=>x.id===cnsAnexoId);
+  if(!c) return;
+  let val = document.getElementById('cns-anexo-input').value.trim();
+  if(val && !val.startsWith('http')) val = 'https://'+val;
+  c.linkAnexo = val;
+  closeModal('modal-cns-anexo');
+  renderCNS();
+  if(typeof sbSaveCNSCidade === 'function') sbSaveCNSCidade(c);
+  toast(val ? 'Anexo salvo!' : 'Anexo removido!');
+  cnsAnexoId = null;
 }
 
 // ── Eco entries no form ────────────────────────────────────────────────────
@@ -5397,7 +5462,8 @@ async function loadFromSupabase(){
       agenda = a.data.map(r=>({
         id:r.id, _dbId:r.id, prod:r.prod||'', fornId:r.forn_id||0, data:r.data||'',
         igrejas:r.igrejas||1, obs:r.obs||'', status:r.status||'Agendado',
-        admin:r.admin||'', comprador:r.comprador||'', contato:r.contato||''
+        admin:r.admin||'', comprador:r.comprador||'', contato:r.contato||'',
+        cat:r.cat||'', valorEstimado:r.valor_estimado||0, prioridade:r.prioridade||''
       }));
       nextAgId = Math.max(...agenda.map(x=>x.id), 0) + 1;
     }
@@ -5439,6 +5505,7 @@ async function loadFromSupabase(){
     if(cns.data && cns.data.length > 0){
       cnsCidades = cns.data.map(r=>({
         id: r.id,
+        _dbId: r.id,
         cidade: r.cidade||'',
         predios: r.predios||0,
         sim: r.sim||0,
@@ -5449,7 +5516,8 @@ async function loadFromSupabase(){
         status: r.status||'implantada',
         just: r.just||'',
         ecoHistorico: r.eco_historico||[],
-        linkAdmin: r.link_admin||''
+        linkAdmin: r.link_admin||'',
+        linkAnexo: r.link_anexo||''
       }));
       nextCNSId = Math.max(...cnsCidades.map(x=>x.id), 0) + 1;
     }
@@ -5519,18 +5587,43 @@ async function sbDeleteFornecedor(id){
 async function sbSaveAgenda(obj){
   if(!db) return;
   showSyncing(true);
-  const row = {prod:obj.prod, forn_id:obj.fornId, data:obj.data, igrejas:obj.igrejas||1, obs:obj.obs||'', status:obj.status||'Agendado', admin:obj.admin||'', comprador:obj.comprador||'', contato:obj.contato||''};
+  const row = {
+    prod:obj.prod,
+    forn_id:obj.fornId||null,
+    data:obj.data||'',
+    igrejas:obj.igrejas||1,
+    obs:obj.obs||'',
+    status:obj.status||'Agendado',
+    admin:obj.admin||'',
+    comprador:obj.comprador||'',
+    contato:obj.contato||'',
+    cat:obj.cat||'',
+    valor_estimado:obj.valorEstimado||0,
+    prioridade:obj.prioridade||''
+  };
   const dbId = obj._dbId || null;
   let error;
   if(dbId){
     const res = await db.from('CNSREGIONAL_agenda_compras').update(row).eq('id', dbId);
     error = res.error;
+    // Se der erro de coluna inexistente, tenta sem os campos novos
+    if(error && (error.code==='PGRST204'||error.message?.includes('column'))){
+      const rowMin = {prod:obj.prod, forn_id:obj.fornId||null, data:obj.data||'', igrejas:obj.igrejas||1, obs:obj.obs||'', status:obj.status||'Agendado', admin:obj.admin||'', comprador:obj.comprador||'', contato:obj.contato||''};
+      const res2 = await db.from('CNSREGIONAL_agenda_compras').update(rowMin).eq('id', dbId);
+      error = res2.error;
+    }
   } else {
     const res = await db.from('CNSREGIONAL_agenda_compras').insert(row).select();
     error = res.error;
-    if(!error && res.data && res.data[0]) obj._dbId = res.data[0].id;
+    // Se der erro de coluna inexistente, tenta sem os campos novos
+    if(error && (error.code==='PGRST204'||error.message?.includes('column'))){
+      const rowMin = {prod:obj.prod, forn_id:obj.fornId||null, data:obj.data||'', igrejas:obj.igrejas||1, obs:obj.obs||'', status:obj.status||'Agendado', admin:obj.admin||'', comprador:obj.comprador||'', contato:obj.contato||''};
+      const res2 = await db.from('CNSREGIONAL_agenda_compras').insert(rowMin).select();
+      error = res2.error;
+      if(!error && res2.data && res2.data[0]) obj._dbId = res2.data[0].id;
+    } else if(!error && res.data && res.data[0]) obj._dbId = res.data[0].id;
   }
-  if(error){ console.error('Save agenda:', error); toast('Erro ao salvar agenda: '+(error.message||error.code),'error'); }
+  if(error){ console.error('Save agenda:', error); toast('Erro ao salvar compra: '+(error.message||error.code),'error'); }
   showSyncing(false);
 }
 
@@ -5777,53 +5870,66 @@ toggleUser = async function(id){
 };
 
 // ── CNS Limpeza Supabase ──────────────────────────────────────────────────────
-async function sbSaveCNSCidades(){
+async function sbSaveCNSCidade(c){
   if(!db) return;
-  showSyncing(true);
-  try {
-    await db.from('CNSREGIONAL_cns_limpeza').delete().neq('id', 0);
-    if(cnsCidades.length){
-      const rows = cnsCidades.map(c=>({
-        cidade: c.cidade,
-        predios: c.predios,
-        sim: c.sim,
-        nao: c.nao,
-        eco_val: c.ecoVal||'',
-        eco_pct: c.ecoPct||'',
-        ano: c.ano,
-        status: c.status||'implantada',
-        just: c.just||'',
-        eco_historico: c.ecoHistorico||[],
-        link_admin: c.linkAdmin||''
-      }));
-      await db.from('CNSREGIONAL_cns_limpeza').insert(rows);
-    }
-  } catch(e){ console.error('Save CNS:', e); toast('Erro ao salvar CNS Limpeza: '+(e.message||e),'error'); }
-  showSyncing(false);
+  const row = {
+    cidade: c.cidade, predios: c.predios, sim: c.sim, nao: c.nao,
+    eco_val: c.ecoVal||'', eco_pct: c.ecoPct||'', ano: c.ano,
+    status: c.status||'implantada', just: c.just||'',
+    eco_historico: c.ecoHistorico||[], link_admin: c.linkAdmin||'',
+    link_anexo: c.linkAnexo||''
+  };
+  if(c._dbId){
+    const res = await db.from('CNSREGIONAL_cns_limpeza').update(row).eq('id', c._dbId);
+    if(res.error) console.error('CNS update err:', res.error);
+  } else {
+    const res = await db.from('CNSREGIONAL_cns_limpeza').insert(row).select();
+    if(res.error){ console.error('CNS insert err:', res.error); }
+    else if(res.data && res.data[0]){ c._dbId = res.data[0].id; }
+  }
+}
+
+async function sbDeleteCNSCidade(c){
+  if(!db) return;
+  if(!c || !c._dbId){ console.warn('sbDeleteCNSCidade: sem _dbId, ignorando'); return; }
+  const {error} = await db.from('CNSREGIONAL_cns_limpeza').delete().eq('id', c._dbId);
+  if(error) console.error('CNS delete err:', error);
 }
 
 const _origSaveCNS = saveCNSCidade;
 saveCNSCidade = async function(){
   _origSaveCNS();
-  await sbSaveCNSCidades();
+  showSyncing(true);
+  try {
+    const isEditing = editingCNSId;
+    const saved = isEditing ? cnsCidades.find(c=>c.id===isEditing) : cnsCidades[cnsCidades.length-1];
+    if(saved) await sbSaveCNSCidade(saved);
+  } catch(e){ console.error('Save CNS:', e); toast('Erro ao salvar CNS Limpeza: '+(e.message||e),'error'); }
+  showSyncing(false);
 };
 
 const _origDeleteCNS = deleteCNS;
 deleteCNS = async function(id){
+  const toDelete = cnsCidades.find(c=>c.id===id);
   _origDeleteCNS(id);
-  await sbSaveCNSCidades();
+  showSyncing(true);
+  try { if(toDelete) await sbDeleteCNSCidade(toDelete); }
+  catch(e){ console.error('Del CNS:', e); }
+  showSyncing(false);
 };
 
 const _origSaveCNSEcoModal = saveCNSEcoModal;
 saveCNSEcoModal = async function(){
   _origSaveCNSEcoModal();
-  await sbSaveCNSCidades();
+  const c = cnsCidades.find(x=>x.id===cnsEcoEditId) || cnsCidades.find(x=>x.id===editingCNSId);
+  if(c) { showSyncing(true); try{ await sbSaveCNSCidade(c); }catch(e){console.error(e);} showSyncing(false); }
 };
 
 const _origSaveCNSJust = saveCNSJust;
 saveCNSJust = async function(){
   _origSaveCNSJust();
-  await sbSaveCNSCidades();
+  const c = cnsCidades.find(x=>x.id===cnsJustEditId);
+  if(c) { showSyncing(true); try{ await sbSaveCNSCidade(c); }catch(e){console.error(e);} showSyncing(false); }
 };
 
 // ── Patch Produtos ────────────────────────────────────────────────────────────
@@ -5833,7 +5939,7 @@ async function sbSaveProdutos(){
   try {
     const {error: delErr} = await db.from('CNSREGIONAL_produtos').delete().neq('id', 0);
     if(delErr) throw delErr;
-    const rows = produtos.map(p=>({nome:p.nome||p, categoria:p.categoria||'', forn_id:p.fornecedorId||null, marca:p.marca||'', valor:p.valor||''}));
+    const rows = produtos.map(p=>({nome:p.nome||p, categoria:p.categoria||'', forn_id:p.fornecedorId||null, marca:p.marca||''}));
     if(rows.length){
       const {error: insErr} = await db.from('CNSREGIONAL_produtos').insert(rows);
       if(insErr) throw insErr;
@@ -5859,13 +5965,13 @@ deleteProduto = async function(i){
 ===== EXECUTE ESTE SQL NO EDITOR DO SUPABASE (schema: public) =====
 
 CREATE TABLE IF NOT EXISTS "CNSREGIONAL_fornecedores" (id bigserial primary key, codigo text, nome text, cnpj text, cat text, email text, tel text, resp text, cidade text, uf text, endereco text, status text, score float, obs text, avals jsonb default '[]');
-CREATE TABLE IF NOT EXISTS "CNSREGIONAL_agenda_compras" (id bigserial primary key, prod text, forn_id int, data text, igrejas int, obs text, status text, admin text, comprador text, contato text);
+CREATE TABLE IF NOT EXISTS "CNSREGIONAL_agenda_compras" (id bigserial primary key, prod text, forn_id int, data text, igrejas int, obs text, status text, admin text, comprador text, contato text, cat text default '', valor_estimado float default 0, prioridade text default '');
 CREATE TABLE IF NOT EXISTS "CNSREGIONAL_convenios" (id bigserial primary key, titulo text, tipo text, img_url text, link text default '', igrejas int, descricao text, data_criacao text, produto text, fornecedor text, data_publicacao text);
 CREATE TABLE IF NOT EXISTS "CNSREGIONAL_pp_items" (id bigserial primary key, cidade text, val text, pct text, ano int);
 CREATE TABLE IF NOT EXISTS "CNSREGIONAL_pp_components" (id bigserial primary key, label text, link text);
 CREATE TABLE IF NOT EXISTS "CNSREGIONAL_usuarios" (id bigserial primary key, nome text, login text unique, email text, perfil text, cargo text, cidade text, senha text, ativo boolean default true, modulos jsonb default '[]', cidades_coord text default '');
 CREATE TABLE IF NOT EXISTS "CNSREGIONAL_produtos" (id bigserial primary key, nome text unique, categoria text, forn_id int, marca text);
-CREATE TABLE IF NOT EXISTS "CNSREGIONAL_cns_limpeza" (id bigserial primary key, cidade text, predios int, sim int, nao int, eco_val text, eco_pct text, ano int, status text, just text, eco_historico jsonb default '[]', link_admin text default '');
+CREATE TABLE IF NOT EXISTS "CNSREGIONAL_cns_limpeza" (id bigserial primary key, cidade text, predios int, sim int, nao int, eco_val text, eco_pct text, ano int, status text, just text, eco_historico jsonb default '[]', link_admin text default '', link_anexo text default '');
 CREATE TABLE IF NOT EXISTS "CNSREGIONAL_ge_meialuz" (id bigserial primary key, cidade text, predios int, sim int, eco text, pct text, ano int, status text, just text);
 CREATE TABLE IF NOT EXISTS "CNSREGIONAL_ge_fotovoltaica" (id bigserial primary key, cidade text, predios int, sim int, eco text, pct text, ano int, status text, just text);
 CREATE TABLE IF NOT EXISTS "CNSREGIONAL_mapa_cns" (id bigserial primary key, cidades jsonb default '[]', colunas jsonb default '[]', dados jsonb default '{}', updated_at timestamptz default now());
