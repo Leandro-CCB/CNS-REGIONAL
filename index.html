@@ -588,7 +588,7 @@ textarea{resize:vertical;min-height:80px}
       <svg viewBox="0 0 24 24" fill="currentColor"><path d="M11.5 2C6.81 2 3 5.81 3 10.5S6.81 19 11.5 19h.5v3c4.86-2.34 8-7 8-11.5C20 5.81 16.19 2 11.5 2zm1 14.5h-2v-2h2v2zm0-4h-2c0-3.25 3-3 3-5 0-1.1-.9-2-2-2s-2 .9-2 2h-2c0-2.21 1.79-4 4-4s4 1.79 4 4c0 2.5-3 2.75-3 5z"/></svg> Suporte
     </div>
     <div class="nav-item nav-master-only" onclick="showPage('categorias',this)">
-      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l-5.5 9h11zm0 3.84L14.6 10h-5.2zM17.5 13c-2.49 0-4.5 2.01-4.5 4.5S15.01 22 17.5 22 22 19.99 22 17.5 19.99 13 17.5 13zm0 7c-1.38 0-2.5-1.12-2.5-2.5S16.12 15 17.5 15 20 16.12 20 17.5 18.88 20 17.5 20zM3 21.5h8v-8H3v8zm2-6h4v4H5v-4z"/></svg> Gerenciar Categorias
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58a.49.49 0 0 0 .12-.61l-1.92-3.32a.49.49 0 0 0-.59-.22l-2.39.96a7.02 7.02 0 0 0-1.62-.94l-.36-2.54A.484.484 0 0 0 14 2h-4c-.25 0-.46.18-.49.42l-.36 2.54a7.02 7.02 0 0 0-1.62.94l-2.39-.96a.48.48 0 0 0-.59.22L2.63 8.48a.47.47 0 0 0 .12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58a.49.49 0 0 0-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.26.42.49.42h4c.25 0 .46-.18.49-.42l.36-2.54a7.02 7.02 0 0 0 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32a.47.47 0 0 0-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg> Configurações
     </div>
   </nav>
 </div>
@@ -2422,16 +2422,30 @@ textarea{resize:vertical;min-height:80px}
       </div>
     </div>
 
-    <!-- GERENCIAR CATEGORIAS (Master only) -->
+    <!-- CONFIGURAÇÕES (Master only) -->
     <div class="page" id="page-categorias">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px">
         <div>
-          <div style="font-family:'Barlow Condensed',sans-serif;font-size:26px;font-weight:800;color:var(--navy)">Gerenciar Categorias</div>
-          <div style="font-size:13px;color:var(--muted);margin-top:4px">Crie, edite e remova categorias de Fornecedores/Produtos e de Compras Coordenadas.</div>
+          <div style="font-family:'Barlow Condensed',sans-serif;font-size:26px;font-weight:800;color:var(--navy)">Configurações</div>
+          <div style="font-size:13px;color:var(--muted);margin-top:4px">Gerencie as administrações da regional, categorias de Fornecedores/Produtos e de Compras Coordenadas.</div>
         </div>
       </div>
 
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:22px">
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:22px">
+
+        <!-- ADMINISTRAÇÕES -->
+        <div class="form-section" style="margin-bottom:0">
+          <div class="form-section-title" style="display:flex;align-items:center;gap:8px">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="var(--navy)"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+            Administrações
+          </div>
+          <p style="font-size:12px;color:var(--muted);margin-bottom:14px">Cidades/administrações da regional. Usadas nos campos de seleção de toda a plataforma.</p>
+          <div style="display:flex;gap:8px;margin-bottom:14px">
+            <input id="adm-nova" type="text" placeholder="Nome da administração..." style="flex:1;padding:8px 12px;border:1.5px solid var(--border);border-radius:8px;font-size:13px;font-family:Barlow,sans-serif" onkeydown="if(event.key==='Enter')adicionarAdm()">
+            <button class="btn btn-primary" onclick="adicionarAdm()" style="white-space:nowrap">+ Adicionar</button>
+          </div>
+          <div id="adm-list" style="display:flex;flex-direction:column;gap:6px;max-height:380px;overflow-y:auto"></div>
+        </div>
 
         <!-- CATEGORIAS DE FORNECEDORES/PRODUTOS -->
         <div class="form-section" style="margin-bottom:0">
@@ -2803,7 +2817,7 @@ function toggleSidebar(){
 document.getElementById('l-pass').addEventListener('keydown',e=>{if(e.key==='Enter')doLogin()});
 
 // ─── NAVIGATION ──────────────────────────────────────────────────────────────
-const pageTitles={dashboard:'Dashboard',economizometro:'Economizômetro',fornecedores:'Fornecedores',produtos:'Gestão de Produtos',ranking:'Ranking de Fornecedores','cad-fornecedor':'Cadastrar Fornecedor',agenda:'Compras Coordenadas','nova-demanda':'Nova Demanda de Compra',usuarios:'Gestão de Usuários',convenios:'Convênios',economia:'Economia de Compras','cns-limpeza':'CNS Limpeza',pintura:'Pintura Programada','gestao-energias':'Gestão de Energias',suporte:'Suporte',aplicativos:'Aplicativos',categorias:'Gerenciar Categorias'};
+const pageTitles={dashboard:'Dashboard',economizometro:'Economizômetro',fornecedores:'Fornecedores',produtos:'Gestão de Produtos',ranking:'Ranking de Fornecedores','cad-fornecedor':'Cadastrar Fornecedor',agenda:'Compras Coordenadas','nova-demanda':'Nova Demanda de Compra',usuarios:'Gestão de Usuários',convenios:'Convênios',economia:'Economia de Compras','cns-limpeza':'CNS Limpeza',pintura:'Pintura Programada','gestao-energias':'Gestão de Energias',suporte:'Suporte',aplicativos:'Aplicativos',categorias:'Configurações'};
 function showPage(id, el){
   window.scrollTo({top:0,left:0,behavior:'instant'});
   const mainEl = document.getElementById('main');
@@ -3488,6 +3502,8 @@ function salvarEdicaoAgenda(){
   closeModal('modal-editar-agenda');
   renderAgenda();
   toast('Demanda atualizada com sucesso!','success');
+  // Sincroniza com Supabase
+  if(typeof sbSaveAgenda === 'function') sbSaveAgenda(a);
 }
 function ndEditarCompra(id){ abrirEditarAgenda(id); }
 function addAgenda(){
@@ -5133,7 +5149,11 @@ function saveCNSCidade(){
   };
   if(editingCNSId){
     const idx = cnsCidades.findIndex(c=>c.id===editingCNSId);
-    if(idx>=0) cnsCidades[idx]=obj;
+    if(idx>=0){
+      // Preserva _dbId para o Supabase conseguir fazer UPDATE
+      if(cnsCidades[idx]._dbId) obj._dbId = cnsCidades[idx]._dbId;
+      cnsCidades[idx]=obj;
+    }
     toast('Cidade atualizada!');
   } else {
     cnsCidades.push(obj);
@@ -5410,7 +5430,7 @@ async function loadFromSupabase(){
       catch(e){ console.warn(`Erro ao carregar ${table}:`, e); return {data:null, error:e}; }
     };
 
-    const [f, a, c, pp, pc, us, pr, cns, geml, gefv] = await Promise.all([
+    const [f, a, c, pp, pc, us, pr, cns, geml, gefv, adm] = await Promise.all([
       safeLoad('fornecedores'),
       safeLoad('agenda_compras'),
       safeLoad('convenios'),
@@ -5421,6 +5441,7 @@ async function loadFromSupabase(){
       safeLoad('cns_limpeza'),
       safeLoad('ge_meialuz'),
       safeLoad('ge_fotovoltaica'),
+      safeLoad('administracoes'),
     ]);
 
     // Detecta erros de schema/conexão — tenta até 3 vezes antes de desistir
@@ -5534,6 +5555,13 @@ async function loadFromSupabase(){
         eco:r.eco||'', pct:r.pct||'', ano:r.ano||new Date().getFullYear(),
         status:r.status||'pendente', just:r.just||''
       }));
+    }
+    // Carrega administrações do Supabase e sincroniza com o módulo local
+    if(adm.data && adm.data.length > 0){
+      const nomes = adm.data.map(r=>r.nome).filter(Boolean);
+      if(nomes.length > 0 && typeof window._syncAdmsFromDB === 'function'){
+        window._syncAdmsFromDB(nomes);
+      }
     }
     toast('Dados carregados!');
   } catch(e){ console.warn('Load error:', e); }
@@ -5898,10 +5926,11 @@ async function sbDeleteCNSCidade(c){
 
 const _origSaveCNS = saveCNSCidade;
 saveCNSCidade = async function(){
+  // Captura o id ANTES de _origSaveCNS() pois ela pode zerar editingCNSId
+  const isEditing = editingCNSId;
   _origSaveCNS();
   showSyncing(true);
   try {
-    const isEditing = editingCNSId;
     const saved = isEditing ? cnsCidades.find(c=>c.id===isEditing) : cnsCidades[cnsCidades.length-1];
     if(saved) await sbSaveCNSCidade(saved);
   } catch(e){ console.error('Save CNS:', e); toast('Erro ao salvar CNS Limpeza: '+(e.message||e),'error'); }
@@ -7291,8 +7320,247 @@ function afterLoginHook(){
 })();
 
 // ════════════════════════════════════════════════════════════════════════════
-// GERENCIAMENTO DE CATEGORIAS — Portal CRS
+// GERENCIAMENTO DE ADMINISTRAÇÕES — Portal CRS
 // ════════════════════════════════════════════════════════════════════════════
+(function(){
+  var STORAGE_KEY = 'crs_administracoes';
+  var DEFAULT_ADMS = [
+    'Caieiras','Campo Limpo Paulista','Franco da Rocha',
+    'Francisco Morato','Jundiaí','Mairiporã','Várzea Paulista'
+  ];
+
+  function loadAdms(){
+    try{
+      var v = localStorage.getItem(STORAGE_KEY);
+      if(v){ var arr=JSON.parse(v); if(Array.isArray(arr)&&arr.length) return arr; }
+    }catch(e){}
+    return DEFAULT_ADMS.slice();
+  }
+  function saveAdms(arr){
+    try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(arr)); }catch(e){}
+    // Expõe globalmente para outros módulos usarem
+    window.CRS_ADMINISTRACOES = arr.slice().sort(function(a,b){return a.localeCompare(b,'pt');});
+    refreshAdmSelects();
+  }
+
+  var ADMS = loadAdms();
+  window.CRS_ADMINISTRACOES = ADMS.slice().sort(function(a,b){return a.localeCompare(b,'pt');});
+
+  function escHtml(str){
+    return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
+  // ── Atualiza selects de administração em toda a plataforma ────────────────
+  function refreshAdmSelects(){
+    var sorted = ADMS.slice().sort(function(a,b){return a.localeCompare(b,'pt');});
+    ['ag-admin','nd-admin','f-cidade','cns-f-cidade'].forEach(function(id){
+      var el = document.getElementById(id);
+      if(!el) return;
+      var cur = el.value;
+      // Só substitui se for um select (não input de texto livre)
+      if(el.tagName !== 'SELECT') return;
+      el.innerHTML = '<option value="">Selecione a administração...</option>';
+      sorted.forEach(function(a){
+        var o = document.createElement('option');
+        o.value = a; o.textContent = a;
+        el.appendChild(o);
+      });
+      if(cur) el.value = cur;
+    });
+  }
+
+  // ── Render da lista na página ─────────────────────────────────────────────
+  window.renderAdmList = function(){
+    var el = document.getElementById('adm-list');
+    if(!el) return;
+    var sorted = ADMS.slice().sort(function(a,b){return a.localeCompare(b,'pt');});
+    if(sorted.length === 0){
+      el.innerHTML = '<div style="text-align:center;color:var(--muted);font-size:12px;padding:18px 0">Nenhuma administração cadastrada.</div>';
+      return;
+    }
+    el.innerHTML = sorted.map(function(adm, idx){
+      var realIdx = ADMS.indexOf(adm);
+      return '<div style="display:flex;align-items:center;gap:8px;background:#f4f7fd;border:1px solid var(--border);border-radius:8px;padding:9px 12px">'+
+        '<span style="width:22px;height:22px;background:var(--navy);color:#fff;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;flex-shrink:0">'+(idx+1)+'</span>'+
+        '<span style="flex:1;font-size:13px;font-weight:600;color:var(--navy)" id="adm-label-'+realIdx+'">'+escHtml(adm)+'</span>'+
+        '<button onclick="admEditar('+realIdx+')" style="background:none;border:none;cursor:pointer;padding:4px;color:var(--blue);display:flex;align-items:center" title="Editar">'+
+          '<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>'+
+        '</button>'+
+        '<button onclick="admRemover('+realIdx+')" style="background:none;border:none;cursor:pointer;padding:4px;color:var(--red);display:flex;align-items:center" title="Remover">'+
+          '<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>'+
+        '</button>'+
+      '</div>';
+    }).join('');
+  };
+
+  // ── Adicionar ─────────────────────────────────────────────────────────────
+  window.adicionarAdm = function(){
+    var inp = document.getElementById('adm-nova');
+    var val = inp.value.trim();
+    if(!val){ if(window.toast) toast('Informe o nome da administração','error'); return; }
+    if(ADMS.map(function(a){return a.toLowerCase();}).includes(val.toLowerCase())){
+      if(window.toast) toast('Administração já cadastrada','error'); return;
+    }
+    ADMS.push(val);
+    saveAdms(ADMS);
+    inp.value = '';
+    window.renderAdmList();
+    if(window.toast) toast('Administração "'+val+'" adicionada!');
+  };
+
+  // ── Editar inline ─────────────────────────────────────────────────────────
+  window.admEditar = function(idx){
+    var labelEl = document.getElementById('adm-label-'+idx);
+    if(!labelEl) return;
+    var oldVal = ADMS[idx];
+    var inp = document.createElement('input');
+    inp.type='text'; inp.value=oldVal;
+    inp.style.cssText='flex:1;padding:4px 8px;border:1.5px solid var(--blue);border-radius:6px;font-size:13px;font-family:Barlow,sans-serif;outline:none';
+    labelEl.parentNode.replaceChild(inp, labelEl);
+    inp.focus(); inp.select();
+    function confirmEdit(){
+      var val = inp.value.trim();
+      if(!val){ inp.focus(); return; }
+      var dup = ADMS.some(function(a,i){ return i!==idx && a.toLowerCase()===val.toLowerCase(); });
+      if(dup){ if(window.toast) toast('Já existe uma administração com esse nome','error'); inp.focus(); return; }
+      ADMS[idx] = val;
+      saveAdms(ADMS);
+      window.renderAdmList();
+      if(window.toast) toast('Administração renomeada para "'+val+'"!');
+    }
+    inp.addEventListener('keydown', function(e){
+      if(e.key==='Enter') confirmEdit();
+      if(e.key==='Escape') window.renderAdmList();
+    });
+    inp.addEventListener('blur', function(){ setTimeout(confirmEdit, 120); });
+  };
+
+  // ── Remover ───────────────────────────────────────────────────────────────
+  window.admRemover = function(idx){
+    if(ADMS.length <= 1){ if(window.toast) toast('Mantenha ao menos uma administração','error'); return; }
+    var nome = ADMS[idx];
+    if(!confirm('Remover "'+nome+'" das administrações?')) return;
+    ADMS.splice(idx, 1);
+    saveAdms(ADMS);
+    window.renderAdmList();
+    if(window.toast) toast('Administração "'+nome+'" removida.','error');
+  };
+
+  // ── Sync com Supabase ─────────────────────────────────────────────────────
+  // Chamado pelo loadFromSupabase após carregar dados do banco
+  window._syncAdmsFromDB = function(nomes){
+    ADMS.length = 0;
+    nomes.forEach(function(n){ ADMS.push(n); });
+    try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(ADMS)); }catch(e){}
+    window.CRS_ADMINISTRACOES = ADMS.slice().sort(function(a,b){return a.localeCompare(b,'pt');});
+    window.renderAdmList();
+    refreshAdmSelects();
+  };
+
+  async function sbSaveAdm(nome){
+    if(!window.db) return;
+    const res = await window.db.from('CNSREGIONAL_administracoes').insert({nome: nome}).select();
+    if(res.error) console.error('ADM insert err:', res.error);
+    return res;
+  }
+
+  async function sbDeleteAdm(nome){
+    if(!window.db) return;
+    const res = await window.db.from('CNSREGIONAL_administracoes').delete().eq('nome', nome);
+    if(res.error) console.error('ADM delete err:', res.error);
+  }
+
+  async function sbRenameAdm(oldNome, newNome){
+    if(!window.db) return;
+    const res = await window.db.from('CNSREGIONAL_administracoes').update({nome: newNome}).eq('nome', oldNome);
+    if(res.error) console.error('ADM rename err:', res.error);
+  }
+
+  async function sbReplaceAllAdms(){
+    if(!window.db) return;
+    if(typeof window.showSyncing === 'function') window.showSyncing(true);
+    try {
+      await window.db.from('CNSREGIONAL_administracoes').delete().neq('id', 0);
+      if(ADMS.length > 0){
+        const rows = ADMS.map(function(n){ return {nome: n}; });
+        const res = await window.db.from('CNSREGIONAL_administracoes').insert(rows);
+        if(res.error) throw res.error;
+      }
+    } catch(e){ console.error('ADM sync err:', e); if(window.toast) toast('Erro ao salvar administrações: '+(e.message||e),'error'); }
+    if(typeof window.showSyncing === 'function') window.showSyncing(false);
+  }
+
+  // Sobrescreve adicionarAdm para sincronizar com Supabase
+  var _origAdicionarAdm = window.adicionarAdm;
+  window.adicionarAdm = function(){
+    var inp = document.getElementById('adm-nova');
+    var val = inp ? inp.value.trim() : '';
+    if(!val){ if(window.toast) toast('Informe o nome da administração','error'); return; }
+    if(ADMS.map(function(a){return a.toLowerCase();}).includes(val.toLowerCase())){
+      if(window.toast) toast('Administração já cadastrada','error'); return;
+    }
+    ADMS.push(val);
+    saveAdms(ADMS);
+    inp.value = '';
+    window.renderAdmList();
+    if(window.toast) toast('Administração "'+val+'" adicionada!');
+    sbSaveAdm(val);
+  };
+
+  // Sobrescreve admRemover para sincronizar com Supabase
+  var _origAdmRemover = window.admRemover;
+  window.admRemover = function(idx){
+    if(ADMS.length <= 1){ if(window.toast) toast('Mantenha ao menos uma administração','error'); return; }
+    var nome = ADMS[idx];
+    if(!confirm('Remover "'+nome+'" das administrações?')) return;
+    ADMS.splice(idx, 1);
+    saveAdms(ADMS);
+    window.renderAdmList();
+    if(window.toast) toast('Administração "'+nome+'" removida.','error');
+    sbDeleteAdm(nome);
+  };
+
+  // Sobrescreve admEditar para sincronizar rename com Supabase
+  window.admEditar = function(idx){
+    var labelEl = document.getElementById('adm-label-'+idx);
+    if(!labelEl) return;
+    var oldVal = ADMS[idx];
+    var inp = document.createElement('input');
+    inp.type='text'; inp.value=oldVal;
+    inp.style.cssText='flex:1;padding:4px 8px;border:1.5px solid var(--blue);border-radius:6px;font-size:13px;font-family:Barlow,sans-serif;outline:none';
+    labelEl.parentNode.replaceChild(inp, labelEl);
+    inp.focus(); inp.select();
+    function confirmEdit(){
+      var val = inp.value.trim();
+      if(!val){ inp.focus(); return; }
+      var dup = ADMS.some(function(a,i){ return i!==idx && a.toLowerCase()===val.toLowerCase(); });
+      if(dup){ if(window.toast) toast('Já existe uma administração com esse nome','error'); inp.focus(); return; }
+      var prev = ADMS[idx];
+      ADMS[idx] = val;
+      saveAdms(ADMS);
+      window.renderAdmList();
+      if(window.toast) toast('Administração renomeada para "'+val+'"!');
+      sbRenameAdm(prev, val);
+    }
+    inp.addEventListener('keydown', function(e){
+      if(e.key==='Enter') confirmEdit();
+      if(e.key==='Escape') window.renderAdmList();
+    });
+    inp.addEventListener('blur', function(){ setTimeout(confirmEdit, 120); });
+  };
+
+  // ── Init ──────────────────────────────────────────────────────────────────
+  document.addEventListener('DOMContentLoaded', function(){
+    window.renderAdmList();
+    refreshAdmSelects();
+  });
+  if(document.readyState !== 'loading'){
+    window.renderAdmList();
+    refreshAdmSelects();
+  }
+
+})();
+
 (function(){
   // ── Defaults ─────────────────────────────────────────────────────────────
   var DEFAULT_CATS_FORN  = ['Alimentação','Construção','Limpeza','Materiais','Outros','Saúde','Serviços Gerais','Tecnologia','Transporte'];
@@ -7368,6 +7636,7 @@ function afterLoginHook(){
   window.renderCategorias = function(){
     renderCatList('cat-forn-list',   CATS_FORN,   'crs_cats_forn',   refreshAllSelects);
     renderCatList('cat-agenda-list', CATS_AGENDA, 'crs_cats_agenda', refreshAllSelects);
+    if(typeof window.renderAdmList === 'function') window.renderAdmList();
   };
 
   // ── Adicionar ─────────────────────────────────────────────────────────────
