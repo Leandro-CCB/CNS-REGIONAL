@@ -5208,88 +5208,132 @@ function anoColor(ano){
 }
 
 function renderCNS(){
-  // KPIs
-  const impl  = cnsCidades.filter(c=>c.status==='implantada').length;
-  const and   = cnsCidades.filter(c=>c.status==='andamento').length;
-  const pend  = cnsCidades.filter(c=>c.status==='pendente').length;
+  // ── Agrupa por cidade (nome normalizado) para somar valores de mesma cidade ──
+  const cidadeMap = {}; // chave: cidade.toLowerCase().trim() → objeto agrupado
+  cnsCidades.forEach(c=>{
+    const key = (c.cidade||'').toLowerCase().trim();
+    if(!cidadeMap[key]){
+      cidadeMap[key] = {
+        cidade: c.cidade,
+        status: c.status, // usa o status mais recente (a última entrada salva vence)
+        predios: 0, sim: 0, nao: 0,
+        ecoTotal: 0,
+        pctVals: [],
+        anos: [],
+        ids: []
+      };
+    }
+    const g = cidadeMap[key];
+    // O status da cidade agrupada é determinado pela última entrada com esse nome
+    g.status = c.status;
+    g.predios = Math.max(g.predios, c.predios||0); // prédios: pega o maior valor
+    g.sim += parseInt(c.sim)||0;
+    g.nao += parseInt(c.nao)||0;
+    // Soma economia
+    if(c.ecoHistorico && c.ecoHistorico.length){
+      c.ecoHistorico.forEach(e=>{ g.ecoTotal += parseFloat(String(e.val).replace(/[^\d,]/g,'').replace(',','.'))||0; });
+    } else {
+      g.ecoTotal += parseFloat(String(c.ecoVal||'0').replace(/[^\d,]/g,'').replace(',','.'))||0;
+    }
+    const pv = parseFloat(String(c.ecoPct||'0').replace(/[^\d.,]/g,'').replace(',','.'))||0;
+    if(pv) g.pctVals.push(pv);
+    g.anos.push(c.ano||new Date().getFullYear());
+    g.ids.push(c.id);
+  });
+
+  const cidadesUnicas = Object.values(cidadeMap);
+
+  // KPIs contam cidades únicas
+  const impl  = cidadesUnicas.filter(c=>c.status==='implantada').length;
+  const and   = cidadesUnicas.filter(c=>c.status==='andamento').length;
+  const pend  = cidadesUnicas.filter(c=>c.status==='pendente').length;
 
   document.getElementById('cns-kpi-impl').textContent = String(impl).padStart(2,'0');
   document.getElementById('cns-s-impl').textContent   = String(impl).padStart(2,'0');
   document.getElementById('cns-s-and').textContent    = String(and).padStart(2,'0');
   document.getElementById('cns-s-pend').textContent   = String(pend).padStart(2,'0');
 
-  // Economia total acumulada
-  let totalEco = 0;
-  cnsCidades.forEach(c=>{
-    if(c.ecoHistorico && c.ecoHistorico.length){
-      c.ecoHistorico.forEach(e=>{ totalEco += parseFloat(String(e.val).replace(/[^\d,]/g,'').replace(',','.'))||0; });
-    } else {
-      totalEco += parseFloat(String(c.ecoVal).replace(/[^\d,]/g,'').replace(',','.'))||0;
-    }
-  });
+  // Economia total acumulada (soma de todas as cidades únicas)
+  const totalEco = cidadesUnicas.reduce((s,c)=>s+c.ecoTotal,0);
   const totalK = totalEco >= 1000 ? (totalEco/1000).toFixed(0)+'mil' : 'R$ '+totalEco.toFixed(0);
   document.getElementById('cns-kpi-eco').textContent = totalK;
 
-  const avgPct = cnsCidades.length
-    ? cnsCidades.map(c=>parseFloat(String(c.ecoPct).replace(/[^\d.,]/g,'').replace(',','.'))||0).reduce((s,v)=>s+v,0)/cnsCidades.length
-    : 0;
+  const allPcts = cidadesUnicas.flatMap(c=>c.pctVals);
+  const avgPct = allPcts.length ? allPcts.reduce((s,v)=>s+v,0)/allPcts.length : 0;
   document.getElementById('cns-kpi-pct').textContent = Math.round(avgPct)+'%';
 
-  // Tabela
+  // Tabela — exibe cidades agrupadas (soma de entradas com mesmo nome)
   const tbody = document.getElementById('cns-tbody');
   if(!cnsCidades.length){
     tbody.innerHTML = `<tr><td colspan="13" style="text-align:center;color:var(--muted);padding:24px">Nenhuma cidade cadastrada. Use o formulário acima para adicionar.</td></tr>`;
     return;
   }
-  tbody.innerHTML = cnsCidades.map((c,i)=>{
-    const ac = anoColor(c.ano);
-    const hasJust = c.just && c.just.trim().length > 0;
+
+  tbody.innerHTML = cidadesUnicas.map((g,i)=>{
+    // Pega o último id real para edição/exclusão/bells/links
+    const lastId = g.ids[g.ids.length - 1];
+    const cReal = cnsCidades.find(x=>x.id===lastId) || {};
+
+    const anoMax = Math.max(...g.anos);
+    const ac = anoColor(anoMax);
+    const hasJust = cReal.just && cReal.just.trim().length > 0;
     const bellColor = hasJust ? '#f59e0b' : '#9eaab8';
-    const hasLink = c.linkAdmin && c.linkAdmin.trim() !== '';
-    const hasAnexo = c.linkAnexo && c.linkAnexo.trim() !== '';
-    // Eco acumulada label
-    let ecoLabel = c.ecoVal||'—';
-    if(c.ecoHistorico && c.ecoHistorico.length){
-      const acum = c.ecoHistorico.reduce((s,e)=>s+(parseFloat(String(e.val).replace(/[^\d,]/g,'').replace(',','.'))||0),0);
-      ecoLabel = 'R$ '+acum.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2});
-    }
+    const hasLink  = cReal.linkAdmin && cReal.linkAdmin.trim() !== '';
+    const hasAnexo = cReal.linkAnexo && cReal.linkAnexo.trim() !== '';
+
+    // Economia somada formatada
+    const ecoLabel = g.ecoTotal > 0
+      ? 'R$ '+g.ecoTotal.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2})
+      : '—';
+
+    // % média das entradas desta cidade
+    const avgPctCidade = g.pctVals.length
+      ? g.pctVals.reduce((s,v)=>s+v,0)/g.pctVals.length
+      : 0;
+    const pctLabel = avgPctCidade > 0 ? Math.round(avgPctCidade)+'%' : (cReal.ecoPct||'—');
+
+    // Indicador de múltiplas entradas
+    const multiTag = g.ids.length > 1
+      ? `<span title="${g.ids.length} lançamentos somados" style="margin-left:4px;background:#dce8ff;color:var(--blue);border-radius:10px;padding:1px 6px;font-size:9px;font-weight:800">${g.ids.length}×</span>`
+      : '';
+
     return `<tr>
       <td><b>${String(i+1).padStart(2,'0')}.</b></td>
-      <td><span class="cns-city-badge">${c.cidade}</span></td>
-      <td><span class="cns-num-badge gray">${String(c.predios).padStart(2,'0')}</span></td>
-      <td><span class="cns-num-badge green">${String(c.sim).padStart(2,'0')}</span></td>
-      <td><span class="cns-num-badge red">${String(c.nao).padStart(2,'0')}</span></td>
+      <td><span class="cns-city-badge">${g.cidade}</span>${multiTag}</td>
+      <td><span class="cns-num-badge gray">${String(g.predios).padStart(2,'0')}</span></td>
+      <td><span class="cns-num-badge green">${String(g.sim).padStart(2,'0')}</span></td>
+      <td><span class="cns-num-badge red">${String(g.nao).padStart(2,'0')}</span></td>
       <td>
-        <button class="cns-bell-btn" title="${hasJust?'Ver justificativa':'Adicionar justificativa'}" onclick="openCNSJust(${c.id})">
+        <button class="cns-bell-btn" title="${hasJust?'Ver justificativa':'Adicionar justificativa'}" onclick="openCNSJust(${lastId})">
           <span style="color:${bellColor}">🔔</span>
         </button>
       </td>
       <td><span class="cns-eco-badge">${ecoLabel}</span></td>
-      <td><span class="cns-pct-badge">${c.ecoPct||'—'}</span></td>
-      <td><span class="cns-ano-badge ${ac}">${c.ano}</span></td>
+      <td><span class="cns-pct-badge">${pctLabel}</span></td>
+      <td><span class="cns-ano-badge ${ac}">${anoMax}</span></td>
       <td>
-        <button class="cns-add-btn" title="Lançar economia acumulada" onclick="openCNSEco(${c.id})">+</button>
+        <button class="cns-add-btn" title="Lançar economia acumulada" onclick="openCNSEco(${lastId})">+</button>
       </td>
       <td>
         <button class="btn btn-sm" style="background:${hasLink?'#dce8ff':'#f4f7fd'};color:${hasLink?'var(--blue)':'var(--muted)'};border:1.5px solid ${hasLink?'#b8d0ff':'var(--border)'};white-space:nowrap;font-size:11px;padding:4px 9px;border-radius:7px;cursor:pointer;font-weight:700"
-          onclick="openCNSLinkAdmin(${c.id})" title="${hasLink?'Ver/editar planilha de controle':'Adicionar planilha de controle'}">
+          onclick="openCNSLinkAdmin(${lastId})" title="${hasLink?'Ver/editar planilha de controle':'Adicionar planilha de controle'}">
           ${hasLink
-            ? `<a href="${c.linkAdmin}" target="_blank" rel="noopener" style="color:var(--blue);text-decoration:none" onclick="event.stopPropagation()">🔗 Abrir</a> <span style="margin-left:4px;opacity:.6" onclick="openCNSLinkAdmin(${c.id})">✏️</span>`
+            ? `<a href="${cReal.linkAdmin}" target="_blank" rel="noopener" style="color:var(--blue);text-decoration:none" onclick="event.stopPropagation()">🔗 Abrir</a> <span style="margin-left:4px;opacity:.6" onclick="openCNSLinkAdmin(${lastId})">✏️</span>`
             : '📎 Link'}
         </button>
       </td>
       <td>
         <button class="btn btn-sm" style="background:${hasAnexo?'#d4f5e5':'#f4f7fd'};color:${hasAnexo?'var(--green)':'var(--muted)'};border:1.5px solid ${hasAnexo?'#a3e4c4':'var(--border)'};white-space:nowrap;font-size:11px;padding:4px 9px;border-radius:7px;cursor:pointer;font-weight:700"
-          onclick="openCNSAnexo(${c.id})" title="${hasAnexo?'Ver/editar link de anexo':'Adicionar link de pasta/administração'}">
+          onclick="openCNSAnexo(${lastId})" title="${hasAnexo?'Ver/editar link de anexo':'Adicionar link de pasta/administração'}">
           ${hasAnexo
-            ? `<a href="${c.linkAnexo}" target="_blank" rel="noopener" style="color:var(--green);text-decoration:none" onclick="event.stopPropagation()">📁 Abrir</a> <span style="margin-left:4px;opacity:.6" onclick="openCNSAnexo(${c.id})">✏️</span>`
+            ? `<a href="${cReal.linkAnexo}" target="_blank" rel="noopener" style="color:var(--green);text-decoration:none" onclick="event.stopPropagation()">📁 Abrir</a> <span style="margin-left:4px;opacity:.6" onclick="openCNSAnexo(${lastId})">✏️</span>`
             : '📁 Anexo'}
         </button>
       </td>
       <td style="white-space:nowrap">
-        <button class="btn btn-outline btn-sm" style="color:var(--blue)" onclick="editCNS(${c.id})">Editar</button>
-        <button class="btn btn-outline btn-sm" style="color:var(--green)" onclick="reabrirCNS(${c.id})">Reabrir</button>
-        <button class="btn btn-red btn-sm" onclick="deleteCNS(${c.id})">✕</button>
+        <button class="btn btn-outline btn-sm" style="color:var(--blue)" onclick="editCNS(${lastId})">Editar</button>
+        <button class="btn btn-outline btn-sm" style="color:var(--green)" onclick="reabrirCNS(${lastId})">Reabrir</button>
+        <button class="btn btn-red btn-sm" onclick="deleteCNS(${lastId})">✕</button>
       </td>
     </tr>`;
   }).join('');
