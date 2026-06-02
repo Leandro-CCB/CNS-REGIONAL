@@ -264,7 +264,7 @@ textarea{resize:vertical;min-height:80px}
 
 
 /* ── EXTRACTED PAGE STYLES ── */
-.pp-header{display:flex;align-items:center;gap:10px;background:#fff;border-radius:14px;padding:12px 20px;margin-bottom:22px;border:1px solid var(--border);width:fit-content;font-family:'Barlow Condensed',sans-serif;font-size:20px;font-weight:800;color:var(--navy)}
+.pp-header{display:flex;align-items:center;gap:10px;background:#fff;border-radius:14px;padding:12px 20px;margin-bottom:22px;border:1px solid var(--border);width:100%;font-family:'Barlow Condensed',sans-serif;font-size:20px;font-weight:800;color:var(--navy)}
         .pp-header svg{width:26px;height:26px;fill:var(--navy)}
         .pp-stat-row{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:24px}
         .pp-stat{border-radius:12px;padding:18px 22px;text-align:center;font-family:'Barlow Condensed',sans-serif}
@@ -1522,9 +1522,24 @@ textarea{resize:vertical;min-height:80px}
     <div class="page" id="page-pintura">
       
 
-      <div class="pp-header">
-        <svg viewBox="0 0 24 24"><path d="M7 14c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3zm13.71-9.37l-1.34-1.34a1 1 0 0 0-1.41 0L9 12.25 11.75 15l8.96-8.96a1 1 0 0 0 0-1.41z"/></svg>
-        Pintura Programada
+      <div class="pp-header" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px">
+        <div style="display:flex;align-items:center;gap:8px">
+          <svg viewBox="0 0 24 24"><path d="M7 14c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3zm13.71-9.37l-1.34-1.34a1 1 0 0 0-1.41 0L9 12.25 11.75 15l8.96-8.96a1 1 0 0 0 0-1.41z"/></svg>
+          Pintura Programada
+        </div>
+        <div style="display:flex;align-items:center;gap:8px">
+          <a id="pp-link-btn" href="#" target="_blank" rel="noopener noreferrer"
+             style="display:none;align-items:center;gap:6px;padding:7px 16px;background:var(--blue);color:#fff;border-radius:7px;font-size:13px;font-weight:600;text-decoration:none;transition:.15s"
+             onmouseover="this.style.background='var(--navy)'" onmouseout="this.style.background='var(--blue)'">
+            <svg viewBox="0 0 24 24" width="15" height="15" fill="#fff"><path d="M19 19H5V5h7V3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z"/></svg>
+            <span id="pp-link-label">Acessar Programa</span>
+          </a>
+          <button onclick="abrirModalPPLink()" title="Configurar link do botão"
+            style="width:32px;height:32px;border:1.5px solid var(--border);border-radius:8px;background:#f4f7fd;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:.15s;color:var(--muted);flex-shrink:0"
+            onmouseover="this.style.background='#dce8ff';this.style.color='var(--blue)'" onmouseout="this.style.background='#f4f7fd';this.style.color='var(--muted)'">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M19.14,12.94c0.04-0.3,0.06-0.61,0.06-0.94c0-0.32-0.02-0.64-0.07-0.94l2.03-1.58c0.18-0.14,0.23-0.41,0.12-0.61 l-1.92-3.32c-0.12-0.22-0.37-0.29-0.59-0.22l-2.39,0.96c-0.5-0.38-1.03-0.7-1.62-0.94L14.4,2.81c-0.04-0.24-0.24-0.41-0.48-0.41 h-3.84c-0.24,0-0.43,0.17-0.47,0.41L9.25,5.35C8.66,5.59,8.12,5.92,7.63,6.29L5.24,5.33c-0.22-0.08-0.47,0-0.59,0.22L2.74,8.87 C2.62,9.08,2.66,9.34,2.86,9.48l2.03,1.58C4.84,11.36,4.8,11.69,4.8,12s0.02,0.64,0.07,0.94l-2.03,1.58 c-0.18,0.14-0.23,0.41-0.12,0.61l1.92,3.32c0.12,0.22,0.37,0.29,0.59,0.22l2.39-0.96c0.5,0.38,1.03,0.7,1.62,0.94l0.36,2.54 c0.05,0.24,0.24,0.41,0.48,0.41h3.84c0.24,0,0.44-0.17,0.47-0.41l0.36-2.54c0.59-0.24,1.13-0.56,1.62-0.94l2.39,0.96 c0.22,0.08,0.47,0,0.59-0.22l1.92-3.32c0.12-0.22,0.07-0.47-0.12-0.61L19.14,12.94z M12,15.6c-1.98,0-3.6-1.62-3.6-3.6 s1.62-3.6,3.6-3.6s3.6,1.62,3.6,3.6S13.98,15.6,12,15.6z"/></svg>
+          </button>
+        </div>
       </div>
 
       <!-- Stats -->
@@ -2209,6 +2224,28 @@ textarea{resize:vertical;min-height:80px}
         <div class="modal-footer">
           <button class="btn btn-outline" onclick="document.getElementById('modal-pp-edit').classList.remove('open')">Cancelar</button>
           <button class="btn btn-primary" onclick="saveEditPP()">Salvar Alterações</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- MODAL LINK POR CIDADE — PINTURA PROGRAMADA -->
+    <div class="modal-bg" id="modal-pp-item-link">
+      <div class="modal" style="width:460px">
+        <div class="modal-header">
+          <span class="modal-title">🔗 Link — <span id="pp-item-link-city"></span></span>
+          <button class="modal-close" onclick="document.getElementById('modal-pp-item-link').classList.remove('open')">×</button>
+        </div>
+        <div class="modal-body" style="padding:20px">
+          <div class="form-group">
+            <label>URL do Link</label>
+            <input type="url" id="pp-item-link-input" placeholder="https://...">
+          </div>
+          <p style="font-size:11px;color:var(--muted);margin-top:8px">Deixe em branco para remover o link.</p>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-outline" onclick="document.getElementById('modal-pp-item-link').classList.remove('open')">Cancelar</button>
+          <button class="btn btn-red btn-sm" onclick="removePPItemLink()" style="margin-right:auto">Remover</button>
+          <button class="btn btn-primary" onclick="savePPItemLink()">Salvar</button>
         </div>
       </div>
     </div>
@@ -4169,10 +4206,10 @@ function clearProdForm(){
 
 // ─── PINTURA PROGRAMADA ──────────────────────────────────────────────────────
 let ppItems = [
-  {cidade:'Caieiras', val:'R$ 5.000,00', pct:'15%', ano:2026},
-  {cidade:'Morato',   val:'R$ 5.000,00', pct:'15%', ano:2026},
-  {cidade:'Jundiaí',  val:'R$ 5.000,00', pct:'15%', ano:2026},
-  {cidade:'Itupeva',  val:'R$ 5.000,00', pct:'15%', ano:2026},
+  {cidade:'Caieiras', val:'R$ 5.000,00', pct:'15%', ano:2026, link:''},
+  {cidade:'Morato',   val:'R$ 5.000,00', pct:'15%', ano:2026, link:''},
+  {cidade:'Jundiaí',  val:'R$ 5.000,00', pct:'15%', ano:2026, link:''},
+  {cidade:'Itupeva',  val:'R$ 5.000,00', pct:'15%', ano:2026, link:''},
 ];
 function renderPP(){
   const list = document.getElementById('pp-list');
@@ -4187,6 +4224,10 @@ function renderPP(){
       <div class="pp-actions">
         <button class="pp-btn pp-btn-edit" title="Editar" onclick="openEditPP(${i})">
           <svg viewBox="0 0 24 24"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a1 1 0 0 0 0-1.41l-2.34-2.34a1 1 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>
+        </button>
+        <button class="pp-btn" title="${it.link ? 'Ver/editar link' : 'Adicionar link'}" onclick="openPPItemLink(${i})"
+          style="background:${it.link ? '#dce8ff' : '#f4f7fd'};color:${it.link ? 'var(--blue)' : 'var(--muted)'};border:1.5px solid ${it.link ? '#b8d0ff' : 'var(--border)'}">
+          <svg viewBox="0 0 24 24" style="width:15px;height:15px;fill:currentColor"><path d="M17 7h-4v2h4c1.65 0 3 1.35 3 3s-1.35 3-3 3h-4v2h4c2.76 0 5-2.24 5-5s-2.24-5-5-5zm-6 8H7c-1.65 0-3-1.35-3-3s1.35-3 3-3h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-2zm1-4H8v2h8v-2z"/></svg>
         </button>
         ${isMaster()?`<button class="pp-btn pp-btn-del" title="Excluir" onclick="deletePPItem(${i})">
           <svg viewBox="0 0 24 24"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>
@@ -4211,7 +4252,7 @@ function savePPItem(){
   const pct    = document.getElementById('pp-pct').value.trim();
   const ano    = parseInt(document.getElementById('pp-item-ano').value)||2026;
   if(!cidade){toast('Informe a cidade/igreja','error');return;}
-  ppItems.push({cidade, val:'R$ '+val, pct, ano});
+  ppItems.push({cidade, val:'R$ '+val, pct, ano, link:''});
   renderPP();
   document.getElementById('modal-pp-add').classList.remove('open');
   ['pp-cidade','pp-val','pp-pct'].forEach(id=>document.getElementById(id).value='');
@@ -4241,11 +4282,41 @@ function saveEditPP(){
   const pct    = document.getElementById('pp-edit-pct').value.trim();
   const ano    = parseInt(document.getElementById('pp-edit-ano').value)||2026;
   if(!cidade){toast('Informe a cidade/igreja','error');return;}
-  ppItems[editingPPIndex] = {cidade, val:'R$ '+val, pct, ano};
+  ppItems[editingPPIndex] = {cidade, val:'R$ '+val, pct, ano, link: ppItems[editingPPIndex].link||''};
   renderPP();
   document.getElementById('modal-pp-edit').classList.remove('open');
   toast('Igreja atualizada!');
   editingPPIndex = -1;
+}
+
+let editingPPLinkIndex = -1;
+function openPPItemLink(i){
+  editingPPLinkIndex = i;
+  const it = ppItems[i];
+  document.getElementById('pp-item-link-city').textContent = it.cidade;
+  document.getElementById('pp-item-link-input').value = it.link || '';
+  document.getElementById('modal-pp-item-link').classList.add('open');
+  setTimeout(()=>document.getElementById('pp-item-link-input').focus(), 100);
+}
+function savePPItemLink(){
+  if(editingPPLinkIndex < 0) return;
+  let val = (document.getElementById('pp-item-link-input').value || '').trim();
+  if(val && !/^https?:\/\//i.test(val)) val = 'https://' + val;
+  ppItems[editingPPLinkIndex].link = val;
+  renderPP();
+  document.getElementById('modal-pp-item-link').classList.remove('open');
+  toast(val ? 'Link salvo!' : 'Link removido.', val ? 'success' : 'error');
+  editingPPLinkIndex = -1;
+  if(typeof sbSavePPItems === 'function') sbSavePPItems();
+}
+function removePPItemLink(){
+  if(editingPPLinkIndex < 0) return;
+  ppItems[editingPPLinkIndex].link = '';
+  renderPP();
+  document.getElementById('modal-pp-item-link').classList.remove('open');
+  toast('Link removido.', 'error');
+  editingPPLinkIndex = -1;
+  if(typeof sbSavePPItems === 'function') sbSavePPItems();
 }
 
 // ─── COMPONENTES DO PROGRAMA (links) ────────────────────────────────────────
@@ -5019,7 +5090,103 @@ function printEcRel(){
     </body></html>`);
   win.document.close();
 }
+</script>
 
+<!-- ── MODAL LINK PINTURA PROGRAMADA ── -->
+<div class="modal-bg" id="modal-pp-link">
+  <div class="modal" style="width:460px">
+    <div class="modal-header">
+      <span class="modal-title">🔗 Configurar Link — Pintura Programada</span>
+      <button class="modal-close" onclick="fecharModalPPLink()">×</button>
+    </div>
+    <div class="modal-body" style="padding:20px">
+      <div class="form-group" style="margin-bottom:14px">
+        <label>Nome do Botão</label>
+        <input type="text" id="pp-link-input-label" placeholder="Ex: Acessar Programa, Ver Relatório..." maxlength="40">
+      </div>
+      <div class="form-group">
+        <label>URL do Link *</label>
+        <input type="url" id="pp-link-input-url" placeholder="https://...">
+      </div>
+      <p style="font-size:11px;color:var(--muted);margin-top:8px">Deixe a URL em branco para ocultar o botão.</p>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="fecharModalPPLink()">Cancelar</button>
+      <button class="btn btn-red btn-sm" onclick="removerPPLink()" style="margin-right:auto">Remover botão</button>
+      <button class="btn btn-primary" onclick="salvarPPLink()">Salvar</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── MODAL LINK PINTURA PROGRAMADA ─────────────────────────────────────────────
+var PP_LINK_KEY   = 'crs_pp_header_link';
+var PP_LABEL_KEY  = 'crs_pp_header_label';
+
+function initPPHeaderLink(){
+  var btn   = document.getElementById('pp-link-btn');
+  var label = document.getElementById('pp-link-label');
+  if(!btn) return;
+  var savedUrl   = localStorage.getItem(PP_LINK_KEY)  || '';
+  var savedLabel = localStorage.getItem(PP_LABEL_KEY) || 'Acessar Programa';
+  if(savedUrl){
+    btn.href = savedUrl;
+    btn.style.display = 'inline-flex';
+    if(label) label.textContent = savedLabel;
+  } else {
+    btn.style.display = 'none';
+  }
+}
+
+function abrirModalPPLink(){
+  var savedUrl   = localStorage.getItem(PP_LINK_KEY)  || '';
+  var savedLabel = localStorage.getItem(PP_LABEL_KEY) || 'Acessar Programa';
+  document.getElementById('pp-link-input-url').value   = savedUrl;
+  document.getElementById('pp-link-input-label').value = savedLabel;
+  document.getElementById('modal-pp-link').classList.add('open');
+}
+
+function fecharModalPPLink(){
+  document.getElementById('modal-pp-link').classList.remove('open');
+}
+
+function salvarPPLink(){
+  var url   = (document.getElementById('pp-link-input-url').value   || '').trim();
+  var lbl   = (document.getElementById('pp-link-input-label').value || '').trim() || 'Acessar Programa';
+  var btn   = document.getElementById('pp-link-btn');
+  var label = document.getElementById('pp-link-label');
+  if(url){
+    if(!/^https?:\/\//i.test(url)) url = 'https://' + url;
+    localStorage.setItem(PP_LINK_KEY,  url);
+    localStorage.setItem(PP_LABEL_KEY, lbl);
+    if(btn){ btn.href = url; btn.style.display = 'inline-flex'; }
+    if(label) label.textContent = lbl;
+    if(window.toast) toast('Link salvo com sucesso!', 'success');
+  } else {
+    removerPPLink();
+    return;
+  }
+  fecharModalPPLink();
+}
+
+function removerPPLink(){
+  localStorage.removeItem(PP_LINK_KEY);
+  localStorage.removeItem(PP_LABEL_KEY);
+  var btn = document.getElementById('pp-link-btn');
+  if(btn){ btn.href='#'; btn.style.display='none'; }
+  fecharModalPPLink();
+  if(window.toast) toast('Botão removido.', 'error');
+}
+
+document.addEventListener('DOMContentLoaded', initPPHeaderLink);
+if(document.readyState !== 'loading') initPPHeaderLink();
+window.abrirModalPPLink  = abrirModalPPLink;
+window.fecharModalPPLink = fecharModalPPLink;
+window.salvarPPLink      = salvarPPLink;
+window.removerPPLink     = removerPPLink;
+</script>
+
+<script>
 // ─── CNS LIMPEZA ──────────────────────────────────────────────────────────────
 let cnsCidades = [
   {id:1, cidade:'Caieiras', predios:15, sim:15, nao:0,  ecoVal:'R$ 5.000,00', ecoPct:'15%', ano:2026, status:'implantada', just:'',  ecoHistorico:[], linkAdmin:''},
@@ -5498,7 +5665,7 @@ async function loadFromSupabase(){
       nextConvId = Math.max(...convenios.map(x=>x.id), 0) + 1;
     }
     if(pp.data && pp.data.length > 0){
-      ppItems = pp.data.map(r=>({cidade:r.cidade||'', val:r.val||'', pct:r.pct||'', ano:r.ano||2026}));
+      ppItems = pp.data.map(r=>({cidade:r.cidade||'', val:r.val||'', pct:r.pct||'', ano:r.ano||2026, link:r.link||''}));
     }
     if(pc.data && pc.data.length > 0){
       ppComponents = pc.data.map(r=>({label:r.label||'', link:r.link||''}));
@@ -5702,7 +5869,7 @@ async function sbSavePPItems(){
     const {error: delErr} = await db.from('CNSREGIONAL_pp_items').delete().neq('id', 0);
     if(delErr) throw delErr;
     if(ppItems.length > 0){
-      const rows = ppItems.map(it=>({cidade:it.cidade, val:it.val, pct:it.pct, ano:it.ano||2026}));
+      const rows = ppItems.map(it=>({cidade:it.cidade, val:it.val, pct:it.pct, ano:it.ano||2026, link:it.link||''}));
       const {error: insErr} = await db.from('CNSREGIONAL_pp_items').insert(rows);
       if(insErr) throw insErr;
     }
@@ -7834,6 +8001,50 @@ function updateUserDropdown(){
 }
 // Periodically sync dropdown (lightweight)
 setInterval(function(){ if(currentUser) updateUserDropdown(); }, 1000);
+
+// ── BOTÃO LINK — PINTURA PROGRAMADA ──────────────────────────────────────────
+var PP_LINK_KEY = 'crs_pp_header_link';
+
+function initPPHeaderLink(){
+  var btn = document.getElementById('pp-link-btn');
+  if(!btn) return;
+  var saved = localStorage.getItem(PP_LINK_KEY) || '';
+  if(saved){ btn.href = saved; btn.style.display='inline-flex'; }
+  else { btn.style.display='none'; }
+}
+
+function editPPHeaderLink(){
+  var current = localStorage.getItem(PP_LINK_KEY) || '';
+  var url = prompt('Cole a URL do link para o botão "Acessar Programa" da Pintura Programada:\n(deixe em branco para ocultar o botão)', current);
+  if(url === null) return;
+  url = url.trim();
+  var btn = document.getElementById('pp-link-btn');
+  if(url){
+    if(!/^https?:\/\//i.test(url)) url = 'https://' + url;
+    localStorage.setItem(PP_LINK_KEY, url);
+    if(btn){ btn.href = url; btn.style.display='inline-flex'; }
+    if(window.toast) toast('Link atualizado!', 'success');
+  } else {
+    localStorage.removeItem(PP_LINK_KEY);
+    if(btn){ btn.href='#'; btn.style.display='none'; }
+    if(window.toast) toast('Botão de link ocultado.','error');
+  }
+}
+
+document.addEventListener('DOMContentLoaded', function(){
+  initPPHeaderLink();
+  var btn = document.getElementById('pp-link-btn');
+  if(btn){
+    btn.addEventListener('click', function(e){
+      if(e.ctrlKey || e.metaKey){
+        e.preventDefault();
+        editPPHeaderLink();
+      }
+    });
+  }
+});
+
+window.editPPHeaderLink = editPPHeaderLink;
 </script>
 
 </body>
