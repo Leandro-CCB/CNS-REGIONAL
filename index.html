@@ -2468,6 +2468,54 @@ textarea{resize:vertical;min-height:80px}
         </div>
       </div>
 
+      <!-- ── SEÇÃO BACKUP ── -->
+      <div class="form-section" style="margin-bottom:24px;border:2px solid #dce8ff;background:linear-gradient(135deg,#f8fbff,#eff6ff)">
+        <div class="form-section-title" style="display:flex;align-items:center;gap:10px;color:var(--navy)">
+          <div style="width:32px;height:32px;border-radius:8px;background:var(--blue);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="#fff"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
+          </div>
+          Backup &amp; Restauração de Dados
+        </div>
+        <p style="font-size:12px;color:var(--muted);margin-bottom:18px;line-height:1.6">
+          Exporte todos os dados do sistema (fornecedores, compras, convênios, usuários, produtos, CNS, Gestão de Energias, Pintura Programada, configurações) em um arquivo <strong>.json</strong>.<br>
+          Na importação, os dados são <strong>mesclados</strong> com os existentes — nenhum registro será sobrescrito ou apagado.
+        </p>
+        <div style="display:flex;gap:12px;flex-wrap:wrap;align-items:center">
+          <!-- Exportar -->
+          <button class="btn btn-primary" onclick="exportarBackup()" style="gap:8px;padding:10px 20px;font-size:13px">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="#fff"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
+            Exportar Backup
+          </button>
+          <!-- Importar -->
+          <label style="cursor:pointer">
+            <input type="file" id="backup-import-input" accept=".json" style="display:none" onchange="importarBackup(this)">
+            <span class="btn btn-outline" style="gap:8px;padding:10px 20px;font-size:13px;display:inline-flex;align-items:center" onclick="document.getElementById('backup-import-input').click();event.preventDefault()">
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M9 16h6v-6h4l-7-7-7 7h4v6zm-4 2h14v2H5v-2z"/></svg>
+              Importar Backup
+            </span>
+          </label>
+          <span id="backup-status" style="font-size:12px;color:var(--muted);display:none"></span>
+        </div>
+        <!-- Preview da importação -->
+        <div id="backup-import-preview" style="display:none;margin-top:18px;background:#fff;border:1px solid var(--border);border-radius:10px;padding:16px">
+          <div style="font-weight:700;font-size:13px;color:var(--navy);margin-bottom:10px;display:flex;align-items:center;gap:7px">
+            <svg viewBox="0 0 24 24" width="15" height="15" fill="var(--blue)"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
+            Prévia do Backup — Dados que serão MESCLADOS (não substituem os existentes)
+          </div>
+          <div id="backup-preview-body" style="font-size:12px;color:var(--text);display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px"></div>
+          <div style="background:#fff8e1;border:1px solid #fcd34d;border-radius:8px;padding:9px 12px;font-size:11px;color:#92400e;margin-bottom:14px">
+            ⚠️ <strong>Atenção:</strong> Registros com o mesmo ID já existentes no sistema <strong>não serão alterados</strong>. Apenas dados novos serão adicionados.
+          </div>
+          <div style="display:flex;gap:10px">
+            <button class="btn btn-green" onclick="confirmarImportacao()" style="gap:6px">
+              <svg viewBox="0 0 24 24" width="14" height="14" fill="#fff"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg>
+              Confirmar Importação
+            </button>
+            <button class="btn btn-outline" onclick="cancelarImportacao()">Cancelar</button>
+          </div>
+        </div>
+      </div>
+
       <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:22px">
 
         <!-- ADMINISTRAÇÕES -->
@@ -8089,6 +8137,284 @@ document.addEventListener('DOMContentLoaded', function(){
 });
 
 window.editPPHeaderLink = editPPHeaderLink;
+
+// ── BACKUP & RESTAURAÇÃO ──────────────────────────────────────────────────────
+
+// Objeto temporário para guardar os dados do backup a importar
+var _backupPendente = null;
+
+function exportarBackup(){
+  // Coleta todas as chaves de localStorage com prefixo 'crs'
+  var lsData = {};
+  var lsKeys = ['crs_administracoes','crs_cats_forn','crs_cats_agenda','crs-app-links','crs-suporte-data','crs-notif-v1','crs_pp_header_link','crs_pp_header_label','mapa_cns_v2'];
+  lsKeys.forEach(function(k){
+    var v = localStorage.getItem(k);
+    if(v !== null){ try{ lsData[k] = JSON.parse(v); }catch(e){ lsData[k] = v; } }
+  });
+  // Notificações lidas de todos os usuários
+  for(var i=0; i<localStorage.length; i++){
+    var k = localStorage.key(i);
+    if(k && k.indexOf('crs-notif-lidas-') === 0){
+      try{ lsData[k] = JSON.parse(localStorage.getItem(k)); }catch(e){ lsData[k] = localStorage.getItem(k); }
+    }
+  }
+
+  var backup = {
+    _meta: {
+      versao: 'v15',
+      sistema: 'Portal CRS Jundiaí',
+      data: new Date().toLocaleString('pt-BR'),
+      geradoPor: currentUser ? currentUser.nome : 'sistema',
+    },
+    // Dados em memória (vindos do Supabase)
+    fornecedores:  (typeof fornecedores  !== 'undefined') ? fornecedores  : [],
+    agenda:        (typeof agenda        !== 'undefined') ? agenda        : [],
+    convenios:     (typeof convenios     !== 'undefined') ? convenios     : [],
+    usuarios:      (typeof users         !== 'undefined') ? users         : [],
+    produtos:      (typeof produtos      !== 'undefined') ? produtos      : [],
+    ppItems:       (typeof ppItems       !== 'undefined') ? ppItems       : [],
+    ppComponents:  (typeof ppComponents  !== 'undefined') ? ppComponents  : [],
+    cnsCidades:    (typeof cnsCidades    !== 'undefined') ? cnsCidades    : [],
+    geMlCidades:   (typeof geMlCidades   !== 'undefined') ? geMlCidades   : [],
+    geFvCidades:   (typeof geFvCidades   !== 'undefined') ? geFvCidades   : [],
+    // Configurações do localStorage
+    localStorage: lsData,
+  };
+
+  var json = JSON.stringify(backup, null, 2);
+  var blob = new Blob([json], {type:'application/json'});
+  var url  = URL.createObjectURL(blob);
+  var a    = document.createElement('a');
+  var now  = new Date();
+  var dt   = now.getFullYear() + '-' + String(now.getMonth()+1).padStart(2,'0') + '-' + String(now.getDate()).padStart(2,'0');
+  a.href     = url;
+  a.download = 'backup_crs_' + dt + '.json';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  if(window.toast) toast('✅ Backup exportado com sucesso!', 'success');
+}
+
+function importarBackup(input){
+  var file = input.files[0];
+  if(!file) return;
+  var statusEl = document.getElementById('backup-status');
+  statusEl.style.display = 'inline';
+  statusEl.textContent = 'Lendo arquivo...';
+
+  var reader = new FileReader();
+  reader.onload = function(e){
+    try{
+      var data = JSON.parse(e.target.result);
+      if(!data || typeof data !== 'object'){
+        throw new Error('Arquivo inválido');
+      }
+      _backupPendente = data;
+      mostrarPreviewBackup(data);
+      statusEl.style.display = 'none';
+    } catch(err){
+      statusEl.textContent = '❌ Arquivo inválido ou corrompido: ' + err.message;
+      statusEl.style.color = 'var(--red)';
+    }
+  };
+  reader.readAsText(file);
+  // Limpa o input para permitir reimportar o mesmo arquivo
+  input.value = '';
+}
+
+function mostrarPreviewBackup(data){
+  var preview = document.getElementById('backup-import-preview');
+  var body    = document.getElementById('backup-preview-body');
+
+  var meta = data._meta || {};
+  var linhas = [
+    { label:'Fornecedores',         count: (data.fornecedores  || []).length,  cor:'#2256c7' },
+    { label:'Compras Coordenadas',  count: (data.agenda        || []).length,  cor:'#7c3aed' },
+    { label:'Convênios',            count: (data.convenios     || []).length,  cor:'#0891b2' },
+    { label:'Usuários',             count: (data.usuarios      || []).length,  cor:'#e87c1a' },
+    { label:'Produtos',             count: (data.produtos      || []).length,  cor:'#1ea96a' },
+    { label:'Pintura (itens)',      count: (data.ppItems       || []).length,  cor:'#ec4899' },
+    { label:'CNS Limpeza',          count: (data.cnsCidades    || []).length,  cor:'#1ea96a' },
+    { label:'GE Meia Luz',          count: (data.geMlCidades   || []).length,  cor:'#f0a500' },
+    { label:'GE Fotovoltaica',      count: (data.geFvCidades   || []).length,  cor:'#f0a500' },
+    { label:'Configurações (local)',count: Object.keys(data.localStorage || {}).length, cor:'#6b7a99' },
+  ];
+
+  body.innerHTML = '<div style="grid-column:span 3;font-size:11px;color:var(--muted);margin-bottom:4px">' +
+    '📅 Gerado em: <strong>' + (meta.data || '—') + '</strong> &nbsp;·&nbsp; ' +
+    'Por: <strong>' + (meta.geradoPor || '—') + '</strong>' +
+  '</div>' +
+  linhas.map(function(l){
+    return '<div style="display:flex;align-items:center;gap:8px;background:#f8faff;border:1px solid var(--border);border-radius:8px;padding:8px 12px">' +
+      '<div style="width:8px;height:8px;border-radius:50%;background:'+l.cor+';flex-shrink:0"></div>' +
+      '<div style="flex:1;font-weight:600;color:var(--navy)">' + l.label + '</div>' +
+      '<div style="font-family:\'Barlow Condensed\',sans-serif;font-size:18px;font-weight:800;color:'+l.cor+'">' + l.count + '</div>' +
+    '</div>';
+  }).join('');
+
+  preview.style.display = 'block';
+}
+
+function cancelarImportacao(){
+  _backupPendente = null;
+  document.getElementById('backup-import-preview').style.display = 'none';
+  document.getElementById('backup-import-input').value = '';
+}
+
+function confirmarImportacao(){
+  if(!_backupPendente){ toast('Nenhum backup carregado.','error'); return; }
+  var data = _backupPendente;
+  var adicionados = { fornecedores:0, agenda:0, convenios:0, usuarios:0, produtos:0, ppItems:0, cnsCidades:0, geMlCidades:0, geFvCidades:0 };
+
+  // ── Fornecedores ──
+  if(Array.isArray(data.fornecedores)){
+    data.fornecedores.forEach(function(f){
+      var existe = fornecedores.some(function(x){ return x.id === f.id || (x.nome && f.nome && x.nome.toLowerCase()===f.nome.toLowerCase()); });
+      if(!existe){
+        var novoId = Math.max.apply(null, fornecedores.map(function(x){return x.id||0;}).concat([0])) + 1;
+        var copia = Object.assign({}, f, {id:novoId, _dbId:undefined});
+        fornecedores.push(copia);
+        adicionados.fornecedores++;
+        if(typeof sbSaveFornecedor === 'function') sbSaveFornecedor(copia);
+      }
+    });
+  }
+
+  // ── Agenda / Compras ──
+  if(Array.isArray(data.agenda)){
+    data.agenda.forEach(function(a){
+      var existe = agenda.some(function(x){ return x.id === a.id; });
+      if(!existe){
+        var novoId = Math.max.apply(null, agenda.map(function(x){return x.id||0;}).concat([0])) + 1;
+        var copia = Object.assign({}, a, {id:novoId, _dbId:undefined});
+        agenda.push(copia);
+        adicionados.agenda++;
+        if(typeof sbSaveAgenda === 'function') sbSaveAgenda(copia);
+      }
+    });
+  }
+
+  // ── Convênios ──
+  if(Array.isArray(data.convenios)){
+    data.convenios.forEach(function(c){
+      var existe = convenios.some(function(x){ return x.id === c.id; });
+      if(!existe){
+        var novoId = Math.max.apply(null, convenios.map(function(x){return x.id||0;}).concat([0])) + 1;
+        var copia = Object.assign({}, c, {id:novoId, _dbId:undefined});
+        convenios.push(copia);
+        adicionados.convenios++;
+        if(typeof sbSaveConvenio === 'function') sbSaveConvenio(copia);
+      }
+    });
+  }
+
+  // ── Usuários (nunca sobrescreve o Master principal) ──
+  if(Array.isArray(data.usuarios)){
+    data.usuarios.forEach(function(u){
+      var existe = users.some(function(x){ return x.id === u.id || (x.login && u.login && x.login.toLowerCase()===u.login.toLowerCase()); });
+      if(!existe){
+        var novoId = Math.max.apply(null, users.map(function(x){return x.id||0;}).concat([0])) + 1;
+        var copia = Object.assign({}, u, {id:novoId, _dbId:undefined});
+        users.push(copia);
+        adicionados.usuarios++;
+        if(typeof sbSaveUser === 'function') sbSaveUser(copia);
+      }
+    });
+  }
+
+  // ── Produtos ──
+  if(Array.isArray(data.produtos)){
+    data.produtos.forEach(function(p){
+      var existe = produtos.some(function(x){ return x.nome && p.nome && x.nome.toLowerCase()===p.nome.toLowerCase(); });
+      if(!existe){
+        produtos.push(Object.assign({}, p));
+        adicionados.produtos++;
+      }
+    });
+    // Salva produtos em bloco se função disponível
+    if(typeof sbSaveProdutos === 'function') sbSaveProdutos();
+  }
+
+  // ── Pintura Programada ──
+  if(Array.isArray(data.ppItems)){
+    data.ppItems.forEach(function(item){
+      var existe = ppItems.some(function(x){ return x.cidade && item.cidade && x.cidade.toLowerCase()===item.cidade.toLowerCase() && x.ano===item.ano; });
+      if(!existe){ ppItems.push(Object.assign({}, item)); adicionados.ppItems++; }
+    });
+    if(typeof sbSavePPItems === 'function') sbSavePPItems();
+  }
+
+  // ── CNS Limpeza ──
+  if(Array.isArray(data.cnsCidades)){
+    data.cnsCidades.forEach(function(c){
+      var existe = cnsCidades.some(function(x){ return x.id === c.id || (x.cidade && c.cidade && x.cidade.toLowerCase()===c.cidade.toLowerCase()); });
+      if(!existe){
+        var novoId = Math.max.apply(null, cnsCidades.map(function(x){return x.id||0;}).concat([0])) + 1;
+        cnsCidades.push(Object.assign({}, c, {id:novoId, _dbId:undefined}));
+        adicionados.cnsCidades++;
+      }
+    });
+    if(typeof sbSaveCNSAll === 'function') sbSaveCNSAll();
+  }
+
+  // ── GE Meia Luz ──
+  if(Array.isArray(data.geMlCidades)){
+    data.geMlCidades.forEach(function(c){
+      var existe = geMlCidades.some(function(x){ return x.cidade && c.cidade && x.cidade.toLowerCase()===c.cidade.toLowerCase(); });
+      if(!existe){ geMlCidades.push(Object.assign({}, c)); adicionados.geMlCidades++; }
+    });
+  }
+
+  // ── GE Fotovoltaica ──
+  if(Array.isArray(data.geFvCidades)){
+    data.geFvCidades.forEach(function(c){
+      var existe = geFvCidades.some(function(x){ return x.cidade && c.cidade && x.cidade.toLowerCase()===c.cidade.toLowerCase(); });
+      if(!existe){ geFvCidades.push(Object.assign({}, c)); adicionados.geFvCidades++; }
+    });
+  }
+
+  // ── localStorage (configurações) — mescla, não sobrescreve ──
+  if(data.localStorage && typeof data.localStorage === 'object'){
+    Object.keys(data.localStorage).forEach(function(k){
+      if(localStorage.getItem(k) === null){
+        try{ localStorage.setItem(k, JSON.stringify(data.localStorage[k])); }catch(e){}
+      }
+    });
+  }
+
+  // Recalcula IDs globais
+  if(typeof nextFornId !== 'undefined') nextFornId = Math.max.apply(null, fornecedores.map(function(x){return x.id||0;}).concat([nextFornId])) + 1;
+  if(typeof nextAgId   !== 'undefined') nextAgId   = Math.max.apply(null, agenda.map(function(x){return x.id||0;}).concat([nextAgId])) + 1;
+  if(typeof nextConvId !== 'undefined') nextConvId = Math.max.apply(null, convenios.map(function(x){return x.id||0;}).concat([nextConvId])) + 1;
+  if(typeof nextUserId !== 'undefined') nextUserId = Math.max.apply(null, users.map(function(x){return x.id||0;}).concat([nextUserId])) + 1;
+  if(typeof nextCNSId  !== 'undefined') nextCNSId  = Math.max.apply(null, cnsCidades.map(function(x){return x.id||0;}).concat([nextCNSId])) + 1;
+
+  // Re-renderiza tudo
+  if(typeof renderAll === 'function') renderAll();
+
+  // Limpa preview
+  cancelarImportacao();
+
+  var totalNovos = Object.values(adicionados).reduce(function(s,v){return s+v;},0);
+  var detalhe = Object.entries(adicionados)
+    .filter(function(e){return e[1]>0;})
+    .map(function(e){
+      var nomes = {fornecedores:'Fornecedores',agenda:'Compras',convenios:'Convênios',usuarios:'Usuários',produtos:'Produtos',ppItems:'Pintura',cnsCidades:'CNS',geMlCidades:'GE Meia Luz',geFvCidades:'GE Fotovoltaica'};
+      return (nomes[e[0]]||e[0]) + ': ' + e[1];
+    }).join(' · ');
+
+  if(totalNovos > 0){
+    toast('✅ Importação concluída! ' + totalNovos + ' registro(s) adicionado(s)' + (detalhe ? ' — ' + detalhe : ''), 'success');
+  } else {
+    toast('ℹ️ Nenhum dado novo encontrado no backup. Todos os registros já existem no sistema.', 'success');
+  }
+}
+
+window.exportarBackup   = exportarBackup;
+window.importarBackup   = importarBackup;
+window.confirmarImportacao = confirmarImportacao;
+window.cancelarImportacao  = cancelarImportacao;
 </script>
 
 </body>
